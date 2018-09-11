@@ -791,6 +791,8 @@ public class MarketDataPanel extends JPanel {
 
                     Tab pinkTab = hashList.get("STK.PINK"); 
                     
+System.out.println("Inside printing pink sheets, line 794"); 
+                    
                     try
                     {
                         childComponent = (ScannerResultsPanel)pinkTab.getComponent(); 
@@ -825,6 +827,8 @@ public class MarketDataPanel extends JPanel {
                             jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"low\":" + row.m_low + "\n },";
                         }
                         jsonOutput += "}";
+                        
+System.out.println("Inside printing pink sheets, line 830, jsonOutput is" + jsonOutput);
                     }
                     catch(NullPointerException e)
                     {
