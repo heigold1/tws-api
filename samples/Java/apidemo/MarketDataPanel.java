@@ -601,7 +601,7 @@ public class MarketDataPanel extends JPanel {
 			sub.stockTypeFilter( m_stockType.getSelectedItem().toString() );
                         sub.belowPrice(11.00);
                         sub.abovePrice(0.0015);
-                        sub.aboveVolume(2000);
+                        sub.aboveVolume(10000);
 			
 			ScannerResultsPanel resultsPanel = new ScannerResultsPanel();
 
@@ -808,13 +808,20 @@ System.out.println("Inside printing pink sheets, line 794");
 //                            String[] arr_orderParameters = str_description.split(" ");
                             String str_symbol = str_description.replace(" STK SMART", "");
 
-                            String str_change = row.change(); 
-                            str_change = str_change.replace("%", ""); 
-                            str_change = str_change.replace("-", ""); 
-                            float fl_change = Float.valueOf(str_change); 
-
-                            TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low); 
-                            myRows.add(myRow);
+                            try
+                            {
+                                String str_change = row.change(); 
+                                str_change = str_change.replace("%", ""); 
+                                str_change = str_change.replace("-", ""); 
+                                float fl_change = Float.valueOf(str_change); 
+                                
+                                TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low); 
+                                myRows.add(myRow);
+                            }
+                            catch(NullPointerException e) 
+                            { 
+                                System.out.println("NullPointerException Caught"); 
+                            } 
                         }
 
                         myRows.sort(new OrderByComparator()); 
