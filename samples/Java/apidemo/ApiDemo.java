@@ -370,7 +370,7 @@ public class ApiDemo implements IConnectionHandler {
                                     NewOrder oStop = new NewOrder();
                                     oStop.action(Action.SELL);
                                     oStop.orderType(OrderType.STP); 
-                                    double fl_childStopPrice = fl_price - 0.07*fl_price;
+                                    double fl_childStopPrice = fl_price - 0.80*fl_price;
                                     if (fl_childStopPrice > 1.00)
                                     {
                                         fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
