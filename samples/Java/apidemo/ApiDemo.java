@@ -399,7 +399,7 @@ public class ApiDemo implements IConnectionHandler {
                                     NewOrder oSell = new NewOrder();
                                     oSell.action(Action.SELL);
                                     oSell.orderType(OrderType.LMT); 
-                                    double fl_childSellPrice = fl_price + 0.95*fl_price;
+                                    double fl_childSellPrice = fl_price + 3*fl_price;
                                     if (fl_childSellPrice > 1.00)
                                     {
                                         fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
