@@ -695,6 +695,7 @@ public class MarketDataPanel extends JPanel {
                             catch(NullPointerException e) 
                             { 
                                 System.out.println("NullPointerException Caught"); 
+                                e.printStackTrace();
                             } 
                         }
 
@@ -733,15 +734,22 @@ public class MarketDataPanel extends JPanel {
                             String str_description = row.m_description; 
 //                            String[] arr_orderParameters = str_description.split(" ");
                             String str_symbol = str_description.replace(" STK SMART", ""); 
-                            
 
-                            String str_change = row.change(); 
-                            str_change = str_change.replace("%", ""); 
-                            str_change = str_change.replace("-", ""); 
-                            float fl_change = Float.valueOf(str_change); 
-
-                            TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low); 
-                            myRows.add(myRow);
+                            try
+                            {
+                                String str_change = row.change(); 
+                                str_change = str_change.replace("%", ""); 
+                                str_change = str_change.replace("-", ""); 
+                                float fl_change = Float.valueOf(str_change); 
+                                
+                                TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low); 
+                                myRows.add(myRow);
+                            }
+                            catch(NullPointerException e) 
+                            { 
+                                System.out.println("NullPointerException Caught"); 
+                                e.printStackTrace();
+                            } 
                         }
                     }
                     catch(NullPointerException e)
@@ -762,7 +770,6 @@ public class MarketDataPanel extends JPanel {
                             TopModel.TopRow row = rows.get(i); 
 
                             String str_description = row.m_description; 
-//                            String[] arr_orderParameters = str_description.split(" ");
                             String str_symbol = str_description.replace(" STK SMART", ""); 
 
                             try
@@ -778,6 +785,7 @@ public class MarketDataPanel extends JPanel {
                             catch(NullPointerException e) 
                             { 
                                 System.out.println("NullPointerException Caught"); 
+                                e.printStackTrace();
                             } 
                         }
                     
@@ -819,7 +827,6 @@ System.out.println("Inside printing pink sheets, line 794");
                             TopModel.TopRow row = rows.get(i); 
 
                             String str_description = row.m_description; 
-//                            String[] arr_orderParameters = str_description.split(" ");
                             String str_symbol = str_description.replace(" STK SMART", "");
 
                             try
@@ -835,6 +842,7 @@ System.out.println("Inside printing pink sheets, line 794");
                             catch(NullPointerException e) 
                             { 
                                 System.out.println("NullPointerException Caught"); 
+                                e.printStackTrace();
                             } 
                         }
 
@@ -848,8 +856,6 @@ System.out.println("Inside printing pink sheets, line 794");
                             jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"low\":" + row.m_low + "\n },";
                         }
                         jsonOutput += "}";
-                        
-System.out.println("Inside printing pink sheets, line 830, jsonOutput is" + jsonOutput);
                     }
                     catch(NullPointerException e)
                     {
