@@ -679,7 +679,6 @@ public class MarketDataPanel extends JPanel {
                             TopModel.TopRow row = rows.get(i); 
 
                             String str_description = row.m_description; 
-//                            String[] arr_orderParameters = str_description.split(" ");
                             String str_symbol = str_description.replace(" STK SMART", ""); 
 
                             try
