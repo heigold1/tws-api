@@ -546,7 +546,7 @@ public class MarketDataPanel extends JPanel {
                             ApiDemo.INSTANCE.connect();
                             reSubscribeTabs(); 
                         }
-                        
+System.out.println("Inside the TimerTask::run, about to call printTabs()"); 
                         printTabs(); 
                     }
                 };
@@ -656,6 +656,7 @@ public class MarketDataPanel extends JPanel {
                     }
                     catch(IOException e)
                     {
+System.out.println("Inside printTabs, something went wrong in instantiating the file writer");
                         e.printStackTrace();
                     } 
 
@@ -663,6 +664,8 @@ public class MarketDataPanel extends JPanel {
 
 // ******* NASDAQ **********************************************************************
 
+
+System.out.println("Inside printTabs,  about to grab STK.NASDAQ");
                     Tab nasdaqTab = hashList.get("STK.NASDAQ"); 
                     
                     try 
@@ -716,6 +719,7 @@ public class MarketDataPanel extends JPanel {
                     
 // **** NYSE and AMEX *****************************************************************************
 
+System.out.println("Inside printTabs,  about to grab STK.NYSE");
                     Tab nyseTab = hashList.get("STK.NYSE"); 
                     
                     try
@@ -756,6 +760,8 @@ public class MarketDataPanel extends JPanel {
                         e.printStackTrace();
                     } 
                         
+System.out.println("Inside printTabs,  about to grab STK.AMEX");
+
                     Tab amexTab = hashList.get("STK.AMEX"); 
                     
                     try
@@ -810,10 +816,10 @@ public class MarketDataPanel extends JPanel {
                     
 // ***** PINK *************************************************************************
 
+System.out.println("Inside printTabs,  about to grab STK.PINK");
+
                     Tab pinkTab = hashList.get("STK.PINK"); 
-                    
-System.out.println("Inside printing pink sheets, line 794"); 
-                    
+                                        
                     try
                     {
                         childComponent = (ScannerResultsPanel)pinkTab.getComponent(); 
