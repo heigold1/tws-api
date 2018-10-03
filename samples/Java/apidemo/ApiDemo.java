@@ -313,6 +313,10 @@ public class ApiDemo implements IConnectionHandler {
                                 myContract.currency("USD"); 
                                 NewOrder o = new NewOrder();
 
+                                
+// reqMktData
+
+                                
                                 o.account("U1203596"); 
                                 o.action(Action.BUY);
 

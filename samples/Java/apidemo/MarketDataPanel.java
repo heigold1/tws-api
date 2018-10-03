@@ -696,7 +696,7 @@ System.out.println("Inside printTabs,  about to grab STK.NASDAQ");
                             }
                             catch(NullPointerException e) 
                             { 
-                                System.out.println("NullPointerException Caught"); 
+                                System.out.println("NullPointerException Caught when accessing str_change");
                                 e.printStackTrace();
                             } 
                         }
@@ -751,13 +751,14 @@ System.out.println("Inside printTabs,  about to grab STK.NYSE");
                             }
                             catch(NullPointerException e) 
                             { 
-                                System.out.println("Inside printTabs,  null pointer when grabbing STK.NYSE");
+                                System.out.println("Inside printTabs (NYSE),  null pointer when grabbing str_change");
                                 e.printStackTrace();
                             } 
                         }
                     }
                     catch(NullPointerException e)
                     {
+                        System.out.println("Inside printTabs,  null pointer when grabbing STK.NYSE");
                         e.printStackTrace();
                     } 
                         
@@ -790,7 +791,7 @@ System.out.println("Inside printTabs,  about to grab STK.AMEX");
                             }
                             catch(NullPointerException e) 
                             { 
-                                System.out.println("Inside printTabs,  null pointer when grabbing STK.AMEX");
+                                System.out.println("Inside printTabs (AMEX),  null pointer when grabbing str_change");
                                 e.printStackTrace();
                             } 
                         }
@@ -811,6 +812,7 @@ System.out.println("Inside printTabs,  about to grab STK.AMEX");
                     }
                     catch(NullPointerException e)
                     {
+                        System.out.println("Inside printTabs,  null pointer when grabbing STK.AMEX");
                         e.printStackTrace();
                     } 
                     
@@ -847,7 +849,7 @@ System.out.println("Inside printTabs,  about to grab STK.PINK");
                             }
                             catch(NullPointerException e) 
                             { 
-                                System.out.println("Inside printTabs,  null pointer when grabbing STK.PINK");
+                                System.out.println("Inside printTabs (PINK),  null pointer when grabbing str_change");
                                 e.printStackTrace();
                             } 
                         }
@@ -865,6 +867,7 @@ System.out.println("Inside printTabs,  about to grab STK.PINK");
                     }
                     catch(NullPointerException e)
                     {
+                        System.out.println("Inside printTabs,  null pointer when grabbing STK.PINK");
                         e.printStackTrace();
                     }                     
 
