@@ -99,8 +99,8 @@ public class MarketDataPanel extends JPanel {
         JButton m_b2 = new JButton("Print tabs");     
 
 	MarketDataPanel() {
-/*           	m_requestPanel.addTab( "Top Market Data", new TopRequestPanel() );
-		m_requestPanel.addTab( "Deep Book", new DeepRequestPanel() );
+           	m_requestPanel.addTab( "Top Market Data", new TopRequestPanel() );
+/*		m_requestPanel.addTab( "Deep Book", new DeepRequestPanel() );
 		m_requestPanel.addTab( "Historical Data", new HistRequestPanel() );
 		m_requestPanel.addTab( "Real-time Bars", new RealtimeRequestPanel() ); */ 
 		m_requestPanel.addTab( "Market Scanner", new ScannerRequestPanel() );
@@ -132,9 +132,14 @@ public class MarketDataPanel extends JPanel {
 
 		protected void onTop() {
 			m_contractPanel.onOK();
+
+                        UpperField symbol = m_contractPanel.getSymbol(); 
+                        String str_symbol = symbol.getString();
+                        System.out.println("The symbol is " + symbol.getString()); 
+                        
 			if (m_topResultPanel == null) {
 				m_topResultPanel = new TopResultsPanel();
-				m_resultsPanel.addTab( "Top Data", m_topResultPanel, true, true);
+				m_resultsPanel.addTab( str_symbol, m_topResultPanel, true, true);
 			}
 			
 			m_topResultPanel.m_model.addRow( m_contract);
@@ -174,6 +179,10 @@ public class MarketDataPanel extends JPanel {
 			m_model.desubscribe();
 			m_topResultPanel = null;
 		}
+                
+                public TopModel getModel(){
+                    return m_model; 
+                }
 
 		void onReqType() {
 			ApiDemo.INSTANCE.controller().reqMktDataType( m_typeCombo.getSelectedItem() );
@@ -546,7 +555,7 @@ public class MarketDataPanel extends JPanel {
                             ApiDemo.INSTANCE.connect();
                             reSubscribeTabs(); 
                         }
-System.out.println("Inside the TimerTask::run, about to call printTabs()"); 
+                        System.out.println("Inside the TimerTask::run, about to call printTabs()"); 
                         printTabs(); 
                     }
                 };
@@ -647,6 +656,7 @@ System.out.println("Inside the TimerTask::run, about to call printTabs()");
                     String jsonOutput = "";
                     TopModel model = null; 
                     ScannerResultsPanel childComponent = null; 
+                    TopResultsPanel childVixComponent = null;
                     ArrayList<TopModel.TopRow> rows = null; 
                     ArrayList<TopModel.MyCustomRow> myRows = null;
                     int totalRows = 0;
@@ -656,7 +666,7 @@ System.out.println("Inside the TimerTask::run, about to call printTabs()");
                     }
                     catch(IOException e)
                     {
-System.out.println("Inside printTabs, something went wrong in instantiating the file writer");
+                        System.out.println("Inside printTabs, something went wrong in instantiating the file writer");
                         e.printStackTrace();
                     } 
 
@@ -665,7 +675,7 @@ System.out.println("Inside printTabs, something went wrong in instantiating the 
 // ******* NASDAQ **********************************************************************
 
 
-System.out.println("Inside printTabs,  about to grab STK.NASDAQ");
+                    System.out.println("Inside printTabs,  about to grab STK.NASDAQ");
                     Tab nasdaqTab = hashList.get("STK.NASDAQ"); 
                     
                     try 
@@ -762,8 +772,7 @@ System.out.println("Inside printTabs,  about to grab STK.NYSE");
                         e.printStackTrace();
                     } 
                         
-System.out.println("Inside printTabs,  about to grab STK.AMEX");
-
+                    System.out.println("Inside printTabs,  about to grab STK.AMEX");
                     Tab amexTab = hashList.get("STK.AMEX"); 
                     
                     try
@@ -871,8 +880,57 @@ System.out.println("Inside printTabs,  about to grab STK.PINK");
                         e.printStackTrace();
                     }                     
 
-// *********************************************************************************
-                    
+// ******* VIX **********************************************************************
+
+                    System.out.println("Inside printTabs,  about to grab the VIX tab");
+                    Tab vixTab = hashList.get("VIX"); 
+
+                    try 
+                    {
+                        System.out.println("Successul in grabbing the VIX tab"); 
+                        childVixComponent = (TopResultsPanel)vixTab.getComponent(); 
+                        model = childVixComponent.getModel();
+
+                        rows = model.getRows(); 
+                        myRows = new ArrayList(); 
+
+                        System.out.println("About to go throught the VIX rows"); 
+
+                        // first create the array that will be sorted
+                        for (int i = rows.size() - 1; i >= 0; i--) 
+                        {
+                            TopModel.TopRow row = rows.get(i); 
+                            String str_description = row.m_description.trim(); 
+                            
+                            if (str_description.equals("VIX IND CBOE"))
+                            {
+                                try
+                                {
+                                    String str_vixLast = Double.toString(row.m_last);
+                                    System.out.println("Found the VIX row, it's last value is " + str_vixLast);
+                                    jsonOutput += ",\"VIX\": \n"; 
+                                    jsonOutput += str_vixLast + "\n";
+//                                    jsonOutput += "";
+                                }
+                                catch(NullPointerException e) 
+                                { 
+                                    System.out.println("NullPointerException Caught when accessing VIX's last value");
+                                    e.printStackTrace();
+                                } 
+                            }
+                            else
+                            {
+                                System.out.println("str_description != VIX IND CBOE");
+                            }
+                        }
+                    }
+                    catch(NullPointerException e)
+                    {
+                        System.out.println("Inside printTabs,  null pointer when grabbing VIX");
+                        e.printStackTrace();
+                    } 
+
+
                     jsonOutput += "}"; 
                     jsonOutput = jsonOutput.replace("},}", "}}");
                     // need this a second time 
@@ -887,6 +945,24 @@ System.out.println("Inside printTabs,  about to grab STK.PINK");
                     {
                         e.printStackTrace();
                     } 
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
 
                     if  (totalRows > 150)
                     {

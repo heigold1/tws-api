@@ -81,4 +81,10 @@ public class UpperField extends JTextField {
 			return 0;
 		}
 	}
+        
+        public String getString()
+        {
+            	String str = super.getText().trim();
+                return str; 
+        }
 }

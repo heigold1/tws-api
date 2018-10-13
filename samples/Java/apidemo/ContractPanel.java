@@ -97,4 +97,10 @@ public class ContractPanel extends JPanel {
 		m_contract.localSymbol( m_localSymbol.getText().toUpperCase() );
 		m_contract.tradingClass( m_tradingClass.getText().toUpperCase() );
 	}
+        
+        public UpperField getSymbol(){
+            return m_symbol; 
+        }
+        
+        
 }
