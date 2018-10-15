@@ -15,6 +15,8 @@ import apidemo.util.VerticalPanel;
 import com.ib.controller.NewContract;
 import com.ib.controller.Types.Right;
 import com.ib.controller.Types.SecType;
+import java.awt.Component;
+import javax.swing.JLabel;
 
 public class ContractPanel extends JPanel {
 	protected UpperField m_symbol = new UpperField();
@@ -75,7 +77,7 @@ public class ContractPanel extends JPanel {
 	@Override public Dimension getMaximumSize() {
 		return super.getPreferredSize();
 	}
-	
+
 	public void onOK() {
 		if (m_contract.isCombo() ) {
 			return;
