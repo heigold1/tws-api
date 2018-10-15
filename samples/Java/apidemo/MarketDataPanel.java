@@ -66,7 +66,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import util.SubscriptionResultsPanel;
-
+import util.VixResultsPanel; 
 
 class OrderByComparator implements Comparator {
         public int compare(Object o1,Object o2) {
@@ -94,111 +94,22 @@ public class MarketDataPanel extends JPanel {
 	private final NewTabbedPanel m_requestPanel = new NewTabbedPanel();
 	private  NewTabbedPanel m_resultsPanel = new NewTabbedPanel();
 	private TopResultsPanel m_topResultPanel;	
-        
+
         JButton m_b1 = new JButton("Re-subscribe tabs");     
         JButton m_b2 = new JButton("Print tabs");     
 
 	MarketDataPanel() {
-           	m_requestPanel.addTab( "Top Market Data", new TopRequestPanel() );
+           	m_requestPanel.addTab( "top-market-data", new TopRequestPanel() );
 /*		m_requestPanel.addTab( "Deep Book", new DeepRequestPanel() );
 		m_requestPanel.addTab( "Historical Data", new HistRequestPanel() );
 		m_requestPanel.addTab( "Real-time Bars", new RealtimeRequestPanel() ); */ 
-		m_requestPanel.addTab( "Market Scanner", new ScannerRequestPanel() );
+		m_requestPanel.addTab( "market-scanner", new ScannerRequestPanel() );
 		
 		setLayout( new BorderLayout() );
 		add( m_requestPanel, BorderLayout.NORTH);
 		add( m_resultsPanel);
 	}
-	
-	private class TopRequestPanel extends JPanel {
-		final ContractPanel m_contractPanel = new ContractPanel(m_contract);
-		
-		TopRequestPanel() {
-			HtmlButton reqTop = new HtmlButton( "Request Top Market Data") {
-				@Override protected void actionPerformed() {
-					onTop();
-				}
-			};
-			
-			VerticalPanel butPanel = new VerticalPanel();
-			butPanel.add( reqTop);
-			
-			setLayout( new BoxLayout( this, BoxLayout.X_AXIS) );
-			add( m_contractPanel);
-			add( Box.createHorizontalStrut(20));
-			add( butPanel);
-                        
-		}
 
-		protected void onTop() {
-			m_contractPanel.onOK();
-
-                        UpperField symbol = m_contractPanel.getSymbol(); 
-                        String str_symbol = symbol.getString();
-                        System.out.println("The symbol is " + symbol.getString()); 
-                        
-			if (m_topResultPanel == null) {
-				m_topResultPanel = new TopResultsPanel();
-				m_resultsPanel.addTab( str_symbol, m_topResultPanel, true, true);
-			}
-			
-			m_topResultPanel.m_model.addRow( m_contract);
-		}
-	}
-	
-	private class TopResultsPanel extends NewTabPanel {
-		final TopModel m_model = new TopModel();
-		final JTable m_tab = new TopTable( m_model);
-		final TCombo<MktDataType> m_typeCombo = new TCombo<MktDataType>( MktDataType.values() );
-
-		TopResultsPanel() {
-			m_typeCombo.removeItemAt( 0);
-
-			JScrollPane scroll = new JScrollPane( m_tab);
-
-			HtmlButton reqType = new HtmlButton( "Go") {
-				@Override protected void actionPerformed() {
-					onReqType();
-				}
-			};
-
-			VerticalPanel butPanel = new VerticalPanel();
-			butPanel.add( "Market data type", m_typeCombo, reqType);
-			
-			setLayout( new BorderLayout() );
-			add( scroll);
-			add( butPanel, BorderLayout.SOUTH);
-		}
-		
-		/** Called when the tab is first visited. */
-		@Override public void activated() {
-		}
-
-		/** Called when the tab is closed by clicking the X. */
-		@Override public void closed() {
-			m_model.desubscribe();
-			m_topResultPanel = null;
-		}
-                
-                public TopModel getModel(){
-                    return m_model; 
-                }
-
-		void onReqType() {
-			ApiDemo.INSTANCE.controller().reqMktDataType( m_typeCombo.getSelectedItem() );
-		}
-		
-		class TopTable extends JTable {
-			public TopTable(TopModel model) { super( model); }
-
-			@Override public TableCellRenderer getCellRenderer(int rowIn, int column) {
-				TableCellRenderer rend = super.getCellRenderer(rowIn, column);
-				m_model.color( rend, rowIn, getForeground() );
-				return rend;
-			}
-		}
-	}		
-	
 	private class DeepRequestPanel extends JPanel {
 		final ContractPanel m_contractPanel = new ContractPanel(m_contract);
 		
@@ -533,6 +444,97 @@ public class MarketDataPanel extends JPanel {
 		}		
 	}
 	
+	
+	private class TopRequestPanel extends JPanel {
+		final ContractPanel m_contractPanel = new ContractPanel(m_contract);
+                Map<String, VixResultsPanel> m_vixResultsHash = new HashMap<String, VixResultsPanel>();
+		
+		TopRequestPanel() {
+			HtmlButton reqTop = new HtmlButton( "Request Top Market Data") {
+				@Override protected void actionPerformed() {
+					onTop();
+				}
+			};
+			
+			VerticalPanel butPanel = new VerticalPanel();
+			butPanel.add( reqTop);
+			
+			setLayout( new BoxLayout( this, BoxLayout.X_AXIS) );
+			add( m_contractPanel);
+			add( Box.createHorizontalStrut(20));
+			add( butPanel);
+                        
+		}
+
+		protected void onTop() {
+			m_contractPanel.onOK();
+
+                        UpperField symbol = m_contractPanel.getSymbol(); 
+                        String str_symbol = symbol.getString();
+                        System.out.println("The symbol is " + symbol.getString()); 
+                        
+			if (m_topResultPanel == null) {
+				m_topResultPanel = new TopResultsPanel();
+				m_resultsPanel.addTab( str_symbol, m_topResultPanel, true, true);
+			}
+			m_topResultPanel.m_model.addRow( m_contract);
+
+		}
+	}
+	
+	public class TopResultsPanel extends NewTabPanel {
+		final TopModel m_model = new TopModel();
+		final JTable m_tab = new TopTable( m_model);
+		final TCombo<MktDataType> m_typeCombo = new TCombo<MktDataType>( MktDataType.values() );
+
+		TopResultsPanel() {
+			m_typeCombo.removeItemAt( 0);
+
+			JScrollPane scroll = new JScrollPane( m_tab);
+
+			HtmlButton reqType = new HtmlButton( "Go") {
+				@Override protected void actionPerformed() {
+					onReqType();
+				}
+			};
+
+			VerticalPanel butPanel = new VerticalPanel();
+			butPanel.add( "Market data type", m_typeCombo, reqType);
+			
+			setLayout( new BorderLayout() );
+			add( scroll);
+			add( butPanel, BorderLayout.SOUTH);
+		}
+		
+		/** Called when the tab is first visited. */
+		@Override public void activated() {
+		}
+
+		/** Called when the tab is closed by clicking the X. */
+		@Override public void closed() {
+			m_model.desubscribe();
+			m_topResultPanel = null;
+		}
+                
+                public TopModel getModel(){
+                    return m_model; 
+                }
+
+		void onReqType() {
+			ApiDemo.INSTANCE.controller().reqMktDataType( m_typeCombo.getSelectedItem() );
+		}
+		
+		class TopTable extends JTable {
+			public TopTable(TopModel model) { super( model); }
+
+			@Override public TableCellRenderer getCellRenderer(int rowIn, int column) {
+				TableCellRenderer rend = super.getCellRenderer(rowIn, column);
+				m_model.color( rend, rowIn, getForeground() );
+				return rend;
+			}
+		}
+	}		
+
 	private class ScannerRequestPanel extends JPanel {
 		final UpperField m_numRows = new UpperField( "50");
 		final TCombo<ScanCode> m_scanCode = new TCombo<ScanCode>( ScanCode.values() );
@@ -552,7 +554,11 @@ public class MarketDataPanel extends JPanel {
                         if (ApiDemo.INSTANCE.isConnected() == false)
                         {
                             System.out.println("System is disconnected, reconnecting");
-                            ApiDemo.INSTANCE.connect();
+                            while (ApiDemo.INSTANCE.isConnected() == false)
+                            {
+                                System.out.println("In the loop to try to connect"); 
+                                ApiDemo.INSTANCE.connect();
+                            }
                             reSubscribeTabs(); 
                         }
                         System.out.println("Inside the TimerTask::run, about to call printTabs()"); 
@@ -730,7 +736,7 @@ public class MarketDataPanel extends JPanel {
                     
 // **** NYSE and AMEX *****************************************************************************
 
-System.out.println("Inside printTabs,  about to grab STK.NYSE");
+                    System.out.println("Inside printTabs,  about to grab STK.NYSE");
                     Tab nyseTab = hashList.get("STK.NYSE"); 
                     
                     try
@@ -824,12 +830,10 @@ System.out.println("Inside printTabs,  about to grab STK.NYSE");
                         System.out.println("Inside printTabs,  null pointer when grabbing STK.AMEX");
                         e.printStackTrace();
                     } 
-                    
-                    
+
 // ***** PINK *************************************************************************
 
-System.out.println("Inside printTabs,  about to grab STK.PINK");
-
+                    System.out.println("Inside printTabs,  about to grab STK.PINK");
                     Tab pinkTab = hashList.get("STK.PINK"); 
                                         
                     try
@@ -910,7 +914,6 @@ System.out.println("Inside printTabs,  about to grab STK.PINK");
                                     System.out.println("Found the VIX row, it's last value is " + str_vixLast);
                                     jsonOutput += ",\"VIX\": \n"; 
                                     jsonOutput += str_vixLast + "\n";
-//                                    jsonOutput += "";
                                 }
                                 catch(NullPointerException e) 
                                 { 
@@ -926,10 +929,9 @@ System.out.println("Inside printTabs,  about to grab STK.PINK");
                     }
                     catch(NullPointerException e)
                     {
-                        System.out.println("Inside printTabs,  null pointer when grabbing VIX");
+                        System.out.println("Inside printTabs, null pointer when grabbing VIX");
                         e.printStackTrace();
                     } 
-
 
                     jsonOutput += "}"; 
                     jsonOutput = jsonOutput.replace("},}", "}}");
@@ -945,24 +947,6 @@ System.out.println("Inside printTabs,  about to grab STK.PINK");
                     {
                         e.printStackTrace();
                     } 
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
 
                     if  (totalRows > 150)
                     {

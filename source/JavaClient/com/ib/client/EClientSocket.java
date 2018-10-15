@@ -436,7 +436,7 @@ public class EClientSocket {
     }
 
     public synchronized void reqScannerSubscription( int tickerId, ScannerSubscription subscription, Vector<TagValue> scannerSubscriptionOptions) {
-System.out.println("inside EClientSocketJave ReqScannerSubscription, reqId is " + tickerId); 
+        System.out.println("inside EClientSocketJave ReqScannerSubscription, reqId is " + tickerId); 
         // not connected?
         if( !m_connected) {
             notConnected();

@@ -405,6 +405,7 @@ public class ApiController implements EWrapper {
 	}
 
     public int reqTopMktData(NewContract contract, String genericTickList, boolean snapshot, ITopMktDataHandler handler) {
+System.out.println("inside reqTopMktData, NOT the reqId one"); 
     	int reqId = m_reqId++;
     	m_topMktDataMap.put( reqId, handler);
 
@@ -420,6 +421,7 @@ public class ApiController implements EWrapper {
     }
     
     public void reqTopMktData(int reqId) {
+System.out.println("inside reqTopMktData, the reqId one"); 
             Integer myInt = reqId; 
             ScannerRequestData requestData = m_scannerRequestDataMap.get(myInt);
 
