@@ -217,4 +217,9 @@ public class NewContract implements Cloneable {
 			return null;
 		}
 	}
+        
+        public String getSymbol(){
+            return m_symbol;
+        }
+        
 }

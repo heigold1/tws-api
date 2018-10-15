@@ -40,7 +40,6 @@ import apidemo.util.VerticalPanel.StackPanel;
 
 import com.ib.client.ScannerSubscription;
 
-
 import com.ib.controller.Bar;
 import com.ib.controller.Instrument;
 import com.ib.controller.NewContract;
@@ -98,6 +97,40 @@ public class MarketDataPanel extends JPanel {
         JButton m_b1 = new JButton("Re-subscribe tabs");     
         JButton m_b2 = new JButton("Print tabs");     
 
+        JButton m_b3 = new JButton("Re-subscribe tabs");     
+        
+                int secondsPassed = 0;
+                Timer myTimer = new Timer();
+                TimerTask task = new TimerTask(){
+                    public void run(){
+                        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                        Date date = new Date();
+                        System.out.println("Task execution, time is: " + dateFormat.format(date)); 
+
+                        if (ApiDemo.INSTANCE.isConnected() == false)
+                        {
+                            System.out.println("System is disconnected, reconnecting");
+                            while (ApiDemo.INSTANCE.isConnected() == false)
+                            {
+                                System.out.println("In the loop to try to connect"); 
+                                ApiDemo.INSTANCE.connect();
+                            }
+
+                            HashMap marketDataHashMap = m_requestPanel.getHashMap(); 
+                            Tab topRequestTab = (Tab) marketDataHashMap.get("top-market-data"); 
+                            Tab scannerTab = (Tab) marketDataHashMap.get("market-scanner"); 
+                            TopRequestPanel topRequestPanel = (TopRequestPanel) topRequestTab.getComponent(); 
+                            ScannerRequestPanel scannerRequestPanel = (ScannerRequestPanel) scannerTab.getComponent();
+
+                            scannerRequestPanel.reSubscribeTabs(); 
+                            topRequestPanel.reSubscribeTabs();
+                            
+                        }
+                        System.out.println("Inside the TimerTask::run, about to call printTabs()"); 
+                        printTabs(); 
+                    }
+                };
+        
 	MarketDataPanel() {
            	m_requestPanel.addTab( "top-market-data", new TopRequestPanel() );
 /*		m_requestPanel.addTab( "Deep Book", new DeepRequestPanel() );
@@ -108,7 +141,312 @@ public class MarketDataPanel extends JPanel {
 		setLayout( new BorderLayout() );
 		add( m_requestPanel, BorderLayout.NORTH);
 		add( m_resultsPanel);
+                
+                myTimer.scheduleAtFixedRate(task, 50000, 5800);
+                
 	}
+
+        public void printTabs()
+        {
+
+            HashMap<String,Tab> hashList = m_resultsPanel.getHashMap(); 
+            String fileName = "percent-decliners.json";
+            FileWriter writer = null;
+            String jsonOutput = "";
+            TopModel model = null; 
+            ScannerResultsPanel childComponent = null; 
+            TopResultsPanel childVixComponent = null;
+            ArrayList<TopModel.TopRow> rows = null; 
+            ArrayList<TopModel.MyCustomRow> myRows = null;
+            int totalRows = 0;
+
+            try{
+                writer = new FileWriter("C:\\Xampp\\htdocs\\screener\\" + fileName);
+            }
+            catch(IOException e)
+            {
+                System.out.println("Inside printTabs, something went wrong in instantiating the file writer");
+                e.printStackTrace();
+            } 
+
+            jsonOutput += "{"; 
+
+// ******* NASDAQ **********************************************************************
+
+
+            System.out.println("Inside printTabs,  about to grab STK.NASDAQ");
+            Tab nasdaqTab = hashList.get("STK.NASDAQ"); 
+
+            try 
+            {
+                childComponent = (ScannerResultsPanel)nasdaqTab.getComponent(); 
+                model = childComponent.getModel();
+
+                rows = model.getRows(); 
+                myRows = new ArrayList(); 
+
+                // first create the array that will be sorted
+                for (int i = rows.size() - 1; i >= 0; i--) 
+                {
+                    TopModel.TopRow row = rows.get(i); 
+
+                    String str_description = row.m_description; 
+                    String str_symbol = str_description.replace(" STK SMART", ""); 
+
+                    try
+                    {
+                        String str_change = row.change(); 
+                        str_change = str_change.replace("%", ""); 
+                        str_change = str_change.replace("-", ""); 
+                        float fl_change = Float.valueOf(str_change); 
+
+                        TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low); 
+                        myRows.add(myRow);
+                    }
+                    catch(NullPointerException e) 
+                    { 
+                        System.out.println("NullPointerException Caught when accessing str_change");
+                        e.printStackTrace();
+                    } 
+                }
+
+                myRows.sort(new OrderByComparator()); 
+                totalRows+= myRows.size(); 
+
+                jsonOutput += "\""+ "NASDAQ" + "\":  \n\n { \n"; 
+                for (int i = 0; i < myRows.size(); i++) 
+                {
+                    TopModel.MyCustomRow row = myRows.get(i); 
+                    jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"low\":" + row.m_low + "\n },";
+                }
+                 jsonOutput += "},";
+            }
+            catch(NullPointerException e)
+            {
+                System.out.println("Inside printTabs,  null pointer when grabbing STK.NASDAQ");
+                e.printStackTrace();
+            } 
+
+// **** NYSE and AMEX *****************************************************************************
+
+            System.out.println("Inside printTabs,  about to grab STK.NYSE");
+            Tab nyseTab = hashList.get("STK.NYSE"); 
+
+            try
+            {
+                childComponent = (ScannerResultsPanel)nyseTab.getComponent(); 
+                model = childComponent.getModel();
+                rows = model.getRows(); 
+                myRows = new ArrayList(); 
+
+                // first create the array that will be sorted
+                for (int i = 0; i < rows.size(); i++) 
+                {
+                    TopModel.TopRow row = rows.get(i); 
+
+                    String str_description = row.m_description; 
+                    String str_symbol = str_description.replace(" STK SMART", ""); 
+
+                    try
+                    {
+                        String str_change = row.change(); 
+                        str_change = str_change.replace("%", ""); 
+                        str_change = str_change.replace("-", ""); 
+                        float fl_change = Float.valueOf(str_change); 
+
+                        TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low); 
+                        myRows.add(myRow);
+                    }
+                    catch(NullPointerException e) 
+                    { 
+                        System.out.println("Inside printTabs (NYSE),  null pointer when grabbing str_change");
+                        e.printStackTrace();
+                    } 
+                }
+            }
+            catch(NullPointerException e)
+            {
+                System.out.println("Inside printTabs,  null pointer when grabbing STK.NYSE");
+                e.printStackTrace();
+            } 
+
+            System.out.println("Inside printTabs,  about to grab STK.AMEX");
+            Tab amexTab = hashList.get("STK.AMEX"); 
+
+            try
+            {
+                childComponent = (ScannerResultsPanel)amexTab.getComponent(); 
+                model = childComponent.getModel();
+                rows = model.getRows(); 
+
+                for (int i = 0; i < rows.size(); i++) 
+                {
+                    TopModel.TopRow row = rows.get(i); 
+
+                    String str_description = row.m_description; 
+                    String str_symbol = str_description.replace(" STK SMART", ""); 
+
+                    try
+                    {
+                        String str_change = row.change(); 
+                        str_change = str_change.replace("%", ""); 
+                        str_change = str_change.replace("-", ""); 
+                        float fl_change = Float.valueOf(str_change); 
+
+                        TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low); 
+                        myRows.add(myRow);
+                    }
+                    catch(NullPointerException e) 
+                    { 
+                        System.out.println("Inside printTabs (AMEX),  null pointer when grabbing str_change");
+                        e.printStackTrace();
+                    } 
+                }
+
+                if ((amexTab != null) || (nyseTab != null))
+                {
+                    myRows.sort(new OrderByComparator()); 
+                    totalRows+= myRows.size(); 
+
+                    jsonOutput += "\""+ "NYSEAMEX" + "\":  \n\n { \n"; 
+                    for (int i = 0; i < myRows.size(); i++) 
+                    {
+                        TopModel.MyCustomRow row = myRows.get(i); 
+                        jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"low\":" + row.m_low + "\n },";
+                    }
+                    jsonOutput += "},";
+                }
+            }
+            catch(NullPointerException e)
+            {
+                System.out.println("Inside printTabs,  null pointer when grabbing STK.AMEX");
+                e.printStackTrace();
+            } 
+
+// ***** PINK *************************************************************************
+
+            System.out.println("Inside printTabs,  about to grab STK.PINK");
+            Tab pinkTab = hashList.get("STK.PINK"); 
+
+            try
+            {
+                childComponent = (ScannerResultsPanel)pinkTab.getComponent(); 
+                model = childComponent.getModel();
+                rows = model.getRows(); 
+                myRows = new ArrayList(); 
+
+                for (int i = 0; i < rows.size(); i++) 
+                {
+                    TopModel.TopRow row = rows.get(i); 
+
+                    String str_description = row.m_description; 
+                    String str_symbol = str_description.replace(" STK SMART", "");
+
+                    try
+                    {
+                        String str_change = row.change(); 
+                        str_change = str_change.replace("%", ""); 
+                        str_change = str_change.replace("-", ""); 
+                        float fl_change = Float.valueOf(str_change); 
+
+                        TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low); 
+                        myRows.add(myRow);
+                    }
+                    catch(NullPointerException e) 
+                    { 
+                        System.out.println("Inside printTabs (PINK),  null pointer when grabbing str_change");
+                        e.printStackTrace();
+                    } 
+                }
+
+                myRows.sort(new OrderByComparator()); 
+                totalRows+= myRows.size(); 
+
+                jsonOutput += "\""+ "PINK" + "\":  \n\n { \n"; 
+                for (int i = 0; i < myRows.size(); i++) 
+                {
+                    TopModel.MyCustomRow row = myRows.get(i); 
+                    jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"low\":" + row.m_low + "\n },";
+                }
+                jsonOutput += "}";
+            }
+            catch(NullPointerException e)
+            {
+                System.out.println("Inside printTabs,  null pointer when grabbing STK.PINK");
+                e.printStackTrace();
+            }                     
+
+// ******* VIX **********************************************************************
+
+            System.out.println("Inside printTabs,  about to grab the VIX tab");
+            Tab vixTab = hashList.get("VIX"); 
+
+            try 
+            {
+                System.out.println("Successul in grabbing the VIX tab"); 
+                childVixComponent = (TopResultsPanel)vixTab.getComponent(); 
+                model = childVixComponent.getModel();
+
+                rows = model.getRows(); 
+                myRows = new ArrayList(); 
+
+                System.out.println("About to go throught the VIX rows"); 
+
+                // first create the array that will be sorted
+                for (int i = rows.size() - 1; i >= 0; i--) 
+                {
+                    TopModel.TopRow row = rows.get(i); 
+                    String str_description = row.m_description.trim(); 
+
+                    if (str_description.equals("VIX IND CBOE"))
+                    {
+                        try
+                        {
+                            String str_vixLast = Double.toString(row.m_last);
+                            System.out.println("Found the VIX row, it's last value is " + str_vixLast);
+                            jsonOutput += ",\"VIX\": \n"; 
+                            jsonOutput += str_vixLast + "\n";
+                        }
+                        catch(NullPointerException e) 
+                        { 
+                            System.out.println("NullPointerException Caught when accessing VIX's last value");
+                            e.printStackTrace();
+                        } 
+                    }
+                    else
+                    {
+                        System.out.println("str_description != VIX IND CBOE");
+                    }
+                }
+            }
+            catch(NullPointerException e)
+            {
+                System.out.println("Inside printTabs, null pointer when grabbing VIX");
+                e.printStackTrace();
+            } 
+
+            jsonOutput += "}"; 
+            jsonOutput = jsonOutput.replace("},}", "}}");
+            // need this a second time 
+            jsonOutput = jsonOutput.replace("},}", "}}");
+
+            try{
+                writer.append(jsonOutput);
+                writer.flush();
+                writer.close();
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+            } 
+
+            if  (totalRows > 150)
+            {
+                HashMap marketDataHashMap = m_requestPanel.getHashMap(); 
+                ScannerRequestPanel scannerRequestPanel = (ScannerRequestPanel) marketDataHashMap.get("market-scanner"); 
+                scannerRequestPanel.reSubscribeTabs(); 
+            }
+        }
 
 	private class DeepRequestPanel extends JPanel {
 		final ContractPanel m_contractPanel = new ContractPanel(m_contract);
@@ -447,8 +785,8 @@ public class MarketDataPanel extends JPanel {
 	
 	private class TopRequestPanel extends JPanel {
 		final ContractPanel m_contractPanel = new ContractPanel(m_contract);
-                Map<String, VixResultsPanel> m_vixResultsHash = new HashMap<String, VixResultsPanel>();
-		
+                Map<String, NewContract> m_newContractHash = new HashMap<String, NewContract>();
+                
 		TopRequestPanel() {
 			HtmlButton reqTop = new HtmlButton( "Request Top Market Data") {
 				@Override protected void actionPerformed() {
@@ -461,9 +799,20 @@ public class MarketDataPanel extends JPanel {
 			
 			setLayout( new BoxLayout( this, BoxLayout.X_AXIS) );
 			add( m_contractPanel);
+
+/*                        
+                        m_contractPanel.add( "Re-subscribe tabs", m_b3); 
+                        m_b3.addActionListener(new java.awt.event.ActionListener()
+                	{
+                	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
+                    	    {
+                                System.out.println("Testing button.");
+                            }
+                        });
+  */
+                        
 			add( Box.createHorizontalStrut(20));
 			add( butPanel);
-                        
 		}
 
 		protected void onTop() {
@@ -478,8 +827,21 @@ public class MarketDataPanel extends JPanel {
 				m_resultsPanel.addTab( str_symbol, m_topResultPanel, true, true);
 			}
 			m_topResultPanel.m_model.addRow( m_contract);
-
+                        m_newContractHash.put(m_contract.getSymbol(), m_contract ); 
 		}
+                
+                public void reSubscribeTabs(){
+                    m_topResultPanel.m_model.removeAllRows(); 
+                    
+                    Iterator it = m_newContractHash.entrySet().iterator();
+                        while (it.hasNext()) {
+                            Map.Entry pair = (Map.Entry)it.next();
+                            NewContract myNewContract = (NewContract) pair.getValue();
+                            m_topResultPanel.m_model.addRow( m_contract);
+                        }
+                    
+                }
+
 	}
 	
 	public class TopResultsPanel extends NewTabPanel {
@@ -543,29 +905,6 @@ public class MarketDataPanel extends JPanel {
 		final TCombo<String> m_stockType = new TCombo<String>( "ALL", "STOCK", "ETF");
                 Map<String, SubscriptionResultsPanel> m_subscriptionResultsHash = new HashMap<String, SubscriptionResultsPanel>();
 
-                int secondsPassed = 0;
-                Timer myTimer = new Timer();
-                TimerTask task = new TimerTask(){
-                    public void run(){
-                        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                        Date date = new Date();
-                        System.out.println("Task execution, time is: " + dateFormat.format(date)); 
-                        
-                        if (ApiDemo.INSTANCE.isConnected() == false)
-                        {
-                            System.out.println("System is disconnected, reconnecting");
-                            while (ApiDemo.INSTANCE.isConnected() == false)
-                            {
-                                System.out.println("In the loop to try to connect"); 
-                                ApiDemo.INSTANCE.connect();
-                            }
-                            reSubscribeTabs(); 
-                        }
-                        System.out.println("Inside the TimerTask::run, about to call printTabs()"); 
-                        printTabs(); 
-                    }
-                };
-
 		ScannerRequestPanel() {
 			HtmlButton go = new HtmlButton( "Go") {
 				@Override protected void actionPerformed() {
@@ -579,18 +918,22 @@ public class MarketDataPanel extends JPanel {
 			paramsPanel.add( "Location", m_location, Box.createHorizontalStrut(10), go);
 			paramsPanel.add( "Stock type", m_stockType);
 			paramsPanel.add( "Num rows", m_numRows);
+
+                        setLayout( new BorderLayout() );
+			add( paramsPanel, BorderLayout.NORTH);
                         
                         paramsPanel.add( "Re-subscribe tabs", m_b1); 
                         paramsPanel.add( "Print tabs", m_b2); 
-			
-			setLayout( new BorderLayout() );
-			add( paramsPanel, BorderLayout.NORTH);
 
                         m_b1.addActionListener(new java.awt.event.ActionListener()
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
                                 reSubscribeTabs(); 
+                                HashMap marketDataHashMap = m_requestPanel.getHashMap(); 
+                                Tab topRequestTab = (Tab) marketDataHashMap.get("top-market-data"); 
+                                TopRequestPanel topRequestPanel = (TopRequestPanel) topRequestTab.getComponent(); 
+                                topRequestPanel.reSubscribeTabs();
                             }
                         });
                   
@@ -602,7 +945,6 @@ public class MarketDataPanel extends JPanel {
                             }
                         });
 
-                        myTimer.scheduleAtFixedRate(task, 50000, 5800);
 		}
 
 		protected void onGo() {
@@ -654,305 +996,6 @@ public class MarketDataPanel extends JPanel {
                     }
                 }
 
-                public void printTabs()
-                {
-                    HashMap<String,Tab> hashList = m_resultsPanel.getHashMap(); 
-                    String fileName = "percent-decliners.json";
-                    FileWriter writer = null;
-                    String jsonOutput = "";
-                    TopModel model = null; 
-                    ScannerResultsPanel childComponent = null; 
-                    TopResultsPanel childVixComponent = null;
-                    ArrayList<TopModel.TopRow> rows = null; 
-                    ArrayList<TopModel.MyCustomRow> myRows = null;
-                    int totalRows = 0;
-
-                    try{
-                        writer = new FileWriter("C:\\Xampp\\htdocs\\screener\\" + fileName);
-                    }
-                    catch(IOException e)
-                    {
-                        System.out.println("Inside printTabs, something went wrong in instantiating the file writer");
-                        e.printStackTrace();
-                    } 
-
-                    jsonOutput += "{"; 
-
-// ******* NASDAQ **********************************************************************
-
-
-                    System.out.println("Inside printTabs,  about to grab STK.NASDAQ");
-                    Tab nasdaqTab = hashList.get("STK.NASDAQ"); 
-                    
-                    try 
-                    {
-                        childComponent = (ScannerResultsPanel)nasdaqTab.getComponent(); 
-                        model = childComponent.getModel();
-
-                        rows = model.getRows(); 
-                        myRows = new ArrayList(); 
-
-                        // first create the array that will be sorted
-                        for (int i = rows.size() - 1; i >= 0; i--) 
-                        {
-                            TopModel.TopRow row = rows.get(i); 
-
-                            String str_description = row.m_description; 
-                            String str_symbol = str_description.replace(" STK SMART", ""); 
-
-                            try
-                            {
-                                String str_change = row.change(); 
-                                str_change = str_change.replace("%", ""); 
-                                str_change = str_change.replace("-", ""); 
-                                float fl_change = Float.valueOf(str_change); 
-                                
-                                TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low); 
-                                myRows.add(myRow);
-                            }
-                            catch(NullPointerException e) 
-                            { 
-                                System.out.println("NullPointerException Caught when accessing str_change");
-                                e.printStackTrace();
-                            } 
-                        }
-
-                        myRows.sort(new OrderByComparator()); 
-                        totalRows+= myRows.size(); 
-
-                        jsonOutput += "\""+ "NASDAQ" + "\":  \n\n { \n"; 
-                        for (int i = 0; i < myRows.size(); i++) 
-                        {
-                            TopModel.MyCustomRow row = myRows.get(i); 
-                            jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"low\":" + row.m_low + "\n },";
-                        }
-                         jsonOutput += "},";
-                    }
-                    catch(NullPointerException e)
-                    {
-                        System.out.println("Inside printTabs,  null pointer when grabbing STK.NASDAQ");
-                        e.printStackTrace();
-                    } 
-                    
-// **** NYSE and AMEX *****************************************************************************
-
-                    System.out.println("Inside printTabs,  about to grab STK.NYSE");
-                    Tab nyseTab = hashList.get("STK.NYSE"); 
-                    
-                    try
-                    {
-                        childComponent = (ScannerResultsPanel)nyseTab.getComponent(); 
-                        model = childComponent.getModel();
-                        rows = model.getRows(); 
-                        myRows = new ArrayList(); 
-
-                        // first create the array that will be sorted
-                        for (int i = 0; i < rows.size(); i++) 
-                        {
-                            TopModel.TopRow row = rows.get(i); 
-
-                            String str_description = row.m_description; 
-//                            String[] arr_orderParameters = str_description.split(" ");
-                            String str_symbol = str_description.replace(" STK SMART", ""); 
-
-                            try
-                            {
-                                String str_change = row.change(); 
-                                str_change = str_change.replace("%", ""); 
-                                str_change = str_change.replace("-", ""); 
-                                float fl_change = Float.valueOf(str_change); 
-                                
-                                TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low); 
-                                myRows.add(myRow);
-                            }
-                            catch(NullPointerException e) 
-                            { 
-                                System.out.println("Inside printTabs (NYSE),  null pointer when grabbing str_change");
-                                e.printStackTrace();
-                            } 
-                        }
-                    }
-                    catch(NullPointerException e)
-                    {
-                        System.out.println("Inside printTabs,  null pointer when grabbing STK.NYSE");
-                        e.printStackTrace();
-                    } 
-                        
-                    System.out.println("Inside printTabs,  about to grab STK.AMEX");
-                    Tab amexTab = hashList.get("STK.AMEX"); 
-                    
-                    try
-                    {
-                        childComponent = (ScannerResultsPanel)amexTab.getComponent(); 
-                        model = childComponent.getModel();
-                        rows = model.getRows(); 
-
-                        for (int i = 0; i < rows.size(); i++) 
-                        {
-                            TopModel.TopRow row = rows.get(i); 
-
-                            String str_description = row.m_description; 
-                            String str_symbol = str_description.replace(" STK SMART", ""); 
-
-                            try
-                            {
-                                String str_change = row.change(); 
-                                str_change = str_change.replace("%", ""); 
-                                str_change = str_change.replace("-", ""); 
-                                float fl_change = Float.valueOf(str_change); 
-                                
-                                TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low); 
-                                myRows.add(myRow);
-                            }
-                            catch(NullPointerException e) 
-                            { 
-                                System.out.println("Inside printTabs (AMEX),  null pointer when grabbing str_change");
-                                e.printStackTrace();
-                            } 
-                        }
-                    
-                        if ((amexTab != null) || (nyseTab != null))
-                        {
-                            myRows.sort(new OrderByComparator()); 
-                            totalRows+= myRows.size(); 
-                            
-                            jsonOutput += "\""+ "NYSEAMEX" + "\":  \n\n { \n"; 
-                            for (int i = 0; i < myRows.size(); i++) 
-                            {
-                                TopModel.MyCustomRow row = myRows.get(i); 
-                                jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"low\":" + row.m_low + "\n },";
-                            }
-                            jsonOutput += "},";
-                        }
-                    }
-                    catch(NullPointerException e)
-                    {
-                        System.out.println("Inside printTabs,  null pointer when grabbing STK.AMEX");
-                        e.printStackTrace();
-                    } 
-
-// ***** PINK *************************************************************************
-
-                    System.out.println("Inside printTabs,  about to grab STK.PINK");
-                    Tab pinkTab = hashList.get("STK.PINK"); 
-                                        
-                    try
-                    {
-                        childComponent = (ScannerResultsPanel)pinkTab.getComponent(); 
-                        model = childComponent.getModel();
-                        rows = model.getRows(); 
-                        myRows = new ArrayList(); 
-
-                        for (int i = 0; i < rows.size(); i++) 
-                        {
-                            TopModel.TopRow row = rows.get(i); 
-
-                            String str_description = row.m_description; 
-                            String str_symbol = str_description.replace(" STK SMART", "");
-
-                            try
-                            {
-                                String str_change = row.change(); 
-                                str_change = str_change.replace("%", ""); 
-                                str_change = str_change.replace("-", ""); 
-                                float fl_change = Float.valueOf(str_change); 
-                                
-                                TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low); 
-                                myRows.add(myRow);
-                            }
-                            catch(NullPointerException e) 
-                            { 
-                                System.out.println("Inside printTabs (PINK),  null pointer when grabbing str_change");
-                                e.printStackTrace();
-                            } 
-                        }
-
-                        myRows.sort(new OrderByComparator()); 
-                        totalRows+= myRows.size(); 
-
-                        jsonOutput += "\""+ "PINK" + "\":  \n\n { \n"; 
-                        for (int i = 0; i < myRows.size(); i++) 
-                        {
-                            TopModel.MyCustomRow row = myRows.get(i); 
-                            jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"low\":" + row.m_low + "\n },";
-                        }
-                        jsonOutput += "}";
-                    }
-                    catch(NullPointerException e)
-                    {
-                        System.out.println("Inside printTabs,  null pointer when grabbing STK.PINK");
-                        e.printStackTrace();
-                    }                     
-
-// ******* VIX **********************************************************************
-
-                    System.out.println("Inside printTabs,  about to grab the VIX tab");
-                    Tab vixTab = hashList.get("VIX"); 
-
-                    try 
-                    {
-                        System.out.println("Successul in grabbing the VIX tab"); 
-                        childVixComponent = (TopResultsPanel)vixTab.getComponent(); 
-                        model = childVixComponent.getModel();
-
-                        rows = model.getRows(); 
-                        myRows = new ArrayList(); 
-
-                        System.out.println("About to go throught the VIX rows"); 
-
-                        // first create the array that will be sorted
-                        for (int i = rows.size() - 1; i >= 0; i--) 
-                        {
-                            TopModel.TopRow row = rows.get(i); 
-                            String str_description = row.m_description.trim(); 
-                            
-                            if (str_description.equals("VIX IND CBOE"))
-                            {
-                                try
-                                {
-                                    String str_vixLast = Double.toString(row.m_last);
-                                    System.out.println("Found the VIX row, it's last value is " + str_vixLast);
-                                    jsonOutput += ",\"VIX\": \n"; 
-                                    jsonOutput += str_vixLast + "\n";
-                                }
-                                catch(NullPointerException e) 
-                                { 
-                                    System.out.println("NullPointerException Caught when accessing VIX's last value");
-                                    e.printStackTrace();
-                                } 
-                            }
-                            else
-                            {
-                                System.out.println("str_description != VIX IND CBOE");
-                            }
-                        }
-                    }
-                    catch(NullPointerException e)
-                    {
-                        System.out.println("Inside printTabs, null pointer when grabbing VIX");
-                        e.printStackTrace();
-                    } 
-
-                    jsonOutput += "}"; 
-                    jsonOutput = jsonOutput.replace("},}", "}}");
-                    // need this a second time 
-                    jsonOutput = jsonOutput.replace("},}", "}}");
-
-                    try{
-                        writer.append(jsonOutput);
-                        writer.flush();
-                        writer.close();
-                    }
-                    catch(IOException e)
-                    {
-                        e.printStackTrace();
-                    } 
-
-                    if  (totalRows > 150)
-                    {
-                        this.reSubscribeTabs(); 
-                    }
-                }
 	}
 
 	public static class ScannerResultsPanel extends NewTabPanel implements IScannerHandler {
