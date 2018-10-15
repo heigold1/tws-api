@@ -33,7 +33,6 @@ public class TopModel extends AbstractTableModel {
             String[] arr_orderParameters = str_description.split(" ");
             String str_symbol = arr_orderParameters[0];
             
-                System.out.println("Inside the contract addRow, contract is " + contract.description() );
 		TopRow row = new TopRow( this, contract.description() );
 		m_rows.add( row);
 		int reqId = ApiDemo.INSTANCE.controller().reqTopMktData(contract, "", false, row);

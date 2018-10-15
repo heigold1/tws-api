@@ -443,7 +443,8 @@ public class MarketDataPanel extends JPanel {
             if  (totalRows > 150)
             {
                 HashMap marketDataHashMap = m_requestPanel.getHashMap(); 
-                ScannerRequestPanel scannerRequestPanel = (ScannerRequestPanel) marketDataHashMap.get("market-scanner"); 
+                Tab scannerTab = (Tab) marketDataHashMap.get("market-scanner"); 
+                ScannerRequestPanel scannerRequestPanel = (ScannerRequestPanel) scannerTab.getComponent();
                 scannerRequestPanel.reSubscribeTabs(); 
             }
         }
