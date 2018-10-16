@@ -151,6 +151,9 @@ public class MarketDataPanel extends JPanel {
 
             HashMap<String,Tab> hashList = m_resultsPanel.getHashMap(); 
             String fileName = "percent-decliners.json";
+            String filePath = "C:\\Xampp\\htdocs\\screener\\";
+            String fullFilePath = filePath + fileName; 
+            
             FileWriter writer = null;
             String jsonOutput = "";
             TopModel model = null; 
@@ -161,7 +164,7 @@ public class MarketDataPanel extends JPanel {
             int totalRows = 0;
 
             try{
-                writer = new FileWriter("C:\\Xampp\\htdocs\\screener\\" + fileName);
+                writer = new FileWriter(fullFilePath);
             }
             catch(IOException e)
             {
@@ -801,17 +804,6 @@ public class MarketDataPanel extends JPanel {
 			
 			setLayout( new BoxLayout( this, BoxLayout.X_AXIS) );
 			add( m_contractPanel);
-
-/*                        
-                        m_contractPanel.add( "Re-subscribe tabs", m_b3); 
-                        m_b3.addActionListener(new java.awt.event.ActionListener()
-                	{
-                	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
-                    	    {
-                                System.out.println("Testing button.");
-                            }
-                        });
-  */
                         
 			add( Box.createHorizontalStrut(20));
 			add( butPanel);
