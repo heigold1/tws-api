@@ -437,6 +437,7 @@ public class MarketDataPanel extends JPanel {
             }
             catch(IOException e)
             {
+                System.out.println("Something went wrong when writing out/closing the file."); 
                 e.printStackTrace();
             } 
 
@@ -821,7 +822,6 @@ public class MarketDataPanel extends JPanel {
 
                         UpperField symbol = m_contractPanel.getSymbol(); 
                         String str_symbol = symbol.getString();
-                        System.out.println("The symbol is " + symbol.getString()); 
                         
 			if (m_topResultPanel == null) {
 				m_topResultPanel = new TopResultsPanel();
