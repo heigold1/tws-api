@@ -195,6 +195,7 @@ public class MarketDataPanel extends JPanel {
 
                     String str_description = row.m_description; 
                     String str_symbol = str_description.replace(" STK SMART", ""); 
+                    str_symbol = str_symbol.trim(); 
 
                     try
                     {
@@ -246,10 +247,10 @@ public class MarketDataPanel extends JPanel {
                 for (int i = 0; i < rows.size(); i++) 
                 {
                     TopModel.TopRow row = rows.get(i); 
-
                     String str_description = row.m_description; 
                     String str_symbol = str_description.replace(" STK SMART", ""); 
-
+                    str_symbol = str_symbol.trim(); 
+                    
                     try
                     {
                         String str_change = row.change(); 
@@ -288,7 +289,8 @@ public class MarketDataPanel extends JPanel {
 
                     String str_description = row.m_description; 
                     String str_symbol = str_description.replace(" STK SMART", ""); 
-
+                    str_symbol = str_symbol.trim(); 
+                    
                     try
                     {
                         String str_change = row.change(); 
@@ -344,7 +346,8 @@ public class MarketDataPanel extends JPanel {
 
                     String str_description = row.m_description; 
                     String str_symbol = str_description.replace(" STK SMART", "");
-
+                    str_symbol = str_symbol.trim(); 
+                    
                     try
                     {
                         String str_change = row.change(); 
