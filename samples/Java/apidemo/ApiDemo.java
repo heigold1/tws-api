@@ -307,7 +307,7 @@ public class ApiDemo implements IConnectionHandler {
                                   javax.swing.JOptionPane.showMessageDialog(p1, str_orderText + "\n\nNOT placed, percentage is only " + str_percentage, "Order NOT Placed", JOptionPane.NO_OPTION);
                                   return;
                                 }
-                                
+
                                 // Order starts here                                 
                                 NewContract myContract = new NewContract();
                                 myContract.symbol(str_symbol); 
