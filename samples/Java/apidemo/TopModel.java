@@ -87,7 +87,7 @@ public class TopModel extends AbstractTableModel {
 	}
 	
 	@Override public int getColumnCount() {
-		return 10;
+		return 11;
 	}
 	
 	@Override public String getColumnName(int col) {
@@ -102,6 +102,7 @@ public class TopModel extends AbstractTableModel {
 			case 7: return "Change";
 			case 8: return "Volume";
                         case 9: return "Low"; 
+                        case 10: return "Avg Volume"; 
 			default: return null;
 		}
 	}
@@ -119,6 +120,7 @@ public class TopModel extends AbstractTableModel {
 			case 7: return row.change();
 			case 8: return Formats.fmt0( row.m_volume);
                         case 9: return fmt( row.m_low);
+                        case 10: return Formats.fmt0( row.m_avgVolume);
 			default: return null;
 		}
 	}
@@ -145,6 +147,7 @@ public class TopModel extends AbstractTableModel {
 		double m_close;
 		int m_volume;
                 double m_low; 
+                double m_avgVolume; 
 		boolean m_frozen;
 		
 		TopRow( AbstractTableModel model, String description) {
@@ -188,6 +191,9 @@ public class TopModel extends AbstractTableModel {
 				case VOLUME:
 					m_volume = size;
 					break;
+                                case AVG_VOLUME:         
+                                        m_avgVolume = size; 
+                                        break; 
 			}
 			m_model.fireTableDataChanged();
 		}
@@ -212,13 +218,15 @@ public class TopModel extends AbstractTableModel {
             public double m_change; 
             public int m_volume; 
             public double m_low; 
+            public double m_avgVolume;
             
-            public MyCustomRow(String symbol, double last, double change, int volume, double low){
+            public MyCustomRow(String symbol, double last, double change, int volume, double low, double avgVolume){
                 m_symbol = symbol; 
                 m_last = last;
                 m_change = change;
                 m_volume = volume; 
                 m_low = low;
+                m_avgVolume = avgVolume; 
             }
             
               private String name;

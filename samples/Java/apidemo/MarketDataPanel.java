@@ -204,7 +204,7 @@ public class MarketDataPanel extends JPanel {
                         str_change = str_change.replace("-", ""); 
                         float fl_change = Float.valueOf(str_change); 
 
-                        TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low); 
+                        TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume); 
                         myRows.add(myRow);
                     }
                     catch(NullPointerException e) 
@@ -221,7 +221,7 @@ public class MarketDataPanel extends JPanel {
                 for (int i = 0; i < myRows.size(); i++) 
                 {
                     TopModel.MyCustomRow row = myRows.get(i); 
-                    jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"low\":" + row.m_low + "\n },";
+                    jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"avg_volume\":" + row.m_avgVolume + ",\"low\":" + row.m_low + "\n },";
                 }
                  jsonOutput += "},";
             }
@@ -258,7 +258,7 @@ public class MarketDataPanel extends JPanel {
                         str_change = str_change.replace("-", ""); 
                         float fl_change = Float.valueOf(str_change); 
 
-                        TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low); 
+                        TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume); 
                         myRows.add(myRow);
                     }
                     catch(NullPointerException e) 
@@ -298,7 +298,7 @@ public class MarketDataPanel extends JPanel {
                         str_change = str_change.replace("-", ""); 
                         float fl_change = Float.valueOf(str_change); 
 
-                        TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low); 
+                        TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume); 
                         myRows.add(myRow);
                     }
                     catch(NullPointerException e) 
@@ -317,7 +317,7 @@ public class MarketDataPanel extends JPanel {
                     for (int i = 0; i < myRows.size(); i++) 
                     {
                         TopModel.MyCustomRow row = myRows.get(i); 
-                        jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"low\":" + row.m_low + "\n },";
+                        jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"avg_volume\":" + row.m_avgVolume + ",\"low\":" + row.m_low + "\n },";
                     }
                     jsonOutput += "},";
                 }
@@ -355,7 +355,7 @@ public class MarketDataPanel extends JPanel {
                         str_change = str_change.replace("-", ""); 
                         float fl_change = Float.valueOf(str_change); 
 
-                        TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low); 
+                        TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume); 
                         myRows.add(myRow);
                     }
                     catch(NullPointerException e) 
@@ -372,7 +372,7 @@ public class MarketDataPanel extends JPanel {
                 for (int i = 0; i < myRows.size(); i++) 
                 {
                     TopModel.MyCustomRow row = myRows.get(i); 
-                    jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"low\":" + row.m_low + "\n },";
+                    jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"avg_volume\":" + row.m_avgVolume + ",\"low\":" + row.m_low + "\n },";
                 }
                 jsonOutput += "}";
             }

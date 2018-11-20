@@ -507,6 +507,7 @@ public class EClientSocket {
 
     public synchronized void reqMktData(int tickerId, Contract contract,
     		String genericTickList, boolean snapshot, List<TagValue> mktDataOptions) {
+        
         if (!m_connected) {
             error(EClientErrors.NO_VALID_ID, EClientErrors.NOT_CONNECTED, "");
             return;

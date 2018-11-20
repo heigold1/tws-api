@@ -412,7 +412,11 @@ public class ApiController implements EWrapper {
         Integer reqIdInteger = m_reqId; 
         ScannerRequestData requestData = new ScannerRequestData(contract, genericTickList, snapshot);
         m_scannerRequestDataMap.put(reqIdInteger, requestData);
-                
+
+System.out.println("inside reqTopMktData, requestData.m_genericTickList is *" + genericTickList + "*"); 
+        
+        genericTickList = "165";
+
     	m_client.reqMktData( reqId, contract.getContract(), genericTickList, snapshot, Collections.<TagValue>emptyList() );
 		sendEOM();
                 
@@ -420,10 +424,12 @@ public class ApiController implements EWrapper {
     }
     
     public void reqTopMktData(int reqId) {
-System.out.println("inside reqTopMktData, the reqId one"); 
+
             Integer myInt = reqId; 
             ScannerRequestData requestData = m_scannerRequestDataMap.get(myInt);
 
+System.out.println("inside reqTopMktData, the reqId one, requestData.m_genericTickList is " + requestData.m_genericTickList); 
+            
             m_client.reqMktData( reqId, requestData.m_contract.getContract(), requestData.m_genericTickList, requestData.m_snapshot, Collections.<TagValue>emptyList());
 		sendEOM();
     }
