@@ -392,7 +392,7 @@ public class MarketDataPanel extends JPanel {
                 for (int i = 0; i < myRows.size(); i++) 
                 {
                     TopModel.MyCustomRow row = myRows.get(i); 
-                    jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"avg_volume\":" + row.m_avgVolume + ",\"low\":" + row.m_low + "\n },";
+                    jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"avg_volume\":" + row.m_avgVolume + ",\"low\":" + row.m_low + ",\"low_percent\":" + row.m_lowPercent + "\n },";
                 }
                 jsonOutput += "}";
             }
