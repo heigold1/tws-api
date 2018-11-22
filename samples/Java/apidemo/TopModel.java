@@ -87,7 +87,7 @@ public class TopModel extends AbstractTableModel {
 	}
 	
 	@Override public int getColumnCount() {
-		return 11;
+		return 12;
 	}
 	
 	@Override public String getColumnName(int col) {
@@ -103,6 +103,7 @@ public class TopModel extends AbstractTableModel {
 			case 8: return "Volume";
                         case 9: return "Low"; 
                         case 10: return "Avg Volume"; 
+                        case 11: return "Low Percent"; 
 			default: return null;
 		}
 	}
@@ -121,6 +122,7 @@ public class TopModel extends AbstractTableModel {
 			case 8: return Formats.fmt0( row.m_volume);
                         case 9: return fmt( row.m_low);
                         case 10: return Formats.fmt0( row.m_avgVolume);
+                        case 11: return row.lowPercent(); 
 			default: return null;
 		}
 	}
@@ -148,6 +150,7 @@ public class TopModel extends AbstractTableModel {
 		int m_volume;
                 double m_low; 
                 double m_avgVolume; 
+                
 		boolean m_frozen;
 		
 		TopRow( AbstractTableModel model, String description) {
@@ -157,6 +160,10 @@ public class TopModel extends AbstractTableModel {
 
 		public String change() {
 			return m_close == 0	? null : fmtPct( (m_last - m_close) / m_close);
+		}
+                
+		public String lowPercent() {
+			return m_close == 0	? null : fmtPct( (m_low - m_close) / m_close);
 		}
 
 		@Override public void tickPrice( NewTickType tickType, double price, int canAutoExecute) {
