@@ -199,12 +199,17 @@ public class MarketDataPanel extends JPanel {
 
                     try
                     {
-                        String str_change = row.change(); 
+                        String str_change = row.change();
                         str_change = str_change.replace("%", ""); 
                         str_change = str_change.replace("-", ""); 
                         float fl_change = Float.valueOf(str_change); 
+                        
+                        String str_lowPercent = row.lowPercent();
+                        str_lowPercent = str_lowPercent.replace("%", ""); 
+                        str_lowPercent = str_lowPercent.replace("-", ""); 
+                        float fl_lowPercent = Float.valueOf(str_lowPercent); 
 
-                        TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume); 
+                        TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
                         myRows.add(myRow);
                     }
                     catch(NullPointerException e) 
@@ -221,7 +226,7 @@ public class MarketDataPanel extends JPanel {
                 for (int i = 0; i < myRows.size(); i++) 
                 {
                     TopModel.MyCustomRow row = myRows.get(i); 
-                    jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"avg_volume\":" + row.m_avgVolume + ",\"low\":" + row.m_low + "\n },";
+                    jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"avg_volume\":" + row.m_avgVolume + ",\"low\":" + row.m_low + ",\"low_percent\":" + row.m_lowPercent + "\n },";
                 }
                  jsonOutput += "},";
             }
@@ -258,7 +263,12 @@ public class MarketDataPanel extends JPanel {
                         str_change = str_change.replace("-", ""); 
                         float fl_change = Float.valueOf(str_change); 
 
-                        TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume); 
+                        String str_lowPercent = row.lowPercent();
+                        str_lowPercent = str_lowPercent.replace("%", ""); 
+                        str_lowPercent = str_lowPercent.replace("-", ""); 
+                        float fl_lowPercent = Float.valueOf(str_lowPercent); 
+
+                        TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
                         myRows.add(myRow);
                     }
                     catch(NullPointerException e) 
@@ -298,7 +308,12 @@ public class MarketDataPanel extends JPanel {
                         str_change = str_change.replace("-", ""); 
                         float fl_change = Float.valueOf(str_change); 
 
-                        TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume); 
+                        String str_lowPercent = row.lowPercent();
+                        str_lowPercent = str_lowPercent.replace("%", ""); 
+                        str_lowPercent = str_lowPercent.replace("-", ""); 
+                        float fl_lowPercent = Float.valueOf(str_lowPercent); 
+
+                        TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
                         myRows.add(myRow);
                     }
                     catch(NullPointerException e) 
@@ -317,7 +332,7 @@ public class MarketDataPanel extends JPanel {
                     for (int i = 0; i < myRows.size(); i++) 
                     {
                         TopModel.MyCustomRow row = myRows.get(i); 
-                        jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"avg_volume\":" + row.m_avgVolume + ",\"low\":" + row.m_low + "\n },";
+                        jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"avg_volume\":" + row.m_avgVolume + ",\"low\":" + row.m_low + ",\"low_percent\":" + row.m_lowPercent + "\n },";
                     }
                     jsonOutput += "},";
                 }
@@ -355,7 +370,12 @@ public class MarketDataPanel extends JPanel {
                         str_change = str_change.replace("-", ""); 
                         float fl_change = Float.valueOf(str_change); 
 
-                        TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume); 
+                        String str_lowPercent = row.lowPercent();
+                        str_lowPercent = str_lowPercent.replace("%", ""); 
+                        str_lowPercent = str_lowPercent.replace("-", ""); 
+                        float fl_lowPercent = Float.valueOf(str_lowPercent); 
+
+                        TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
                         myRows.add(myRow);
                     }
                     catch(NullPointerException e) 

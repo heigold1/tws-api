@@ -226,14 +226,16 @@ public class TopModel extends AbstractTableModel {
             public int m_volume; 
             public double m_low; 
             public double m_avgVolume;
+            public double m_lowPercent; 
             
-            public MyCustomRow(String symbol, double last, double change, int volume, double low, double avgVolume){
+            public MyCustomRow(String symbol, double last, double change, int volume, double low, double avgVolume, double lowPercent){
                 m_symbol = symbol; 
                 m_last = last;
                 m_change = change;
                 m_volume = volume; 
                 m_low = low;
                 m_avgVolume = avgVolume; 
+                m_lowPercent = lowPercent;
             }
             
               private String name;
