@@ -179,7 +179,7 @@ public class MarketDataPanel extends JPanel {
 
 
             System.out.println("Inside printTabs,  about to grab STK.NASDAQ");
-            Tab nasdaqTab = hashList.get("STK.NASDAQ"); 
+            Tab nasdaqTab = hashList.get("STK.NASDAQ.SCM"); 
 
             try 
             {
@@ -238,7 +238,7 @@ public class MarketDataPanel extends JPanel {
             }
             catch(NullPointerException e)
             {
-                System.out.println("Inside printTabs,  null pointer when grabbing STK.NASDAQ");
+                System.out.println("Inside printTabs,  null pointer when grabbing STK.NASDAQ.SCM");
                 e.printStackTrace();
             } 
 
