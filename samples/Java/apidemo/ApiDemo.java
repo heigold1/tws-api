@@ -302,7 +302,7 @@ public class ApiDemo implements IConnectionHandler {
                                 {
                                   javax.swing.JOptionPane.showMessageDialog(p1, str_orderText + "\n\nPlacing buy stop order " + str_percentage, "Buy Stop Order", JOptionPane.NO_OPTION);
                                 }
-                                else if (fl_percentage < 14)
+                                else if (fl_percentage < 12)
                                 {
                                   javax.swing.JOptionPane.showMessageDialog(p1, str_orderText + "\n\nNOT placed, percentage is only " + str_percentage, "Order NOT Placed", JOptionPane.NO_OPTION);
                                   return;
