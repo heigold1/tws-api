@@ -215,9 +215,15 @@ public class ApiDemo implements IConnectionHandler {
                 // brent 
 		public final JTextField m_orderText = new JTextField(25);
                 JButton m_b1 = new JButton("Send Order");     
+                JButton m_b2 = new JButton("Fast 4%"); 
 		
                 private final JLabel m_status = new JLabel("Disconnected");
 		
+                public void sendOrder(double percentageProfit)
+                {
+                    System.out.println("inside sendOrder"); 
+                }
+                
 		public ConnectionPanel() {
 			HtmlButton connect = new HtmlButton("Connect") {
 				@Override public void actionPerformed() {
@@ -243,11 +249,12 @@ public class ApiDemo implements IConnectionHandler {
 //                        p1.add( "Order:", m_orderText);
 			
                         
+
+
                         m_b1.addActionListener(new java.awt.event.ActionListener()
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                               
                                 // grab the pasted order from the text box 
                                 String str_orderText = ""; 
                                 try
@@ -468,13 +475,261 @@ public class ApiDemo implements IConnectionHandler {
 
                                 javax.swing.JOptionPane.showMessageDialog(p1, str_orderText + "\n\nHas been placed successfully", "Order Placed", JOptionPane.NO_OPTION);
                                 
-                	    } // end of the click event handler
-
+                	    } // end of the click event handler for 
                         });                    
 
+                        m_b2.addActionListener(new java.awt.event.ActionListener()
+                	{
+                	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
+                    	    {
+                                // grab the pasted order from the text box 
+                                String str_orderText = ""; 
+                                try
+                                {
+                                    str_orderText = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor); 
+                                    System.out.println(""); 
+                                    System.out.println(str_orderText); 
+                                }
+                                catch(Exception e)
+                                {
+                                    // if any I/O error occurs
+                                    System.out.println(e.getMessage()); 
+                                    e.printStackTrace();
+                                }
+
+                                
+                                /*
+                                String str_orderText = m_orderText.getText().trim();
+                                
+                                System.out.println(""); 
+                                System.out.println(str_orderText);   */
+
+                                if (str_orderText.isEmpty())
+                                {
+                                    JOptionPane.showMessageDialog(p1, "The order string is empty");
+                                    return; 
+                                }
+
+                                String[] arr_orderParameters = str_orderText.split(" ");
+                                String str_symbol = arr_orderParameters[0];
+                                System.out.println("Symbol is " + str_symbol);
+                                
+                                String str_numShares = arr_orderParameters[2].replaceAll(",", "");
+                                int i_numShares = Integer.parseInt(str_numShares);
+                                if (i_numShares > 500000)
+                                {
+                                    i_numShares = 500000; 
+                                }
+                                System.out.println("Number of shares is " + i_numShares);
+
+                                String str_price = arr_orderParameters[3].replaceAll("\\$", "");
+                                double fl_price = Double.parseDouble(str_price); 
+                                System.out.println("Parent sell price is " + fl_price);
+                                
+                                String str_percentage = arr_orderParameters[4].replaceAll("\\(", "");
+                                str_percentage = str_percentage.replaceAll("\\)", "");
+                                str_percentage = str_percentage.replaceAll("\\%", "");
+                                double fl_percentage = Double.parseDouble(str_percentage); 
+                                System.out.println("Percentage is " + fl_percentage);
+
+                                if (fl_percentage < 0)
+                                {
+                                  javax.swing.JOptionPane.showMessageDialog(p1, str_orderText + "\n\nPlacing buy stop order " + str_percentage, "Buy Stop Order", JOptionPane.NO_OPTION);
+                                }
+                                else if (fl_percentage < 12)
+                                {
+                                  javax.swing.JOptionPane.showMessageDialog(p1, str_orderText + "\n\nNOT placed, percentage is only " + str_percentage, "Order NOT Placed", JOptionPane.NO_OPTION);
+                                  return;
+                                }
+
+                                // Order starts here                                 
+                                NewContract myContract = new NewContract();
+                                myContract.symbol(str_symbol); 
+                                myContract.secType(SecType.STK);
+                                myContract.exchange("SMART"); 
+                                myContract.primaryExch("ISLAND");
+                                myContract.currency("USD"); 
+                                NewOrder o = new NewOrder();
+
+                                
+// reqMktData
+
+                                
+                                o.account("U1203596"); 
+                                o.action(Action.BUY);
+
+                                if (fl_percentage < 0)
+                                {
+                                    o.orderType(OrderType.STP); 
+                                }
+                                else
+                                {
+                                    o.orderType(OrderType.LMT);                                     
+                                }
+
+                                o.lmtPrice(fl_price);
+                                o.totalQuantity(i_numShares);
+                                o.tif(TimeInForce.DAY);
+                                o.outsideRth(true);
+
+                                // grab the latest (max) order id
+                                int i_parentBuyOrderId = 0; 
+                                int i_childSellOrderId = 0;
+                                int i_childStopOrderId = 0;
+                                int i_nextOrderId = 0; 
+                                try
+                                {
+                                    // new input stream created
+                                    FileInputStream fis = new FileInputStream("C:\\TWS API\\DayTradeApp\\latestOrder.txt");
+                                    BufferedReader fisReader = new BufferedReader(new InputStreamReader(fis));
+
+                                    String str_latestOrderId = fisReader.readLine();
+                                    i_parentBuyOrderId = Integer.parseInt(str_latestOrderId);
+
+                                    System.out.println("The latest order id is " + i_parentBuyOrderId);
+                                    fis.close();
+                                }
+                                catch(Exception e)
+                                {
+                                    // if any I/O error occurs
+                                    System.out.println(e.getMessage()); 
+                                    e.printStackTrace();
+                                }
+
+                                o.orderId(i_parentBuyOrderId); 
+                                o.transmit(true);
+
+                                System.out.println("The NEXT parent buy order id is " + i_parentBuyOrderId);
+                                ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o); 
+                                System.out.println("You have just sent off the parent order");
+
+                                if (m_otc.isSelected() == false)
+                                {
+                                    // Limit sell stop order
+
+                                    i_childStopOrderId = i_parentBuyOrderId + 1; 
+
+                                    NewOrder oStop = new NewOrder();
+                                    oStop.action(Action.SELL);
+                                    oStop.orderType(OrderType.STP); 
+                                    double fl_childStopPrice = fl_price - 0.80*fl_price;
+                                    if (fl_childStopPrice > 1.00)
+                                    {
+                                        fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
+                                    }
+                                    else 
+                                    {
+                                        fl_childStopPrice = Double.parseDouble(String.format( "%.4f", fl_childStopPrice )); 
+                                    }  
+                                    System.out.println("Child stop order price is " + fl_childStopPrice);
+                                    oStop.auxPrice(fl_childStopPrice);
+                                    oStop.totalQuantity(i_numShares);
+                                    oStop.tif(TimeInForce.DAY);
+                                    oStop.outsideRth(true);
+                                    oStop.orderId(i_childStopOrderId);
+                                    oStop.parentId(i_parentBuyOrderId); 
+                                    oStop.transmit(true);
+
+                                    System.out.println("The NEXT child stop order id is " + i_childStopOrderId);
+                                    ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oStop); 
+                                    System.out.println("You have just sent off the child stop order");
+
+                                    // Limit sell bracket order
+
+                                    i_childSellOrderId = i_parentBuyOrderId + 2; 
+
+                                    NewOrder oSell = new NewOrder();
+                                    oSell.action(Action.SELL);
+                                    oSell.orderType(OrderType.LMT); 
+                                    double fl_childSellPrice = fl_price + 0.04*fl_price;
+                                    if (fl_childSellPrice > 1.00)
+                                    {
+                                        fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
+                                    }
+                                    else 
+                                    {
+                                        fl_childSellPrice = Double.parseDouble(String.format( "%.4f", fl_childSellPrice )); 
+                                    }  
+                                    System.out.println("Child sell price is " + fl_childSellPrice);
+                                    oSell.lmtPrice(fl_childSellPrice);
+                                    oSell.totalQuantity(i_numShares);
+                                    oSell.tif(TimeInForce.DAY);
+                                    oSell.outsideRth(true);
+                                    oSell.orderId(i_childSellOrderId); 
+                                    oSell.parentId(i_parentBuyOrderId);
+                                    oSell.transmit(true);
+
+                                    System.out.println("The NEXT child sell order id is " + i_childSellOrderId);
+                                    ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oSell); 
+                                    System.out.println("You have just sent off the child sell order");
+
+                                    i_nextOrderId = i_parentBuyOrderId + 3;
+                                }
+                                else 
+                                {
+                                    i_nextOrderId = i_parentBuyOrderId + 1; 
+                                }    
+
+                                m_otc.setSelected(false); 
+                                
+                                // now we write the next order ID to the output file
+                                try
+                                {
+                                    // new input stream created
+                                    FileOutputStream fos = new FileOutputStream("C:\\TWS API\\DayTradeApp\\latestOrder.txt");
+
+                                    // convert next orderId to string 
+                                    StringBuilder sb = new StringBuilder();
+                                    sb.append("");
+                                    sb.append(i_nextOrderId);
+                                    String str_nextOrderId = sb.toString();
+                                    byte[] arr_nextOrderId = str_nextOrderId.getBytes();
+                                    
+                                    // byte[] arr_outputString = 
+                                    fos.write(arr_nextOrderId);
+                                    fos.flush();
+                                    fos.close();
+                                }
+                                catch(Exception e)
+                                {
+                                    // if any I/O error occurs
+                                    System.out.println(e.getMessage()); 
+                                    e.printStackTrace();
+                                }
+
+                                // Clear the order text box
+                                m_orderText.setText(""); 
+
+                                javax.swing.JOptionPane.showMessageDialog(p1, str_orderText + "\n\nHas been placed successfully", "Order Placed", JOptionPane.NO_OPTION);
+                                
+                	    } // end of the click event handler for 
+                        });                    
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                         p1.add( "Send:", m_b1);
 
 			JPanel p2 = new VerticalPanel();
+                        p2.add(m_b2); 
                         p2.add(m_otc); 
                         p2.add(m_multipleFive); 
 			p2.add( connect);
