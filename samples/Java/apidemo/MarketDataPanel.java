@@ -996,7 +996,7 @@ public class MarketDataPanel extends JPanel {
 			sub.instrument( m_instrument.getSelectedItem().toString() );
 			sub.locationCode( m_location.getText() );
 			sub.stockTypeFilter( m_stockType.getSelectedItem().toString() );
-                        sub.belowPrice(12.50);
+                        sub.belowPrice(13.50);
                         sub.abovePrice(0.0015);
                         sub.aboveVolume(10000);
 			

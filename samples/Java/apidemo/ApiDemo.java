@@ -4,7 +4,7 @@
 package apidemo;
 
 
-import java.awt.BorderLayout;
+import java.awt.BorderLayout; 
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -414,7 +414,7 @@ public class ApiDemo implements IConnectionHandler {
                                     NewOrder oSell = new NewOrder();
                                     oSell.action(Action.SELL);
                                     oSell.orderType(OrderType.LMT); 
-                                    double fl_childSellPrice = fl_price + 2.00*fl_price;
+                                    double fl_childSellPrice = fl_price + 9.00*fl_price;
                                     if (fl_childSellPrice > 1.00)
                                     {
                                         fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
