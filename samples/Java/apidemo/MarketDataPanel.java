@@ -178,12 +178,12 @@ public class MarketDataPanel extends JPanel {
 // ******* NASDAQ **********************************************************************
 
 
-            System.out.println("Inside printTabs,  about to grab STK.NASDAQ");
-            Tab nasdaqTab = hashList.get("STK.NASDAQ.SCM"); 
+            System.out.println("Inside printTabs,  about to grab STK.NASDAQ.SCM");
+            Tab nasdaqTabSCM = hashList.get("STK.NASDAQ.SCM"); 
 
             try 
             {
-                childComponent = (ScannerResultsPanel)nasdaqTab.getComponent(); 
+                childComponent = (ScannerResultsPanel)nasdaqTabSCM.getComponent(); 
                 model = childComponent.getModel();
 
                 rows = model.getRows(); 
@@ -196,7 +196,65 @@ public class MarketDataPanel extends JPanel {
 
                     String str_description = row.m_description; 
                     String str_symbol = str_description.replace(" STK SMART", ""); 
+                    str_symbol = str_symbol.replace(" WI", ""); 
                     str_symbol = str_symbol.trim(); 
+                    str_symbol = str_symbol.replace(" ", "."); 
+
+                    try
+                    {
+                        String str_change = row.change();
+                        str_change = str_change.replace("%", ""); 
+                        negativeSignCount = str_change.length() - str_change.replace("-", "").length();
+
+                        if (negativeSignCount > 0)
+                        {
+                            str_change = str_change.replace("-", ""); 
+                            float fl_change = Float.valueOf(str_change); 
+
+                            String str_lowPercent = row.lowPercent();
+                            str_lowPercent = str_lowPercent.replace("%", ""); 
+                            str_lowPercent = str_lowPercent.replace("-", ""); 
+                            float fl_lowPercent = Float.valueOf(str_lowPercent); 
+
+                            TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
+                            myRows.add(myRow);
+                        }
+                    }
+                    catch(NullPointerException e) 
+                    { 
+                        System.out.println("NullPointerException Caught when accessing str_change");
+                        e.printStackTrace();
+                    } 
+                }
+            }
+            catch(NullPointerException e)
+            {
+                System.out.println("Inside printTabs,  null pointer when grabbing STK.NASDAQ.SCM");
+                e.printStackTrace();
+            } 
+
+// ******* NASDAQ.NMS *******************************************************************
+
+            System.out.println("Inside printTabs,  about to grab STK.NASDAQ.NMS");
+            Tab nasdaqTabNMS = hashList.get("STK.NASDAQ.NMS"); 
+
+            try 
+            {
+                childComponent = (ScannerResultsPanel)nasdaqTabNMS.getComponent(); 
+                model = childComponent.getModel();
+
+                rows = model.getRows(); 
+
+                // first create the array that will be sorted
+                for (int i = rows.size() - 1; i >= 0; i--) 
+                {
+                    TopModel.TopRow row = rows.get(i); 
+
+                    String str_description = row.m_description; 
+                    String str_symbol = str_description.replace(" STK SMART", ""); 
+                    str_symbol = str_symbol.replace(" WI", ""); 
+                    str_symbol = str_symbol.trim(); 
+                    str_symbol = str_symbol.replace(" ", "."); 
 
                     try
                     {
@@ -225,23 +283,27 @@ public class MarketDataPanel extends JPanel {
                     } 
                 }
 
-                myRows.sort(new OrderByComparator()); 
-                totalRows+= myRows.size(); 
-
-                jsonOutput += "\""+ "NASDAQ" + "\":  \n\n { \n"; 
-                for (int i = 0; i < myRows.size(); i++) 
+                if ((nasdaqTabSCM != null) || (nasdaqTabNMS != null))
                 {
-                    TopModel.MyCustomRow row = myRows.get(i); 
-                    jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"avg_volume\":" + row.m_avgVolume + ",\"low\":" + row.m_low + ",\"low_percent\":" + row.m_lowPercent + "\n },";
+                    myRows.sort(new OrderByComparator()); 
+                    totalRows+= myRows.size(); 
+
+                    jsonOutput += "\""+ "NASDAQ" + "\":  \n\n { \n"; 
+                    for (int i = 0; i < myRows.size(); i++) 
+                    {
+                        TopModel.MyCustomRow row = myRows.get(i); 
+                        jsonOutput += "\"" + row.m_symbol + "\":{\"last\":" + row.m_last + ",\"change\":" + row.m_change + ",\"volume\":" + row.m_volume + ",\"avg_volume\":" + row.m_avgVolume + ",\"low\":" + row.m_low + ",\"low_percent\":" + row.m_lowPercent + "\n },";
+                    }
+                    jsonOutput += "},";
                 }
-                 jsonOutput += "},";
             }
             catch(NullPointerException e)
             {
-                System.out.println("Inside printTabs,  null pointer when grabbing STK.NASDAQ.SCM");
+                System.out.println("Inside printTabs,  null pointer when grabbing STK.NASDAQ.NMS");
                 e.printStackTrace();
             } 
 
+            
 // **** NYSE and AMEX *****************************************************************************
 
             System.out.println("Inside printTabs,  about to grab STK.NYSE");
@@ -260,7 +322,9 @@ public class MarketDataPanel extends JPanel {
                     TopModel.TopRow row = rows.get(i); 
                     String str_description = row.m_description; 
                     String str_symbol = str_description.replace(" STK SMART", ""); 
+                    str_symbol = str_symbol.replace(" WI", ""); 
                     str_symbol = str_symbol.trim(); 
+                    str_symbol = str_symbol.replace(" ", "."); 
                     
                     try
                     {
@@ -311,7 +375,9 @@ public class MarketDataPanel extends JPanel {
 
                     String str_description = row.m_description; 
                     String str_symbol = str_description.replace(" STK SMART", ""); 
+                    str_symbol = str_symbol.replace(" WI", ""); 
                     str_symbol = str_symbol.trim(); 
+                    str_symbol = str_symbol.replace(" ", "."); 
                     
                     try
                     {
@@ -491,7 +557,7 @@ public class MarketDataPanel extends JPanel {
                 e.printStackTrace();
             } 
 
-            if  (totalRows > 150)
+            if  (totalRows > 160)
             {
                 HashMap marketDataHashMap = m_requestPanel.getHashMap(); 
                 Tab scannerTab = (Tab) marketDataHashMap.get("market-scanner"); 

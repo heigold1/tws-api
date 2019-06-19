@@ -285,7 +285,7 @@ public class ApiDemo implements IConnectionHandler {
 
                                 String[] arr_orderParameters = str_orderText.split(" ");
                                 String str_symbol = arr_orderParameters[0];
-                                System.out.println("Symbol is " + str_symbol);
+                                str_symbol = str_symbol.replaceAll("\\.", " ");
                                 
                                 String str_numShares = arr_orderParameters[2].replaceAll(",", "");
                                 int i_numShares = Integer.parseInt(str_numShares);
@@ -512,6 +512,9 @@ public class ApiDemo implements IConnectionHandler {
 
                                 String[] arr_orderParameters = str_orderText.split(" ");
                                 String str_symbol = arr_orderParameters[0];
+                                str_symbol = str_symbol.replaceAll("\\.", " ");
+                                
+                                
                                 System.out.println("Symbol is " + str_symbol);
                                 
                                 String str_numShares = arr_orderParameters[2].replaceAll(",", "");
