@@ -150,7 +150,7 @@ public class MarketDataPanel extends JPanel {
         {
 
             HashMap<String,Tab> hashList = m_resultsPanel.getHashMap(); 
-            String fileName = "percent-decliners.json";
+            String fileName = "decliners.json";
             String filePath = "C:\\Xampp\\htdocs\\screener\\";
             String fullFilePath = filePath + fileName; 
             
@@ -1062,7 +1062,7 @@ public class MarketDataPanel extends JPanel {
 			sub.instrument( m_instrument.getSelectedItem().toString() );
 			sub.locationCode( m_location.getText() );
 			sub.stockTypeFilter( m_stockType.getSelectedItem().toString() );
-                        sub.belowPrice(13.50);
+                        sub.belowPrice(15.50);
                         sub.abovePrice(0.0015);
                         sub.aboveVolume(10000);
 			
