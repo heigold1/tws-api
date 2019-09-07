@@ -1018,10 +1018,17 @@ public class MarketDataPanel extends JPanel {
 				}
 			};
 			
+                        HtmlButton all = new HtmlButton( "All") {
+				@Override protected void actionPerformed() {
+					subscribeAll();
+				}
+			};
+                        
 			VerticalPanel paramsPanel = new VerticalPanel();
 			paramsPanel.add( "Scan code", m_scanCode);
 			paramsPanel.add( "Instrument", m_instrument);
 			paramsPanel.add( "Location", m_location, Box.createHorizontalStrut(10), go);
+                        paramsPanel.add( "Location", m_location, Box.createHorizontalStrut(10), all);
 			paramsPanel.add( "Stock type", m_stockType);
 			paramsPanel.add( "Num rows", m_numRows);
 
@@ -1076,6 +1083,93 @@ public class MarketDataPanel extends JPanel {
                         m_subscriptionResultsHash.put(m_location.getText(), subscriptionResultsPanel);
 		}
 
+                protected void subscribeAll() {
+
+
+                        int reqIdPink;
+			ScannerSubscription subPink = new ScannerSubscription();
+			subPink.numberOfRows( 50 );
+			subPink.scanCode( "TOP_PERC_LOSE" );
+			subPink.instrument( "STK" );
+			subPink.locationCode( "STK.PINK" );
+			subPink.stockTypeFilter( "ALL" );
+                        subPink.belowPrice(23.50);
+                        subPink.abovePrice(0.0015);
+                        subPink.aboveVolume(10000);
+			ScannerResultsPanel resultsPanelPink = new ScannerResultsPanel();
+            		m_resultsPanel.addTab(m_location.getText(), resultsPanelPink, true, true);
+			reqIdPink = ApiDemo.INSTANCE.controller().reqScannerSubscription( subPink, resultsPanelPink);
+                        SubscriptionResultsPanel subscriptionResultsPanelPink = new SubscriptionResultsPanel(reqIdPink, subPink, resultsPanelPink); 
+                        m_subscriptionResultsHash.put(m_location.getText(), subscriptionResultsPanelPink);
+
+                    
+                        int reqIdNasdaqSCM; 
+			ScannerSubscription subNasdqaSCM = new ScannerSubscription();
+			subNasdqaSCM.numberOfRows( 20 );
+			subNasdqaSCM.scanCode( "TOP_PERC_LOSE" );
+			subNasdqaSCM.instrument( "STK" );
+			subNasdqaSCM.locationCode( "STK.NASDAQ.SCM" );
+			subNasdqaSCM.stockTypeFilter( "ALL" );
+                        subNasdqaSCM.belowPrice(23.50);
+                        subNasdqaSCM.abovePrice(0.0015);
+                        subNasdqaSCM.aboveVolume(10000);
+			ScannerResultsPanel resultsPanelNasdaqSCM = new ScannerResultsPanel();
+            		m_resultsPanel.addTab("STK.NASDAQ.SCM", resultsPanelNasdaqSCM, true, true);
+			reqIdNasdaqSCM = ApiDemo.INSTANCE.controller().reqScannerSubscription( subNasdqaSCM, resultsPanelNasdaqSCM);
+                        SubscriptionResultsPanel subscriptionResultsPanelNasdaqSCM = new SubscriptionResultsPanel(reqIdNasdaqSCM, subNasdqaSCM, resultsPanelNasdaqSCM); 
+                        m_subscriptionResultsHash.put("STK.NASDAQ.SCM", subscriptionResultsPanelNasdaqSCM);
+
+                        int reqIdNasdaqNMS; 
+			ScannerSubscription subNasdqaNMS = new ScannerSubscription();
+			subNasdqaNMS.numberOfRows( 20 );
+			subNasdqaNMS.scanCode( "TOP_PERC_LOSE" );
+			subNasdqaNMS.instrument( "STK" );
+			subNasdqaNMS.locationCode( "STK.NASDAQ.NMS" );
+			subNasdqaNMS.stockTypeFilter( "ALL" );
+                        subNasdqaNMS.belowPrice(23.50);
+                        subNasdqaNMS.abovePrice(0.0015);
+                        subNasdqaNMS.aboveVolume(10000);
+			ScannerResultsPanel resultsPanelNasdaqNMS = new ScannerResultsPanel();
+            		m_resultsPanel.addTab("STK.NASDAQ.NMS", resultsPanelNasdaqNMS, true, true);
+			reqIdNasdaqNMS = ApiDemo.INSTANCE.controller().reqScannerSubscription( subNasdqaNMS, resultsPanelNasdaqNMS);
+                        SubscriptionResultsPanel subscriptionResultsPanelNasdaqNMS = new SubscriptionResultsPanel(reqIdNasdaqNMS, subNasdqaNMS, resultsPanelNasdaqNMS); 
+                        m_subscriptionResultsHash.put("STK.NASDAQ.NMS", subscriptionResultsPanelNasdaqNMS);
+                        
+                        int reqIdNYSE; 
+			ScannerSubscription subNYSE = new ScannerSubscription();
+			subNYSE.numberOfRows( 20 );
+			subNYSE.scanCode( "TOP_PERC_LOSE" );
+			subNYSE.instrument( "STK" );
+			subNYSE.locationCode( "STK.NYSE" );
+			subNYSE.stockTypeFilter( "ALL" );
+                        subNYSE.belowPrice(23.50);
+                        subNYSE.abovePrice(0.0015);
+                        subNYSE.aboveVolume(10000);
+			ScannerResultsPanel resultsPanelNYSE = new ScannerResultsPanel();
+            		m_resultsPanel.addTab("STK.NYSE", resultsPanelNYSE, true, true);
+			reqIdNYSE = ApiDemo.INSTANCE.controller().reqScannerSubscription( subNYSE, resultsPanelNYSE);
+                        SubscriptionResultsPanel subscriptionResultsPanelNYSE = new SubscriptionResultsPanel(reqIdNYSE, subNYSE, resultsPanelNYSE); 
+                        m_subscriptionResultsHash.put("STK.NYSE", subscriptionResultsPanelNYSE);
+                        
+                        int reqIdAMEX; 
+			ScannerSubscription subAMEX = new ScannerSubscription();
+			subAMEX.numberOfRows( 20 );
+			subAMEX.scanCode( "TOP_PERC_LOSE" );
+			subAMEX.instrument( "STK" );
+			subAMEX.locationCode( "STK.AMEX" );
+			subAMEX.stockTypeFilter( "ALL" );
+                        subAMEX.belowPrice(23.50);
+                        subAMEX.abovePrice(0.0015);
+                        subAMEX.aboveVolume(10000);
+			ScannerResultsPanel resultsPanelAMEX = new ScannerResultsPanel();
+            		m_resultsPanel.addTab("STK.AMEX", resultsPanelAMEX, true, true);
+			reqIdAMEX = ApiDemo.INSTANCE.controller().reqScannerSubscription( subAMEX, resultsPanelAMEX);
+                        SubscriptionResultsPanel subscriptionResultsPanelAMEX = new SubscriptionResultsPanel(reqIdAMEX, subAMEX, resultsPanelAMEX); 
+                        m_subscriptionResultsHash.put("STK.AMEX", subscriptionResultsPanelAMEX);
+
+                }
+                
+                
                 public void reSubscribeTabs(){
                     HashMap<String,Tab> hashList = m_resultsPanel.getHashMap();
 
