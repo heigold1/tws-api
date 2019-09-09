@@ -1018,7 +1018,7 @@ public class MarketDataPanel extends JPanel {
 				}
 			};
 			
-                        HtmlButton all = new HtmlButton( "All") {
+                        HtmlButton all = new HtmlButton( "Subscribe All") {
 				@Override protected void actionPerformed() {
 					subscribeAll();
 				}
@@ -1027,8 +1027,8 @@ public class MarketDataPanel extends JPanel {
 			VerticalPanel paramsPanel = new VerticalPanel();
 			paramsPanel.add( "Scan code", m_scanCode);
 			paramsPanel.add( "Instrument", m_instrument);
-			paramsPanel.add( "Location", m_location, Box.createHorizontalStrut(10), go);
-                        paramsPanel.add( "Location", m_location, Box.createHorizontalStrut(10), all);
+			paramsPanel.add( "Location", m_location, Box.createHorizontalStrut(10), go, all);
+//                        paramsPanel.add( "Subscribe All", m_location, Box.createHorizontalStrut(10), all);
 			paramsPanel.add( "Stock type", m_stockType);
 			paramsPanel.add( "Num rows", m_numRows);
 
