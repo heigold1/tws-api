@@ -3,17 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/TWS%20API/source/JavaClient/com/ib/client/ScannerSubscription.java</file>
-            <file>file:/C:/TWS%20API/source/JavaClient/com/ib/client/EClientSocket.java</file>
-            <file>file:/C:/TWS%20API/source/JavaClient/com/ib/client/EWrapper.java</file>
             <file>file:/C:/TWS%20API/samples/Java/apidemo/TopModel.java</file>
-            <file>file:/C:/TWS%20API/source/JavaClient/com/ib/client/TickType.java</file>
-            <file>file:/C:/TWS%20API/source/JavaClient/com/ib/controller/NewTickType.java</file>
-            <file>file:/C:/TWS%20API/samples/Java/apidemo/ComboPanel.java</file>
-            <file>file:/C:/TWS%20API/samples/Java/apidemo/util/SubscriptionResultsPanel.java</file>
-            <file>file:/C:/TWS%20API/samples/Java/apidemo/util/NewTabbedPanel.java</file>
-            <file>file:/C:/TWS%20API/samples/Java/apidemo/ApiDemo.java</file>
-            <file>file:/C:/TWS%20API/samples/Java/apidemo/MarketDataPanel.java</file>
         </group>
     </open-files>
 </project-private>
