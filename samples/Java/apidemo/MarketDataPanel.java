@@ -142,7 +142,7 @@ public class MarketDataPanel extends JPanel {
 		add( m_requestPanel, BorderLayout.NORTH);
 		add( m_resultsPanel);
                 
-                myTimer.scheduleAtFixedRate(task, 50000, 4000);
+                myTimer.scheduleAtFixedRate(task, 10000, 4000);
                 
 	}
 
