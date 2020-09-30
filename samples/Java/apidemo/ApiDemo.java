@@ -215,7 +215,7 @@ public class ApiDemo implements IConnectionHandler {
                 // brent 
 		public final JTextField m_orderText = new JTextField(25);
                 JButton m_b1 = new JButton("Send Order");     
-                JButton m_b323 = new JButton("3.23%");     
+                JButton m_b34 = new JButton("3.4%");     
                 JButton m_b2 = new JButton("4.2%"); 
                 JButton m_b3 = new JButton("5%"); 
                 JButton m_b315 = new JButton("5.15%"); 
@@ -479,8 +479,8 @@ public class ApiDemo implements IConnectionHandler {
                         });                    
 
 
-                        // Take fast 3.2% 
-                        m_b323.addActionListener(new java.awt.event.ActionListener()
+                        // Take fast 3.4% 
+                        m_b34.addActionListener(new java.awt.event.ActionListener()
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
@@ -644,7 +644,8 @@ public class ApiDemo implements IConnectionHandler {
                                 NewOrder oSell = new NewOrder();
                                 oSell.action(Action.SELL);
                                 oSell.orderType(OrderType.LMT); 
-                                double fl_childSellPrice = fl_price + 0.0323*fl_price;
+
+                                double fl_childSellPrice = fl_price + 0.034*fl_price;
                                 if (fl_childSellPrice > 1.00)
                                 {
                                     fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
@@ -700,7 +701,7 @@ public class ApiDemo implements IConnectionHandler {
                                 javax.swing.JOptionPane.showMessageDialog(p1, str_orderText + "\n\nHas been placed successfully", "Order Placed", JOptionPane.NO_OPTION);
                                 
                 	    } 
-                        });  // end of the click event handler for "Fast 3.25%" 
+                        });  // end of the click event handler for "Fast 3.4%" 
 
                         
                         // Take fast 4.2% 
@@ -3384,7 +3385,7 @@ public class ApiDemo implements IConnectionHandler {
 
                         
                         p1.add("Send:", m_b1);
-                        p1.add("Send:", m_b323); 
+                        p1.add("Send:", m_b34); 
                         p1.add("Send:", m_b2); 
                         p1.add("Send:", m_b3); 
                         p1.add("Send:", m_b315);
