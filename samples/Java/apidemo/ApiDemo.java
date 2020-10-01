@@ -215,11 +215,11 @@ public class ApiDemo implements IConnectionHandler {
                 // brent 
 		public final JTextField m_orderText = new JTextField(25);
                 JButton m_b1 = new JButton("Send Order");     
-                JButton m_b34 = new JButton("3.4%");     
+                JButton m_b35 = new JButton("3.5%");     
                 JButton m_b2 = new JButton("4.2%"); 
                 JButton m_b3 = new JButton("5%"); 
-                JButton m_b315 = new JButton("5.15%"); 
-                JButton m_b35 = new JButton("5.5%"); 
+                JButton m_b515 = new JButton("5.15%"); 
+                JButton m_b55 = new JButton("5.5%"); 
                 JButton m_b4 = new JButton("6%");                 
                 JButton m_b5 = new JButton("7%");                 
                 JButton m_b6 = new JButton("8%");
@@ -479,8 +479,8 @@ public class ApiDemo implements IConnectionHandler {
                         });                    
 
 
-                        // Take fast 3.4% 
-                        m_b34.addActionListener(new java.awt.event.ActionListener()
+                        // Take fast 3.5% 
+                        m_b35.addActionListener(new java.awt.event.ActionListener()
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
@@ -645,7 +645,7 @@ public class ApiDemo implements IConnectionHandler {
                                 oSell.action(Action.SELL);
                                 oSell.orderType(OrderType.LMT); 
 
-                                double fl_childSellPrice = fl_price + 0.034*fl_price;
+                                double fl_childSellPrice = fl_price + 0.035*fl_price;
                                 if (fl_childSellPrice > 1.00)
                                 {
                                     fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
@@ -701,7 +701,7 @@ public class ApiDemo implements IConnectionHandler {
                                 javax.swing.JOptionPane.showMessageDialog(p1, str_orderText + "\n\nHas been placed successfully", "Order Placed", JOptionPane.NO_OPTION);
                                 
                 	    } 
-                        });  // end of the click event handler for "Fast 3.4%" 
+                        });  // end of the click event handler for "Fast 3.5%" 
 
                         
                         // Take fast 4.2% 
@@ -1152,7 +1152,7 @@ public class ApiDemo implements IConnectionHandler {
                         
                         
                         // Take fast 5.15% 
-                        m_b315.addActionListener(new java.awt.event.ActionListener()
+                        m_b515.addActionListener(new java.awt.event.ActionListener()
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
@@ -1377,7 +1377,7 @@ public class ApiDemo implements IConnectionHandler {
                         
 
                         // Take fast 5.5% 
-                        m_b35.addActionListener(new java.awt.event.ActionListener()
+                        m_b55.addActionListener(new java.awt.event.ActionListener()
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
@@ -3385,11 +3385,11 @@ public class ApiDemo implements IConnectionHandler {
 
                         
                         p1.add("Send:", m_b1);
-                        p1.add("Send:", m_b34); 
+                        p1.add("Send:", m_b35); 
                         p1.add("Send:", m_b2); 
                         p1.add("Send:", m_b3); 
-                        p1.add("Send:", m_b315);
-                        p1.add("Send:", m_b35); 
+                        p1.add("Send:", m_b515);
+                        p1.add("Send:", m_b55); 
                         p1.add("Send:", m_b4); 
                         p1.add("Send:", m_b5); 
                         p1.add("Send:", m_b6); 
