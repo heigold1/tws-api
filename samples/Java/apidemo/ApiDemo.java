@@ -228,6 +228,7 @@ public class ApiDemo implements IConnectionHandler {
                 JButton m_b9 = new JButton("11%");                 
                 JButton m_b10 = new JButton("12%");                 
                 JButton m_b11 = new JButton("13%");
+                JCheckBox m_bracketOrderOnly = new JCheckBox("Bracket only"); 
 		
                 private final JLabel m_status = new JLabel("Disconnected");
 		
@@ -333,10 +334,6 @@ public class ApiDemo implements IConnectionHandler {
                                 myContract.currency("USD"); 
                                 NewOrder o = new NewOrder();
 
-                                
-// reqMktData
-
-                                
                                 o.account("U1203596"); 
                                 o.action(Action.BUY);
 
@@ -379,6 +376,7 @@ public class ApiDemo implements IConnectionHandler {
                                 }
 
                                 o.orderId(i_parentBuyOrderId); 
+                    
                                 o.transmit(true);
 
                                 System.out.println("The NEXT parent buy order id is " + i_parentBuyOrderId);
@@ -554,12 +552,9 @@ public class ApiDemo implements IConnectionHandler {
                                 myContract.exchange("SMART"); 
                                 myContract.primaryExch("ISLAND");
                                 myContract.currency("USD"); 
+                                
+                                
                                 NewOrder o = new NewOrder();
-
-                                
-// reqMktData
-
-                                
                                 o.account("U1203596"); 
                                 o.action(Action.BUY);
 
@@ -605,6 +600,25 @@ public class ApiDemo implements IConnectionHandler {
                                 o.transmit(true);
 
                                 System.out.println("The NEXT parent buy order id is " + i_parentBuyOrderId);
+
+
+
+System.out.println("About to check for checkbox value");           
+
+if (m_bracketOrderOnly.isSelected()  )
+{
+    System.out.println("Selected");
+}else
+{
+    System.out.println("Not Selected");
+}
+
+/* 
+System.exit(0); 
+*/
+            
+                                
+                                
                                 ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o); 
                                 System.out.println("You have just sent off the parent order");
 
@@ -3397,14 +3411,15 @@ public class ApiDemo implements IConnectionHandler {
                         p1.add("Send:", m_b8); 
                         p1.add("Send:", m_b9); 
                         p1.add("Send:", m_b10); 
-                        p1.add("Send:", m_b11);                         
-                        
+                        p1.add("Send:", m_b11);
+                        p1.add("", m_bracketOrderOnly); 
+
 			JPanel p2 = new VerticalPanel();
                         // p2.add(m_b2); 
 			p2.add( connect);
 			p2.add( disconnect);
 			p2.add( Box.createVerticalStrut(20));
-			
+
 			JPanel p3 = new VerticalPanel();
 			p3.setBorder( new EmptyBorder( 20, 0, 0, 0));
 			p3.add( "Connection status: ", m_status);

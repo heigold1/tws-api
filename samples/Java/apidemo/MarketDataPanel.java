@@ -164,15 +164,6 @@ public class MarketDataPanel extends JPanel {
             int totalRows = 0;
             int negativeSignCount = 0; 
 
-            try{
-                writer = new FileWriter(fullFilePath);
-            }
-            catch(IOException e)
-            {
-                System.out.println("Inside printTabs, something went wrong in instantiating the file writer");
-                e.printStackTrace();
-            } 
-
             jsonOutput += "{"; 
 
 // ******* NASDAQ **********************************************************************
@@ -545,6 +536,15 @@ public class MarketDataPanel extends JPanel {
             jsonOutput = jsonOutput.replace("},}", "}}");
             // need this a second time 
             jsonOutput = jsonOutput.replace("},}", "}}");
+
+            try{
+                writer = new FileWriter(fullFilePath);
+            }
+            catch(IOException e)
+            {
+                System.out.println("Inside printTabs, something went wrong in instantiating the file writer");
+                e.printStackTrace();
+            } 
 
             try{
                 writer.append(jsonOutput);
