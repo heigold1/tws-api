@@ -62,6 +62,9 @@ import com.ib.controller.ApiController.ITimeHandler;
 import com.ib.controller.Formats;
 import com.ib.controller.Types.NewsType;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class ApiDemo implements IConnectionHandler {
 	static { NewLookAndFeel.register(); }
 	static ApiDemo INSTANCE = new ApiDemo();
@@ -230,8 +233,8 @@ public class ApiDemo implements IConnectionHandler {
                 JButton m_b11 = new JButton("13%");
                 JCheckBox m_bracketOrderOnly = new JCheckBox("Bracket only"); 
 		
-                JTextField m_profitTakerHighRisk = new JTextField(15);
-                JTextField m_profitTakerNonHighRisk = new JTextField(15);
+                JTextField m_profitTakerHighRisk = new JTextField("3.5", 15);
+                JTextField m_profitTakerNonHighRisk = new JTextField("4.2", 15);
                 JButton m_processMultipleOrders = new JButton("Process Multiple Orders"); 
                 
                 public JTextArea m_multipleOrders = new JTextArea(20,40); 
@@ -3404,29 +3407,199 @@ System.exit(0);
                         });  // end of the click event handler for "Fast 13%"  
 
                         
-                        
+                        // grab the lines of orders from the text area and parse them out into orders.
                         m_processMultipleOrders.addActionListener(new java.awt.event.ActionListener()
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
                                 System.out.println("Inside process multiple orders");
                                 String str_profitTakerHighRisk = m_profitTakerHighRisk.getText(); 
+                                Double fl_profitTakerHighRisk = Double.parseDouble(str_profitTakerHighRisk)/100;
                                 String str_profitTakerNonHighRisk = m_profitTakerNonHighRisk.getText();
+                                Double fl_profitTakerNonHighRisk = Double.parseDouble(str_profitTakerNonHighRisk)/100;
                                 System.out.println("High risk is " + str_profitTakerHighRisk); 
                                 System.out.println("Non high risk is " + str_profitTakerNonHighRisk);
-                                
-                                for (String line : m_multipleOrders.getText().split("\\n")){
-                                    // doStuffWithLine(line);
-                                    System.out.println("Line is: " + line);  
+
+                                // set the order id numbers
+                                int i_parentBuyOrderId = 0; 
+                                int i_childSellOrderId = 0;
+                                int i_childStopOrderId = 0;
+                                int i_nextOrderId = 0; 
+                                try
+                                {
+                                    // new input stream created
+                                    FileInputStream fis = new FileInputStream("C:\\TWS API\\DayTradeApp\\latestOrder.txt");
+                                    BufferedReader fisReader = new BufferedReader(new InputStreamReader(fis));
+
+                                    String str_latestOrderId = fisReader.readLine();
+                                    i_parentBuyOrderId = Integer.parseInt(str_latestOrderId);
+
+                                    System.out.println("The latest order id is " + i_parentBuyOrderId);
+                                    fis.close();
                                 }
+                                catch(Exception e)
+                                {
+                                    // if any I/O error occurs
+                                    System.out.println(e.getMessage()); 
+                                    e.printStackTrace();
+                                }
+                                // end of set the order id numbers
+
+                                // loop through the order strings and place the orders
+                                for (String line : m_multipleOrders.getText().split("\\n")){
+
+                                    System.out.println("line.trim() is: *" + line.trim() + "*"); 
+
+                                    String[] arr_orderParameters = line.split(" ");
+                                    
+                                    try
+                                    {
+                                        // Parse out the order parameters
+                                        String str_symbol = arr_orderParameters[0];
+                                        String str_numShares = arr_orderParameters[1];
+                                        str_numShares = str_numShares.replaceAll("\\,", ""); 
+                                        Integer i_numShares = Integer.parseInt(str_numShares);
+                                        String str_price = arr_orderParameters[2]; 
+                                        str_price = str_price.replaceAll("\\$", ""); 
+                                        
+                                        Double fl_price = Double.parseDouble(str_price);
+
+                                        String str_highRisk = arr_orderParameters[3];
+                                        System.out.println("Order is: " + str_symbol + " " + str_numShares + " " + str_price + " " + str_highRisk); 
+
+                                        // Set up the contract
+                                        NewContract myContract = new NewContract();
+                                        myContract.symbol(str_symbol); 
+                                        myContract.secType(SecType.STK);
+                                        myContract.exchange("SMART"); 
+                                        myContract.primaryExch("ISLAND");
+                                        myContract.currency("USD");                                 
+
+                                        // set up the order
+                                        NewOrder o = new NewOrder();
+                                        o.account("U1203596"); 
+                                        o.action(Action.BUY);
+                                        o.lmtPrice(fl_price);
+                                        o.totalQuantity(i_numShares);
+                                        o.tif(TimeInForce.DAY);
+                                        o.outsideRth(true);
+                                        o.orderId(i_parentBuyOrderId); 
+                                        o.transmit(true);
+
+                                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o); 
+                                        System.out.println("You have just sent off the parent order");
+
+                                        // limit sell stop order
+                                        i_childStopOrderId = i_parentBuyOrderId + 1; 
+
+                                        NewOrder oStop = new NewOrder();
+                                        oStop.action(Action.SELL);
+                                        oStop.orderType(OrderType.STP); 
+                                        double fl_childStopPrice = fl_price - 0.80*fl_price;
+                                        if (fl_childStopPrice > 1.00 || (fl_price > 1.00 &&  fl_childStopPrice < 1.00) )
+                                        {
+                                            fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
+                                        }
+                                        else 
+                                        {
+                                            fl_childStopPrice = Double.parseDouble(String.format( "%.4f", fl_childStopPrice )); 
+                                        }  
+                                        System.out.println("Child stop order price is " + fl_childStopPrice);
+                                        oStop.auxPrice(fl_childStopPrice);
+                                        oStop.totalQuantity(i_numShares);
+                                        oStop.tif(TimeInForce.DAY);
+                                        oStop.outsideRth(true);
+                                        oStop.orderId(i_childStopOrderId);
+                                        oStop.parentId(i_parentBuyOrderId); 
+                                        oStop.transmit(true);
+
+                                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oStop); 
+                                        System.out.println("You have just sent off the child stop order");
+
+                                        // Limit sell bracket order
+
+                                        i_childSellOrderId = i_parentBuyOrderId + 2; 
+
+                                        NewOrder oSell = new NewOrder();
+                                        oSell.action(Action.SELL);
+                                        oSell.orderType(OrderType.LMT); 
+                                        
+                                        double fl_childSellPrice = 0.0; 
+
+                                        if (str_highRisk.equals("HIGH_RISK")){
+                                            fl_childSellPrice = fl_price + (fl_profitTakerHighRisk*fl_price);
+                                        }
+                                        else if (str_highRisk.equals("NON_HIGH_RISK"))
+                                        {
+                                            fl_childSellPrice = fl_price + (fl_profitTakerNonHighRisk*fl_price);
+                                        }
+
+                                        if (fl_childSellPrice > 1.00)
+                                        {
+                                            fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
+                                        }
+                                        else 
+                                        {
+                                            fl_childSellPrice = Double.parseDouble(String.format( "%.4f", fl_childSellPrice )); 
+                                        }  
+                                        System.out.println("Child sell price is " + fl_childSellPrice);
+                                        oSell.lmtPrice(fl_childSellPrice);
+                                        oSell.totalQuantity(i_numShares);
+                                        oSell.tif(TimeInForce.DAY);
+                                        oSell.outsideRth(true);
+                                        oSell.orderId(i_childSellOrderId); 
+                                        oSell.parentId(i_parentBuyOrderId);
+                                        oSell.transmit(true);
+
+                                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oSell); 
+                                        System.out.println("You have just sent off the child sell order");
+
+                                        i_parentBuyOrderId = i_parentBuyOrderId + 3;
+
+                                    }
+                                    catch(Exception e)
+                                    {
+                                        // if any I/O error occurs
+                                        System.out.println(e.getMessage()); 
+                                        e.printStackTrace();
+                                        continue; 
+                                    }                                    
+                                } // end of loop through the order strings and place the orders
+                                
+
+                                
+                                // now we write the next order ID to the output file
+                                try
+                                {
+                                    // new input stream created
+                                    FileOutputStream fos = new FileOutputStream("C:\\TWS API\\DayTradeApp\\latestOrder.txt");
+
+                                    // convert next orderId to string 
+                                    StringBuilder sb = new StringBuilder();
+                                    sb.append("");
+                                    sb.append(i_parentBuyOrderId);
+                                    String str_nextOrderId = sb.toString();
+                                    byte[] arr_nextOrderId = str_nextOrderId.getBytes();
+
+                                    // byte[] arr_outputString = 
+                                    fos.write(arr_nextOrderId);
+                                    fos.flush();
+                                    fos.close();
+                                }
+                                catch(Exception e)
+                                {
+                                    // if any I/O error occurs
+                                    System.out.println(e.getMessage()); 
+                                    e.printStackTrace();
+                                }
+                                // end of write next order id to file 
                                 
                                 
-                                
-                	    } 
-                        });  // end of the click event handler for "Fast 13%"  
+                	    } // end of the @override function
+                        });  // end of the click event handler for process multiple orders
                         
                         p1.add("Send:", m_b1);
-                        p1.add("Send:", m_b35); 
+                        p1.add("end:", m_b35); 
                         p1.add("Send:", m_b2); 
                         p1.add("Send:", m_b3); 
                         p1.add("Send:", m_b515);

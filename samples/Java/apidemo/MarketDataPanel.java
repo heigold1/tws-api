@@ -105,14 +105,14 @@ public class MarketDataPanel extends JPanel {
                     public void run(){
                         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                         Date date = new Date();
-                        System.out.println("Task execution, time is: " + dateFormat.format(date)); 
+//                        System.out.println("Task execution, time is: " + dateFormat.format(date)); 
 
                         if (ApiDemo.INSTANCE.isConnected() == false)
                         {
-                            System.out.println("System is disconnected, reconnecting");
+//                            System.out.println("System is disconnected, reconnecting");
                             while (ApiDemo.INSTANCE.isConnected() == false)
                             {
-                                System.out.println("In the loop to try to connect"); 
+//                                System.out.println("In the loop to try to connect"); 
                                 ApiDemo.INSTANCE.connect();
                             }
 
@@ -126,8 +126,8 @@ public class MarketDataPanel extends JPanel {
                             topRequestPanel.reSubscribeTabs();
                             
                         }
-                        System.out.println("Inside the TimerTask::run, about to call printTabs()"); 
-                        printTabs(); 
+//                        System.out.println("Inside the TimerTask::run, about to call printTabs()"); 
+//                         printTabs(); 
                     }
                 };
         
