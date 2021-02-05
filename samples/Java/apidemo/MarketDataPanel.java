@@ -539,23 +539,25 @@ public class MarketDataPanel extends JPanel {
 
             try{
                 writer = new FileWriter(fullFilePath);
+                
+                        try{
+                            writer.append(jsonOutput);
+                            writer.flush();
+                            writer.close();
+                        }
+                        catch(IOException e2)
+                        {
+                            System.out.println("Something went wrong when writing out/closing the file."); 
+                            e2.printStackTrace();
+                        } 
             }
-            catch(IOException e)
+            catch(IOException e1)
             {
                 System.out.println("Inside printTabs, something went wrong in instantiating the file writer");
-                e.printStackTrace();
+                e1.printStackTrace();
             } 
 
-            try{
-                writer.append(jsonOutput);
-                writer.flush();
-                writer.close();
-            }
-            catch(IOException e)
-            {
-                System.out.println("Something went wrong when writing out/closing the file."); 
-                e.printStackTrace();
-            } 
+
 
             if  (totalRows > 160)
             {

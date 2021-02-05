@@ -230,6 +230,12 @@ public class ApiDemo implements IConnectionHandler {
                 JButton m_b11 = new JButton("13%");
                 JCheckBox m_bracketOrderOnly = new JCheckBox("Bracket only"); 
 		
+                JTextField m_profitTakerHighRisk = new JTextField(15);
+                JTextField m_profitTakerNonHighRisk = new JTextField(15);
+                JButton m_processMultipleOrders = new JButton("Process Multiple Orders"); 
+                
+                public JTextArea m_multipleOrders = new JTextArea(20,40); 
+                
                 private final JLabel m_status = new JLabel("Disconnected");
 		
                 public void sendOrder(double percentageProfit)
@@ -3398,6 +3404,27 @@ System.exit(0);
                         });  // end of the click event handler for "Fast 13%"  
 
                         
+                        
+                        m_processMultipleOrders.addActionListener(new java.awt.event.ActionListener()
+                	{
+                	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
+                    	    {
+                                System.out.println("Inside process multiple orders");
+                                String str_profitTakerHighRisk = m_profitTakerHighRisk.getText(); 
+                                String str_profitTakerNonHighRisk = m_profitTakerNonHighRisk.getText();
+                                System.out.println("High risk is " + str_profitTakerHighRisk); 
+                                System.out.println("Non high risk is " + str_profitTakerNonHighRisk);
+                                
+                                for (String line : m_multipleOrders.getText().split("\\n")){
+                                    // doStuffWithLine(line);
+                                    System.out.println("Line is: " + line);  
+                                }
+                                
+                                
+                                
+                	    } 
+                        });  // end of the click event handler for "Fast 13%"  
+                        
                         p1.add("Send:", m_b1);
                         p1.add("Send:", m_b35); 
                         p1.add("Send:", m_b2); 
@@ -3422,6 +3449,10 @@ System.exit(0);
 
 			JPanel p3 = new VerticalPanel();
 			p3.setBorder( new EmptyBorder( 20, 0, 0, 0));
+                        p3.add("High Risk:", m_profitTakerHighRisk);
+                        p3.add("Non High Risk:", m_profitTakerNonHighRisk);
+                        p3.add("", m_multipleOrders);
+                        p3.add("", m_processMultipleOrders); 
 			p3.add( "Connection status: ", m_status);
 			
 			JPanel p4 = new JPanel( new BorderLayout() );
