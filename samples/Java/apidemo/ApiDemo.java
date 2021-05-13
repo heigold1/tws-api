@@ -4055,8 +4055,8 @@ System.exit(0);
                         });  // end of the click event handler for process multiple orders
                         
                         p1.add("Send:", m_b1);
-                        p1.add("end:", m_b35); 
                         p1.add("end:", m_b29); 
+                        p1.add("end:", m_b35); 
                         p1.add("Send:", m_b2); 
                         p1.add("Send:", m_b3); 
                         p1.add("Send:", m_b515);

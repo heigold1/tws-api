@@ -1071,7 +1071,7 @@ public class MarketDataPanel extends JPanel {
 			sub.instrument( m_instrument.getSelectedItem().toString() );
 			sub.locationCode( m_location.getText() );
 			sub.stockTypeFilter( m_stockType.getSelectedItem().toString() );
-                        sub.belowPrice(23.50);
+                        sub.belowPrice(25.50);
                         sub.abovePrice(0.0015);
                         sub.aboveVolume(10000);
 			
@@ -1095,7 +1095,7 @@ public class MarketDataPanel extends JPanel {
 			subPink.instrument( "STK" );
 			subPink.locationCode( "STK.PINK" );
 			subPink.stockTypeFilter( "ALL" );
-                        subPink.belowPrice(23.50);
+                        subPink.belowPrice(25.50);
                         subPink.abovePrice(0.0015);
                         subPink.aboveVolume(10000);
 			ScannerResultsPanel resultsPanelPink = new ScannerResultsPanel();
@@ -1112,7 +1112,7 @@ public class MarketDataPanel extends JPanel {
 			subNasdqaSCM.instrument( "STK" );
 			subNasdqaSCM.locationCode( "STK.NASDAQ.SCM" );
 			subNasdqaSCM.stockTypeFilter( "ALL" );
-                        subNasdqaSCM.belowPrice(23.50);
+                        subNasdqaSCM.belowPrice(25.50);
                         subNasdqaSCM.abovePrice(0.0015);
                         subNasdqaSCM.aboveVolume(10000);
 			ScannerResultsPanel resultsPanelNasdaqSCM = new ScannerResultsPanel();
@@ -1128,7 +1128,7 @@ public class MarketDataPanel extends JPanel {
 			subNasdqaNMS.instrument( "STK" );
 			subNasdqaNMS.locationCode( "STK.NASDAQ.NMS" );
 			subNasdqaNMS.stockTypeFilter( "ALL" );
-                        subNasdqaNMS.belowPrice(23.50);
+                        subNasdqaNMS.belowPrice(25.50);
                         subNasdqaNMS.abovePrice(0.0015);
                         subNasdqaNMS.aboveVolume(10000);
 			ScannerResultsPanel resultsPanelNasdaqNMS = new ScannerResultsPanel();
@@ -1144,7 +1144,7 @@ public class MarketDataPanel extends JPanel {
 			subNYSE.instrument( "STK" );
 			subNYSE.locationCode( "STK.NYSE" );
 			subNYSE.stockTypeFilter( "ALL" );
-                        subNYSE.belowPrice(23.50);
+                        subNYSE.belowPrice(25.50);
                         subNYSE.abovePrice(0.0015);
                         subNYSE.aboveVolume(10000);
 			ScannerResultsPanel resultsPanelNYSE = new ScannerResultsPanel();
@@ -1160,7 +1160,7 @@ public class MarketDataPanel extends JPanel {
 			subAMEX.instrument( "STK" );
 			subAMEX.locationCode( "STK.AMEX" );
 			subAMEX.stockTypeFilter( "ALL" );
-                        subAMEX.belowPrice(23.50);
+                        subAMEX.belowPrice(25.50);
                         subAMEX.abovePrice(0.0015);
                         subAMEX.aboveVolume(10000);
 			ScannerResultsPanel resultsPanelAMEX = new ScannerResultsPanel();
