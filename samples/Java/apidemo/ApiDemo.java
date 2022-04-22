@@ -397,13 +397,13 @@ public class ApiDemo implements IConnectionHandler {
                                 System.out.println("You have just sent off the parent order");
 
                                 // Limit sell stop order
-
+/*
                                 i_childStopOrderId = i_parentBuyOrderId + 1; 
 
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.80*fl_price;
+                                double fl_childStopPrice = fl_price - 0.105*fl_price;
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -424,10 +424,10 @@ public class ApiDemo implements IConnectionHandler {
                                 System.out.println("The NEXT child stop order id is " + i_childStopOrderId);
                                 ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oStop); 
                                 System.out.println("You have just sent off the child stop order");
-
+*/
                                 // Limit sell bracket order
 
-                                i_childSellOrderId = i_parentBuyOrderId + 2; 
+                                i_childSellOrderId = i_parentBuyOrderId + 1; 
 
                                 NewOrder oSell = new NewOrder();
                                 oSell.action(Action.SELL);
@@ -454,7 +454,7 @@ public class ApiDemo implements IConnectionHandler {
                                 ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oSell); 
                                 System.out.println("You have just sent off the child sell order");
 
-                                i_nextOrderId = i_parentBuyOrderId + 3;
+                                i_nextOrderId = i_parentBuyOrderId + 2;
   
                                 // now we write the next order ID to the output file
                                 try
@@ -791,7 +791,7 @@ public class ApiDemo implements IConnectionHandler {
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.80*fl_price;
+                                double fl_childStopPrice = fl_price - 0.105*fl_price;
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -1031,7 +1031,7 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.80*fl_price;
+                                double fl_childStopPrice = fl_price - 0.105*fl_price;
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -1256,7 +1256,7 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.80*fl_price;
+                                double fl_childStopPrice = fl_price - 0.105*fl_price;
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -1479,7 +1479,7 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.80*fl_price;
+                                double fl_childStopPrice = fl_price - 0.105*fl_price;
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -1703,7 +1703,7 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.80*fl_price;
+                                double fl_childStopPrice = fl_price - 0.105*fl_price;
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -1928,7 +1928,7 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.80*fl_price;
+                                double fl_childStopPrice = fl_price - 0.105*fl_price;
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -2151,7 +2151,7 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.80*fl_price;
+                                double fl_childStopPrice = fl_price - 0.105*fl_price;
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -2374,7 +2374,7 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.80*fl_price;
+                                double fl_childStopPrice = fl_price - 0.105*fl_price;
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -2597,7 +2597,7 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.80*fl_price;
+                                double fl_childStopPrice = fl_price - 0.105*fl_price;
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -2820,7 +2820,7 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.80*fl_price;
+                                double fl_childStopPrice = fl_price - 0.105*fl_price;
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -3043,7 +3043,7 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.80*fl_price;
+                                double fl_childStopPrice = fl_price - 0.105*fl_price;
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -3266,7 +3266,7 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.80*fl_price;
+                                double fl_childStopPrice = fl_price - 0.105*fl_price;
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -3489,7 +3489,7 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.80*fl_price;
+                                double fl_childStopPrice = fl_price - 0.105*fl_price;
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -3712,7 +3712,7 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.80*fl_price;
+                                double fl_childStopPrice = fl_price - 0.105*fl_price;
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -3931,7 +3931,7 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.80*fl_price;
+                                double fl_childStopPrice = fl_price - 0.105*fl_price;
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -4106,7 +4106,7 @@ System.exit(0);
                                         NewOrder oStop = new NewOrder();
                                         oStop.action(Action.SELL);
                                         oStop.orderType(OrderType.STP); 
-                                        double fl_childStopPrice = fl_price - 0.80*fl_price;
+                                        double fl_childStopPrice = fl_price - 0.105*fl_price;
                                         if (fl_childStopPrice > 1.00 || (fl_price > 1.00 &&  fl_childStopPrice < 1.00) )
                                         {
                                             fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
