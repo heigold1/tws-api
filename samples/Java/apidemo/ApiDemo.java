@@ -234,7 +234,7 @@ public class ApiDemo implements IConnectionHandler {
                 JButton m_b10 = new JButton("12%");                 
                 JButton m_b11 = new JButton("13%");
                 JButton m_b95 = new JButton("95%");
-                JCheckBox m_bracketOrderOnly = new JCheckBox("Bracket only"); 
+                JCheckBox m_stopOrder = new JCheckBox("10% Stop Order"); 
 		
                 JTextField m_profitTakerHighRisk = new JTextField("3.5", 15);
                 JTextField m_profitTakerNonHighRisk = new JTextField("4.2", 15);
@@ -403,7 +403,7 @@ public class ApiDemo implements IConnectionHandler {
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.105*fl_price;
+                                double fl_childStopPrice = fl_price - 0.80*fl_price;
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -791,7 +791,21 @@ public class ApiDemo implements IConnectionHandler {
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.105*fl_price;
+
+                                double fl_childStopPrice;
+                                
+                                if (m_stopOrder.isSelected()  )
+                                {
+                                    System.out.println("Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                }else
+                                {
+                                    System.out.println("Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                }
+                                
+                                m_stopOrder.setSelected(false); 
+                                
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -1007,7 +1021,7 @@ public class ApiDemo implements IConnectionHandler {
 
 System.out.println("About to check for checkbox value");           
 
-if (m_bracketOrderOnly.isSelected()  )
+if (m_stopOrder.isSelected()  )
 {
     System.out.println("Selected");
 }else
@@ -1031,7 +1045,21 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.105*fl_price;
+                                
+                                double fl_childStopPrice;
+                                
+                                if (m_stopOrder.isSelected()  )
+                                {
+                                    System.out.println("Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                }else
+                                {
+                                    System.out.println("Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                }
+                                
+                                m_stopOrder.setSelected(false); 
+                                
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -1256,7 +1284,21 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.105*fl_price;
+                                
+                                double fl_childStopPrice;
+                                
+                                if (m_stopOrder.isSelected()  )
+                                {
+                                    System.out.println("Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                }else
+                                {
+                                    System.out.println("Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                }
+                                
+                                m_stopOrder.setSelected(false); 
+                                
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -1479,7 +1521,21 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.105*fl_price;
+
+                                double fl_childStopPrice;
+                                
+                                if (m_stopOrder.isSelected()  )
+                                {
+                                    System.out.println("Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                }else
+                                {
+                                    System.out.println("Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                }
+                                
+                                m_stopOrder.setSelected(false); 
+
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -1703,7 +1759,21 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.105*fl_price;
+                                
+                                double fl_childStopPrice;
+                                
+                                if (m_stopOrder.isSelected()  )
+                                {
+                                    System.out.println("Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                }else
+                                {
+                                    System.out.println("Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                }
+                                
+                                m_stopOrder.setSelected(false); 
+                                
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -1928,7 +1998,21 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.105*fl_price;
+                                
+                                double fl_childStopPrice;
+                                
+                                if (m_stopOrder.isSelected()  )
+                                {
+                                    System.out.println("Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                }else
+                                {
+                                    System.out.println("Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                }
+                                
+                                m_stopOrder.setSelected(false); 
+                                
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -2151,7 +2235,21 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.105*fl_price;
+                                
+                                double fl_childStopPrice;
+                                
+                                if (m_stopOrder.isSelected()  )
+                                {
+                                    System.out.println("Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                }else
+                                {
+                                    System.out.println("Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                }
+                                
+                                m_stopOrder.setSelected(false); 
+                                
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -2374,7 +2472,21 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.105*fl_price;
+                                
+                                double fl_childStopPrice;
+                                
+                                if (m_stopOrder.isSelected()  )
+                                {
+                                    System.out.println("Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                }else
+                                {
+                                    System.out.println("Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                }
+                                
+                                m_stopOrder.setSelected(false); 
+                                
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -2597,7 +2709,21 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.105*fl_price;
+                                
+                                double fl_childStopPrice;
+                                
+                                if (m_stopOrder.isSelected()  )
+                                {
+                                    System.out.println("Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                }else
+                                {
+                                    System.out.println("Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                }
+                                
+                                m_stopOrder.setSelected(false); 
+                                
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -2820,7 +2946,21 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.105*fl_price;
+                                
+                                double fl_childStopPrice;
+                                
+                                if (m_stopOrder.isSelected()  )
+                                {
+                                    System.out.println("Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                }else
+                                {
+                                    System.out.println("Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                }
+                                
+                                m_stopOrder.setSelected(false); 
+                                
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -3043,7 +3183,21 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.105*fl_price;
+                                
+                                double fl_childStopPrice;
+                                
+                                if (m_stopOrder.isSelected()  )
+                                {
+                                    System.out.println("Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                }else
+                                {
+                                    System.out.println("Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                }
+                                
+                                m_stopOrder.setSelected(false); 
+                                
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -3266,7 +3420,21 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.105*fl_price;
+                                
+                                double fl_childStopPrice;
+                                
+                                if (m_stopOrder.isSelected()  )
+                                {
+                                    System.out.println("Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                }else
+                                {
+                                    System.out.println("Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                }
+                                
+                                m_stopOrder.setSelected(false); 
+                                
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -3489,7 +3657,21 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.105*fl_price;
+                                
+                                double fl_childStopPrice;
+                                
+                                if (m_stopOrder.isSelected()  )
+                                {
+                                    System.out.println("Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                }else
+                                {
+                                    System.out.println("Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                }
+                                
+                                m_stopOrder.setSelected(false); 
+                                
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -3712,7 +3894,21 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.105*fl_price;
+                                
+                                double fl_childStopPrice;
+                                
+                                if (m_stopOrder.isSelected()  )
+                                {
+                                    System.out.println("Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                }else
+                                {
+                                    System.out.println("Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                }
+                                
+                                m_stopOrder.setSelected(false); 
+                                
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -3931,7 +4127,21 @@ System.exit(0);
                                 NewOrder oStop = new NewOrder();
                                 oStop.action(Action.SELL);
                                 oStop.orderType(OrderType.STP); 
-                                double fl_childStopPrice = fl_price - 0.105*fl_price;
+                                
+                                double fl_childStopPrice;
+                                
+                                if (m_stopOrder.isSelected()  )
+                                {
+                                    System.out.println("Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                }else
+                                {
+                                    System.out.println("Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                }
+                                
+                                m_stopOrder.setSelected(false); 
+                                
                                 if (fl_childStopPrice > 1.00)
                                 {
                                     fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -4106,7 +4316,7 @@ System.exit(0);
                                         NewOrder oStop = new NewOrder();
                                         oStop.action(Action.SELL);
                                         oStop.orderType(OrderType.STP); 
-                                        double fl_childStopPrice = fl_price - 0.105*fl_price;
+                                        double fl_childStopPrice = fl_price - 0.80*fl_price;
                                         if (fl_childStopPrice > 1.00 || (fl_price > 1.00 &&  fl_childStopPrice < 1.00) )
                                         {
                                             fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
@@ -4226,7 +4436,7 @@ System.exit(0);
                         p1.add("Send:", m_b10); 
                         p1.add("Send:", m_b11);
                         p1.add("Send:", m_b95);
-                        p1.add("", m_bracketOrderOnly); 
+                        p1.add("", m_stopOrder); 
 
 			JPanel p2 = new VerticalPanel();
                         // p2.add(m_b2); 
