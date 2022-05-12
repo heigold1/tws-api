@@ -1466,136 +1466,136 @@ System.exit(0);
                                     System.out.println("Average Down is not selected");
                                     
                                 
-                                                                        // Order starts here                                 
-                                                                        NewContract myContract = new NewContract();
-                                                                        myContract.symbol(str_symbol); 
-                                                                        myContract.secType(SecType.STK);
-                                                                        myContract.exchange("SMART"); 
-                                                                        myContract.primaryExch("ISLAND");
-                                                                        myContract.currency("USD"); 
-                                                                        NewOrder o = new NewOrder();
+                                    // Order starts here                                 
+                                    NewContract myContract = new NewContract();
+                                    myContract.symbol(str_symbol); 
+                                    myContract.secType(SecType.STK);
+                                    myContract.exchange("SMART"); 
+                                    myContract.primaryExch("ISLAND");
+                                    myContract.currency("USD"); 
+                                    NewOrder o = new NewOrder();
 
-                                                                        o.account("U1203596"); 
-                                                                        o.action(Action.BUY);
+                                    o.account("U1203596"); 
+                                    o.action(Action.BUY);
 
-                                                                        if (fl_percentage < 0)
-                                                                        {
-                                                                            o.orderType(OrderType.STP); 
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            o.orderType(OrderType.LMT);                                     
-                                                                        }
+                                    if (fl_percentage < 0)
+                                    {
+                                        o.orderType(OrderType.STP); 
+                                    }
+                                    else
+                                    {
+                                        o.orderType(OrderType.LMT);                                     
+                                    }
 
-                                                                        o.lmtPrice(fl_price);
-                                                                        o.totalQuantity(i_numShares);
-                                                                        o.tif(TimeInForce.DAY);
-                                                                        o.outsideRth(true);
+                                    o.lmtPrice(fl_price);
+                                    o.totalQuantity(i_numShares);
+                                    o.tif(TimeInForce.DAY);
+                                    o.outsideRth(true);
 
-                                                                        // grab the latest (max) order id
-                                                                        int i_parentBuyOrderId = 0; 
-                                                                        int i_childSellOrderId = 0;
-                                                                        int i_childStopOrderId = 0;
+                                    // grab the latest (max) order id
+                                    int i_parentBuyOrderId = 0; 
+                                    int i_childSellOrderId = 0;
+                                    int i_childStopOrderId = 0;
 
-                                                                        try
-                                                                        {
-                                                                            // new input stream created
-                                                                            FileInputStream fis = new FileInputStream("C:\\TWS API\\DayTradeApp\\latestOrder.txt");
-                                                                            BufferedReader fisReader = new BufferedReader(new InputStreamReader(fis));
+                                    try
+                                    {
+                                        // new input stream created
+                                        FileInputStream fis = new FileInputStream("C:\\TWS API\\DayTradeApp\\latestOrder.txt");
+                                        BufferedReader fisReader = new BufferedReader(new InputStreamReader(fis));
 
-                                                                            String str_latestOrderId = fisReader.readLine();
-                                                                            i_parentBuyOrderId = Integer.parseInt(str_latestOrderId);
+                                        String str_latestOrderId = fisReader.readLine();
+                                        i_parentBuyOrderId = Integer.parseInt(str_latestOrderId);
 
-                                                                            System.out.println("The latest order id is " + i_parentBuyOrderId);
-                                                                            fis.close();
-                                                                        }
-                                                                        catch(Exception e)
-                                                                        {
-                                                                            // if any I/O error occurs
-                                                                            System.out.println(e.getMessage()); 
-                                                                            e.printStackTrace();
-                                                                        }
+                                        System.out.println("The latest order id is " + i_parentBuyOrderId);
+                                        fis.close();
+                                    }
+                                    catch(Exception e)
+                                    {
+                                        // if any I/O error occurs
+                                        System.out.println(e.getMessage()); 
+                                        e.printStackTrace();
+                                    }
 
-                                                                        o.orderId(i_parentBuyOrderId); 
-                                                                        o.transmit(true);
+                                    o.orderId(i_parentBuyOrderId); 
+                                    o.transmit(true);
 
-                                                                        System.out.println("The NEXT parent buy order id is " + i_parentBuyOrderId);
-                                                                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o); 
-                                                                        System.out.println("You have just sent off the parent order");
+                                    System.out.println("The NEXT parent buy order id is " + i_parentBuyOrderId);
+                                    ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o); 
+                                    System.out.println("You have just sent off the parent order");
 
-                                                                        // Limit sell stop order
+                                    // Limit sell stop order
 
-                                                                        i_childStopOrderId = i_parentBuyOrderId + 1; 
+                                    i_childStopOrderId = i_parentBuyOrderId + 1; 
 
-                                                                        NewOrder oStop = new NewOrder();
-                                                                        oStop.action(Action.SELL);
-                                                                        oStop.orderType(OrderType.STP); 
+                                    NewOrder oStop = new NewOrder();
+                                    oStop.action(Action.SELL);
+                                    oStop.orderType(OrderType.STP); 
 
-                                                                        double fl_childStopPrice;
+                                    double fl_childStopPrice;
 
-                                                                        if (m_noStopOrder.isSelected()  )
-                                                                        {
-                                                                            System.out.println("No Stop Order Selected");
-                                                                            fl_childStopPrice = fl_price - 0.8*fl_price;
-                                                                        }else
-                                                                        {
-                                                                            System.out.println("No Stop Order NOT Selected");
-                                                                            fl_childStopPrice = fl_price - 0.105*fl_price;
-                                                                        }
+                                    if (m_noStopOrder.isSelected()  )
+                                    {
+                                        System.out.println("No Stop Order Selected");
+                                        fl_childStopPrice = fl_price - 0.8*fl_price;
+                                    }else
+                                    {
+                                        System.out.println("No Stop Order NOT Selected");
+                                        fl_childStopPrice = fl_price - 0.105*fl_price;
+                                    }
 
-                                                                        m_noStopOrder.setSelected(false); 
+                                    m_noStopOrder.setSelected(false); 
 
-                                                                        if (fl_childStopPrice > 1.00)
-                                                                        {
-                                                                            fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
-                                                                        }
-                                                                        else 
-                                                                        {
-                                                                            fl_childStopPrice = Double.parseDouble(String.format( "%.4f", fl_childStopPrice )); 
-                                                                        }  
-                                                                        System.out.println("Child stop order price is " + fl_childStopPrice);
-                                                                        oStop.auxPrice(fl_childStopPrice);
-                                                                        oStop.totalQuantity(i_numShares);
-                                                                        oStop.tif(TimeInForce.DAY);
-                                                                        oStop.outsideRth(true);
-                                                                        oStop.orderId(i_childStopOrderId);
-                                                                        oStop.parentId(i_parentBuyOrderId); 
-                                                                        oStop.transmit(true);
+                                    if (fl_childStopPrice > 1.00)
+                                    {
+                                        fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
+                                    }
+                                    else 
+                                    {
+                                        fl_childStopPrice = Double.parseDouble(String.format( "%.4f", fl_childStopPrice )); 
+                                    }  
+                                    System.out.println("Child stop order price is " + fl_childStopPrice);
+                                    oStop.auxPrice(fl_childStopPrice);
+                                    oStop.totalQuantity(i_numShares);
+                                    oStop.tif(TimeInForce.DAY);
+                                    oStop.outsideRth(true);
+                                    oStop.orderId(i_childStopOrderId);
+                                    oStop.parentId(i_parentBuyOrderId); 
+                                    oStop.transmit(true);
 
-                                                                        System.out.println("The NEXT child stop order id is " + i_childStopOrderId);
-                                                                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oStop); 
-                                                                        System.out.println("You have just sent off the child stop order");
+                                    System.out.println("The NEXT child stop order id is " + i_childStopOrderId);
+                                    ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oStop); 
+                                    System.out.println("You have just sent off the child stop order");
 
-                                                                        // Limit sell bracket order
+                                    // Limit sell bracket order
 
-                                                                        i_childSellOrderId = i_parentBuyOrderId + 2; 
+                                    i_childSellOrderId = i_parentBuyOrderId + 2; 
 
-                                                                        NewOrder oSell = new NewOrder();
-                                                                        oSell.action(Action.SELL);
-                                                                        oSell.orderType(OrderType.LMT); 
-                                                                        double fl_childSellPrice = fl_price + 0.05*fl_price;
-                                                                        if (fl_childSellPrice > 1.00)
-                                                                        {
-                                                                            fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
-                                                                        }
-                                                                        else 
-                                                                        {
-                                                                            fl_childSellPrice = Double.parseDouble(String.format( "%.4f", fl_childSellPrice )); 
-                                                                        }  
-                                                                        System.out.println("Child sell price is " + fl_childSellPrice);
-                                                                        oSell.lmtPrice(fl_childSellPrice);
-                                                                        oSell.totalQuantity(i_numShares);
-                                                                        oSell.tif(TimeInForce.DAY);
-                                                                        oSell.outsideRth(true);
-                                                                        oSell.orderId(i_childSellOrderId); 
-                                                                        oSell.parentId(i_parentBuyOrderId);
-                                                                        oSell.transmit(true);
+                                    NewOrder oSell = new NewOrder();
+                                    oSell.action(Action.SELL);
+                                    oSell.orderType(OrderType.LMT); 
+                                    double fl_childSellPrice = fl_price + 0.05*fl_price;
+                                    if (fl_childSellPrice > 1.00)
+                                    {
+                                        fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
+                                    }
+                                    else 
+                                    {
+                                        fl_childSellPrice = Double.parseDouble(String.format( "%.4f", fl_childSellPrice )); 
+                                    }  
+                                    System.out.println("Child sell price is " + fl_childSellPrice);
+                                    oSell.lmtPrice(fl_childSellPrice);
+                                    oSell.totalQuantity(i_numShares);
+                                    oSell.tif(TimeInForce.DAY);
+                                    oSell.outsideRth(true);
+                                    oSell.orderId(i_childSellOrderId); 
+                                    oSell.parentId(i_parentBuyOrderId);
+                                    oSell.transmit(true);
 
-                                                                        System.out.println("The NEXT child sell order id is " + i_childSellOrderId);
-                                                                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oSell); 
-                                                                        System.out.println("You have just sent off the child sell order");
+                                    System.out.println("The NEXT child sell order id is " + i_childSellOrderId);
+                                    ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oSell); 
+                                    System.out.println("You have just sent off the child sell order");
 
-                                                                        i_nextOrderId = i_parentBuyOrderId + 3;
+                                    i_nextOrderId = i_parentBuyOrderId + 3;
 
                                 } // if (!m_averageDown.selected()) 
                                 else
@@ -1633,7 +1633,7 @@ System.exit(0);
                                     int i_parentSecondBuyOrderId = 0; 
                                     int i_childFirstSellOrderId = 0;
                                     int i_childSecondSellOrderId = 0;
-                                    int i_childStopOrderId = 0;
+                                    int i_secondOrderStopId = 0;
 
                                     try
                                     {
@@ -1689,7 +1689,7 @@ System.exit(0);
                                     System.out.println("You have just sent off the child sell order");
 
                                     i_nextOrderId =  i_childFirstSellOrderId + 1; // i_parentFirstBuyOrderId + 3;
-                                    
+                                    i_parentSecondBuyOrderId = i_nextOrderId; 
 
                                     // next we calculate the additional prices
                                     // 10% past the first order percentage 
@@ -1698,9 +1698,106 @@ System.exit(0);
                                     double fl_halfWayPercentage = fl_percentage + 5;
                                     double fl_halfWayEntryPrice = fl_previousClose - (fl_halfWayPercentage*fl_previousClose/100); 
                                     
-System.out.println("Half way percentage is " + fl_halfWayPercentage);
-System.out.println("Half way entry price is " + fl_halfWayEntryPrice); 
+                                    double fl_secondBuyOrderPercentage = fl_percentage +  10; 
+                                    double fl_secondBuyOrderEntryPrice = fl_previousClose - (fl_secondBuyOrderPercentage*fl_previousClose/100); 
+
+                                    // 2nd parent buy order 
                                     
+                                    myContract = new NewContract();
+                                    myContract.symbol(str_symbol); 
+                                    myContract.secType(SecType.STK);
+                                    myContract.exchange("SMART"); 
+                                    myContract.primaryExch("ISLAND");
+                                    myContract.currency("USD"); 
+                                    NewOrder o2 = new NewOrder();
+
+                                    o2.account("U1203596"); 
+                                    o2.action(Action.BUY);
+
+                                    if (fl_percentage < 0)
+                                    {
+                                        o2.orderType(OrderType.STP); 
+                                    }
+                                    else
+                                    {
+                                        o2.orderType(OrderType.LMT);                                     
+                                    }
+
+                                    o2.lmtPrice(fl_secondBuyOrderEntryPrice);
+                                    o2.totalQuantity(i_numShares);
+                                    o2.tif(TimeInForce.DAY);
+                                    o2.outsideRth(true);
+                                    o2.orderId(i_parentSecondBuyOrderId); 
+                                    o2.transmit(true);
+                                    
+                                    ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o2); 
+                                    System.out.println("You have just sent off the SECOND parent order");
+
+                                    i_nextOrderId = i_parentSecondBuyOrderId + 1; 
+                                    i_childSecondSellOrderId = i_nextOrderId; 
+
+                                    // 2nd sell child order 
+
+                                    NewOrder o2Sell = new NewOrder();
+                                    o2Sell.action(Action.SELL);
+                                    o2Sell.orderType(OrderType.LMT); 
+                                    if (fl_halfWayEntryPrice > 1.00)
+                                    {
+                                        fl_childSellPrice = fl_halfWayEntryPrice + 0.01; 
+                                        fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
+                                    }
+                                    else 
+                                    {
+                                        fl_childSellPrice = fl_halfWayEntryPrice + 0.0002; 
+                                        fl_childSellPrice = Double.parseDouble(String.format( "%.4f", fl_childSellPrice )); 
+                                    }  
+                                    System.out.println("Child sell price is " + fl_childSellPrice);
+                                    o2Sell.lmtPrice(fl_childSellPrice);
+                                    o2Sell.totalQuantity(i_numShares*2);
+                                    o2Sell.tif(TimeInForce.DAY);
+                                    o2Sell.outsideRth(true);
+                                    o2Sell.orderId(i_childSecondSellOrderId); 
+                                    o2Sell.parentId(i_parentSecondBuyOrderId);
+                                    o2Sell.transmit(true);
+
+                                    ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o2Sell); 
+                                    System.out.println("You have just sent off the child sell order for the SECOND parent order");
+
+                                    i_nextOrderId = i_childSecondSellOrderId + 1; 
+                                    i_secondOrderStopId = i_nextOrderId; 
+
+                                    NewOrder o2Stop = new NewOrder();
+                                    o2Stop.action(Action.SELL);
+                                    o2Stop.orderType(OrderType.STP); 
+
+                                    double fl_childStopPrice;
+
+                                    fl_childStopPrice = fl_halfWayEntryPrice - 0.105*fl_halfWayEntryPrice;
+
+                                    m_noStopOrder.setSelected(false); 
+
+                                    if (fl_childStopPrice > 1.00)
+                                    {
+                                        fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
+                                    }
+                                    else 
+                                    {
+                                        fl_childStopPrice = Double.parseDouble(String.format( "%.4f", fl_childStopPrice )); 
+                                    }  
+                                    System.out.println("Child stop order price is " + fl_childStopPrice);
+                                    o2Stop.auxPrice(fl_childStopPrice);
+                                    o2Stop.totalQuantity(i_numShares);
+                                    o2Stop.tif(TimeInForce.DAY);
+                                    o2Stop.outsideRth(true);
+                                    o2Stop.orderId(i_secondOrderStopId);
+                                    o2Stop.parentId(i_parentSecondBuyOrderId); 
+                                    o2Stop.transmit(true);
+
+                                    ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o2Stop); 
+                                    System.out.println("You have just sent off the child stop order");                                    
+                                    
+                                    i_nextOrderId = i_secondOrderStopId + 1; 
+
                                 } // if we ARE averaging down 
                                                                         
                                                       
