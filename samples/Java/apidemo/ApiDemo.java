@@ -234,7 +234,8 @@ public class ApiDemo implements IConnectionHandler {
                 JButton m_b10 = new JButton("12%");                 
                 JButton m_b11 = new JButton("13%");
                 JButton m_b95 = new JButton("95%");
-                JCheckBox m_stopOrder = new JCheckBox("10% Stop Order"); 
+                JCheckBox m_noStopOrder = new JCheckBox("No Stop Order"); 
+                JCheckBox m_averageDown = new JCheckBox("Average Down"); 
 		
                 JTextField m_profitTakerHighRisk = new JTextField("3.5", 15);
                 JTextField m_profitTakerNonHighRisk = new JTextField("4.2", 15);
@@ -794,17 +795,17 @@ public class ApiDemo implements IConnectionHandler {
 
                                 double fl_childStopPrice;
                                 
-                                if (m_stopOrder.isSelected()  )
+                                if (m_noStopOrder.isSelected()  )
                                 {
-                                    System.out.println("Stop Order Selected");
-                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                    System.out.println("No Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
                                 }else
                                 {
-                                    System.out.println("Stop Order NOT Selected");
-                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                    System.out.println("No Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
                                 }
                                 
-                                m_stopOrder.setSelected(false); 
+                                m_noStopOrder.setSelected(false); 
                                 
                                 if (fl_childStopPrice > 1.00)
                                 {
@@ -1021,7 +1022,7 @@ public class ApiDemo implements IConnectionHandler {
 
 System.out.println("About to check for checkbox value");           
 
-if (m_stopOrder.isSelected()  )
+if (m_noStopOrder.isSelected()  )
 {
     System.out.println("Selected");
 }else
@@ -1048,17 +1049,17 @@ System.exit(0);
                                 
                                 double fl_childStopPrice;
                                 
-                                if (m_stopOrder.isSelected()  )
+                                if (m_noStopOrder.isSelected()  )
                                 {
-                                    System.out.println("Stop Order Selected");
-                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                    System.out.println("No Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
                                 }else
                                 {
-                                    System.out.println("Stop Order NOT Selected");
-                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                    System.out.println("No Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
                                 }
                                 
-                                m_stopOrder.setSelected(false); 
+                                m_noStopOrder.setSelected(false); 
                                 
                                 if (fl_childStopPrice > 1.00)
                                 {
@@ -1287,17 +1288,17 @@ System.exit(0);
                                 
                                 double fl_childStopPrice;
                                 
-                                if (m_stopOrder.isSelected()  )
+                                if (m_noStopOrder.isSelected()  )
                                 {
-                                    System.out.println("Stop Order Selected");
-                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                    System.out.println("No Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
                                 }else
                                 {
-                                    System.out.println("Stop Order NOT Selected");
-                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                    System.out.println("No Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
                                 }
                                 
-                                m_stopOrder.setSelected(false); 
+                                m_noStopOrder.setSelected(false); 
                                 
                                 if (fl_childStopPrice > 1.00)
                                 {
@@ -1390,6 +1391,9 @@ System.exit(0);
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
+                                
+                                int i_nextOrderId = 0; 
+                                
                                 // grab the pasted order from the text box 
                                 String str_orderText = ""; 
                                 try
@@ -1453,142 +1457,255 @@ System.exit(0);
                                   return;
                                 }
 
-                                // Order starts here                                 
-                                NewContract myContract = new NewContract();
-                                myContract.symbol(str_symbol); 
-                                myContract.secType(SecType.STK);
-                                myContract.exchange("SMART"); 
-                                myContract.primaryExch("ISLAND");
-                                myContract.currency("USD"); 
-                                NewOrder o = new NewOrder();
-
+                                String str_previousClose = arr_orderParameters[6].replaceAll("\\$", "");
+                                double fl_previousClose = Double.parseDouble(str_previousClose); 
                                 
-// reqMktData
-
-                                
-                                o.account("U1203596"); 
-                                o.action(Action.BUY);
-
-                                if (fl_percentage < 0)
+                               
+                                if (!m_averageDown.isSelected())
                                 {
-                                    o.orderType(OrderType.STP); 
-                                }
+                                    System.out.println("Average Down is not selected");
+                                    
+                                
+                                                                        // Order starts here                                 
+                                                                        NewContract myContract = new NewContract();
+                                                                        myContract.symbol(str_symbol); 
+                                                                        myContract.secType(SecType.STK);
+                                                                        myContract.exchange("SMART"); 
+                                                                        myContract.primaryExch("ISLAND");
+                                                                        myContract.currency("USD"); 
+                                                                        NewOrder o = new NewOrder();
+
+                                                                        o.account("U1203596"); 
+                                                                        o.action(Action.BUY);
+
+                                                                        if (fl_percentage < 0)
+                                                                        {
+                                                                            o.orderType(OrderType.STP); 
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            o.orderType(OrderType.LMT);                                     
+                                                                        }
+
+                                                                        o.lmtPrice(fl_price);
+                                                                        o.totalQuantity(i_numShares);
+                                                                        o.tif(TimeInForce.DAY);
+                                                                        o.outsideRth(true);
+
+                                                                        // grab the latest (max) order id
+                                                                        int i_parentBuyOrderId = 0; 
+                                                                        int i_childSellOrderId = 0;
+                                                                        int i_childStopOrderId = 0;
+
+                                                                        try
+                                                                        {
+                                                                            // new input stream created
+                                                                            FileInputStream fis = new FileInputStream("C:\\TWS API\\DayTradeApp\\latestOrder.txt");
+                                                                            BufferedReader fisReader = new BufferedReader(new InputStreamReader(fis));
+
+                                                                            String str_latestOrderId = fisReader.readLine();
+                                                                            i_parentBuyOrderId = Integer.parseInt(str_latestOrderId);
+
+                                                                            System.out.println("The latest order id is " + i_parentBuyOrderId);
+                                                                            fis.close();
+                                                                        }
+                                                                        catch(Exception e)
+                                                                        {
+                                                                            // if any I/O error occurs
+                                                                            System.out.println(e.getMessage()); 
+                                                                            e.printStackTrace();
+                                                                        }
+
+                                                                        o.orderId(i_parentBuyOrderId); 
+                                                                        o.transmit(true);
+
+                                                                        System.out.println("The NEXT parent buy order id is " + i_parentBuyOrderId);
+                                                                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o); 
+                                                                        System.out.println("You have just sent off the parent order");
+
+                                                                        // Limit sell stop order
+
+                                                                        i_childStopOrderId = i_parentBuyOrderId + 1; 
+
+                                                                        NewOrder oStop = new NewOrder();
+                                                                        oStop.action(Action.SELL);
+                                                                        oStop.orderType(OrderType.STP); 
+
+                                                                        double fl_childStopPrice;
+
+                                                                        if (m_noStopOrder.isSelected()  )
+                                                                        {
+                                                                            System.out.println("No Stop Order Selected");
+                                                                            fl_childStopPrice = fl_price - 0.8*fl_price;
+                                                                        }else
+                                                                        {
+                                                                            System.out.println("No Stop Order NOT Selected");
+                                                                            fl_childStopPrice = fl_price - 0.105*fl_price;
+                                                                        }
+
+                                                                        m_noStopOrder.setSelected(false); 
+
+                                                                        if (fl_childStopPrice > 1.00)
+                                                                        {
+                                                                            fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
+                                                                        }
+                                                                        else 
+                                                                        {
+                                                                            fl_childStopPrice = Double.parseDouble(String.format( "%.4f", fl_childStopPrice )); 
+                                                                        }  
+                                                                        System.out.println("Child stop order price is " + fl_childStopPrice);
+                                                                        oStop.auxPrice(fl_childStopPrice);
+                                                                        oStop.totalQuantity(i_numShares);
+                                                                        oStop.tif(TimeInForce.DAY);
+                                                                        oStop.outsideRth(true);
+                                                                        oStop.orderId(i_childStopOrderId);
+                                                                        oStop.parentId(i_parentBuyOrderId); 
+                                                                        oStop.transmit(true);
+
+                                                                        System.out.println("The NEXT child stop order id is " + i_childStopOrderId);
+                                                                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oStop); 
+                                                                        System.out.println("You have just sent off the child stop order");
+
+                                                                        // Limit sell bracket order
+
+                                                                        i_childSellOrderId = i_parentBuyOrderId + 2; 
+
+                                                                        NewOrder oSell = new NewOrder();
+                                                                        oSell.action(Action.SELL);
+                                                                        oSell.orderType(OrderType.LMT); 
+                                                                        double fl_childSellPrice = fl_price + 0.05*fl_price;
+                                                                        if (fl_childSellPrice > 1.00)
+                                                                        {
+                                                                            fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
+                                                                        }
+                                                                        else 
+                                                                        {
+                                                                            fl_childSellPrice = Double.parseDouble(String.format( "%.4f", fl_childSellPrice )); 
+                                                                        }  
+                                                                        System.out.println("Child sell price is " + fl_childSellPrice);
+                                                                        oSell.lmtPrice(fl_childSellPrice);
+                                                                        oSell.totalQuantity(i_numShares);
+                                                                        oSell.tif(TimeInForce.DAY);
+                                                                        oSell.outsideRth(true);
+                                                                        oSell.orderId(i_childSellOrderId); 
+                                                                        oSell.parentId(i_parentBuyOrderId);
+                                                                        oSell.transmit(true);
+
+                                                                        System.out.println("The NEXT child sell order id is " + i_childSellOrderId);
+                                                                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oSell); 
+                                                                        System.out.println("You have just sent off the child sell order");
+
+                                                                        i_nextOrderId = i_parentBuyOrderId + 3;
+
+                                } // if (!m_averageDown.selected()) 
                                 else
                                 {
-                                    o.orderType(OrderType.LMT);                                     
-                                }
+                                    // we are averaging down 
+                                    
+                                    // Order starts here                                 
+                                    NewContract myContract = new NewContract();
+                                    myContract.symbol(str_symbol); 
+                                    myContract.secType(SecType.STK);
+                                    myContract.exchange("SMART"); 
+                                    myContract.primaryExch("ISLAND");
+                                    myContract.currency("USD"); 
+                                    NewOrder o = new NewOrder();
 
-                                o.lmtPrice(fl_price);
-                                o.totalQuantity(i_numShares);
-                                o.tif(TimeInForce.DAY);
-                                o.outsideRth(true);
+                                    o.account("U1203596"); 
+                                    o.action(Action.BUY);
 
-                                // grab the latest (max) order id
-                                int i_parentBuyOrderId = 0; 
-                                int i_childSellOrderId = 0;
-                                int i_childStopOrderId = 0;
-                                int i_nextOrderId = 0; 
-                                try
-                                {
-                                    // new input stream created
-                                    FileInputStream fis = new FileInputStream("C:\\TWS API\\DayTradeApp\\latestOrder.txt");
-                                    BufferedReader fisReader = new BufferedReader(new InputStreamReader(fis));
+                                    if (fl_percentage < 0)
+                                    {
+                                        o.orderType(OrderType.STP); 
+                                    }
+                                    else
+                                    {
+                                        o.orderType(OrderType.LMT);                                     
+                                    }
 
-                                    String str_latestOrderId = fisReader.readLine();
-                                    i_parentBuyOrderId = Integer.parseInt(str_latestOrderId);
+                                    o.lmtPrice(fl_price);
+                                    o.totalQuantity(i_numShares);
+                                    o.tif(TimeInForce.DAY);
+                                    o.outsideRth(true);
 
-                                    System.out.println("The latest order id is " + i_parentBuyOrderId);
-                                    fis.close();
-                                }
-                                catch(Exception e)
-                                {
-                                    // if any I/O error occurs
-                                    System.out.println(e.getMessage()); 
-                                    e.printStackTrace();
-                                }
+                                    // grab the latest (max) order id
+                                    int i_parentFirstBuyOrderId = 0; 
+                                    int i_parentSecondBuyOrderId = 0; 
+                                    int i_childFirstSellOrderId = 0;
+                                    int i_childSecondSellOrderId = 0;
+                                    int i_childStopOrderId = 0;
 
-                                o.orderId(i_parentBuyOrderId); 
-                                o.transmit(true);
+                                    try
+                                    {
+                                        // new input stream created
+                                        FileInputStream fis = new FileInputStream("C:\\TWS API\\DayTradeApp\\latestOrder.txt");
+                                        BufferedReader fisReader = new BufferedReader(new InputStreamReader(fis));
 
-                                System.out.println("The NEXT parent buy order id is " + i_parentBuyOrderId);
-                                ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o); 
-                                System.out.println("You have just sent off the parent order");
+                                        String str_latestOrderId = fisReader.readLine();
+                                        i_parentFirstBuyOrderId = Integer.parseInt(str_latestOrderId);
 
-                                // Limit sell stop order
+                                        System.out.println("The latest order id is " + i_parentFirstBuyOrderId);
+                                        fis.close();
+                                    }
+                                    catch(Exception e)
+                                    {
+                                        // if any I/O error occurs
+                                        System.out.println(e.getMessage()); 
+                                        e.printStackTrace();
+                                    }
 
-                                i_childStopOrderId = i_parentBuyOrderId + 1; 
+                                    o.orderId(i_parentFirstBuyOrderId); 
+                                    o.transmit(true);
 
-                                NewOrder oStop = new NewOrder();
-                                oStop.action(Action.SELL);
-                                oStop.orderType(OrderType.STP); 
+                                    System.out.println("The NEXT parent buy order id is " + i_parentFirstBuyOrderId);
+                                    ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o); 
+                                    System.out.println("You have just sent off the parent order");
+                                    
+                                    i_childFirstSellOrderId = i_parentFirstBuyOrderId + 1; 
 
-                                double fl_childStopPrice;
-                                
-                                if (m_stopOrder.isSelected()  )
-                                {
-                                    System.out.println("Stop Order Selected");
-                                    fl_childStopPrice = fl_price - 0.105*fl_price;
-                                }else
-                                {
-                                    System.out.println("Stop Order NOT Selected");
-                                    fl_childStopPrice = fl_price - 0.8*fl_price;
-                                }
-                                
-                                m_stopOrder.setSelected(false); 
+                                    NewOrder oSell = new NewOrder();
+                                    oSell.action(Action.SELL);
+                                    oSell.orderType(OrderType.LMT); 
+                                    double fl_childSellPrice = fl_price + 0.05*fl_price;
+                                    if (fl_childSellPrice > 1.00)
+                                    {
+                                        fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
+                                    }
+                                    else 
+                                    {
+                                        fl_childSellPrice = Double.parseDouble(String.format( "%.4f", fl_childSellPrice )); 
+                                    }  
+                                    System.out.println("Child sell price is " + fl_childSellPrice);
+                                    oSell.lmtPrice(fl_childSellPrice);
+                                    oSell.totalQuantity(i_numShares);
+                                    oSell.tif(TimeInForce.DAY);
+                                    oSell.outsideRth(true);
+                                    oSell.orderId(i_childFirstSellOrderId); 
+                                    oSell.parentId(i_parentFirstBuyOrderId);
+                                    oSell.transmit(true);
 
-                                if (fl_childStopPrice > 1.00)
-                                {
-                                    fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
-                                }
-                                else 
-                                {
-                                    fl_childStopPrice = Double.parseDouble(String.format( "%.4f", fl_childStopPrice )); 
-                                }  
-                                System.out.println("Child stop order price is " + fl_childStopPrice);
-                                oStop.auxPrice(fl_childStopPrice);
-                                oStop.totalQuantity(i_numShares);
-                                oStop.tif(TimeInForce.DAY);
-                                oStop.outsideRth(true);
-                                oStop.orderId(i_childStopOrderId);
-                                oStop.parentId(i_parentBuyOrderId); 
-                                oStop.transmit(true);
+                                    System.out.println("The NEXT child sell order id is " + i_childFirstSellOrderId);
+                                    ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oSell); 
+                                    System.out.println("You have just sent off the child sell order");
 
-                                System.out.println("The NEXT child stop order id is " + i_childStopOrderId);
-                                ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oStop); 
-                                System.out.println("You have just sent off the child stop order");
+                                    i_nextOrderId =  i_childFirstSellOrderId + 1; // i_parentFirstBuyOrderId + 3;
+                                    
 
-                                // Limit sell bracket order
-
-                                i_childSellOrderId = i_parentBuyOrderId + 2; 
-
-                                NewOrder oSell = new NewOrder();
-                                oSell.action(Action.SELL);
-                                oSell.orderType(OrderType.LMT); 
-                                double fl_childSellPrice = fl_price + 0.05*fl_price;
-                                if (fl_childSellPrice > 1.00)
-                                {
-                                    fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
-                                }
-                                else 
-                                {
-                                    fl_childSellPrice = Double.parseDouble(String.format( "%.4f", fl_childSellPrice )); 
-                                }  
-                                System.out.println("Child sell price is " + fl_childSellPrice);
-                                oSell.lmtPrice(fl_childSellPrice);
-                                oSell.totalQuantity(i_numShares);
-                                oSell.tif(TimeInForce.DAY);
-                                oSell.outsideRth(true);
-                                oSell.orderId(i_childSellOrderId); 
-                                oSell.parentId(i_parentBuyOrderId);
-                                oSell.transmit(true);
-
-                                System.out.println("The NEXT child sell order id is " + i_childSellOrderId);
-                                ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oSell); 
-                                System.out.println("You have just sent off the child sell order");
-
-                                i_nextOrderId = i_parentBuyOrderId + 3;
-
-                                
+                                    // next we calculate the additional prices
+                                    // 10% past the first order percentage 
+                                    
+                                    // str_previousClose 
+                                    double fl_halfWayPercentage = fl_percentage + 5;
+                                    double fl_halfWayEntryPrice = fl_previousClose - (fl_halfWayPercentage*fl_previousClose/100); 
+                                    
+System.out.println("Half way percentage is " + fl_halfWayPercentage);
+System.out.println("Half way entry price is " + fl_halfWayEntryPrice); 
+                                    
+                                } // if we ARE averaging down 
+                                                                        
+                                                      
+                                m_averageDown.setSelected(false); 
+                                                                        
                                 // now we write the next order ID to the output file
                                 try
                                 {
@@ -1762,17 +1879,17 @@ System.exit(0);
                                 
                                 double fl_childStopPrice;
                                 
-                                if (m_stopOrder.isSelected()  )
+                                if (m_noStopOrder.isSelected()  )
                                 {
-                                    System.out.println("Stop Order Selected");
-                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                    System.out.println("No Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
                                 }else
                                 {
-                                    System.out.println("Stop Order NOT Selected");
-                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                    System.out.println("No Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
                                 }
                                 
-                                m_stopOrder.setSelected(false); 
+                                m_noStopOrder.setSelected(false); 
                                 
                                 if (fl_childStopPrice > 1.00)
                                 {
@@ -2001,17 +2118,17 @@ System.exit(0);
                                 
                                 double fl_childStopPrice;
                                 
-                                if (m_stopOrder.isSelected()  )
+                                if (m_noStopOrder.isSelected()  )
                                 {
-                                    System.out.println("Stop Order Selected");
-                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                    System.out.println("No Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
                                 }else
                                 {
-                                    System.out.println("Stop Order NOT Selected");
-                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                    System.out.println("No Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
                                 }
                                 
-                                m_stopOrder.setSelected(false); 
+                                m_noStopOrder.setSelected(false); 
                                 
                                 if (fl_childStopPrice > 1.00)
                                 {
@@ -2238,17 +2355,17 @@ System.exit(0);
                                 
                                 double fl_childStopPrice;
                                 
-                                if (m_stopOrder.isSelected()  )
+                                if (m_noStopOrder.isSelected()  )
                                 {
-                                    System.out.println("Stop Order Selected");
-                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                    System.out.println("No Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
                                 }else
                                 {
-                                    System.out.println("Stop Order NOT Selected");
-                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                    System.out.println("No Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
                                 }
                                 
-                                m_stopOrder.setSelected(false); 
+                                m_noStopOrder.setSelected(false); 
                                 
                                 if (fl_childStopPrice > 1.00)
                                 {
@@ -2475,17 +2592,17 @@ System.exit(0);
                                 
                                 double fl_childStopPrice;
                                 
-                                if (m_stopOrder.isSelected()  )
+                                if (m_noStopOrder.isSelected()  )
                                 {
-                                    System.out.println("Stop Order Selected");
-                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                    System.out.println("No Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
                                 }else
                                 {
-                                    System.out.println("Stop Order NOT Selected");
-                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                    System.out.println("No Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
                                 }
                                 
-                                m_stopOrder.setSelected(false); 
+                                m_noStopOrder.setSelected(false); 
                                 
                                 if (fl_childStopPrice > 1.00)
                                 {
@@ -2712,17 +2829,17 @@ System.exit(0);
                                 
                                 double fl_childStopPrice;
                                 
-                                if (m_stopOrder.isSelected()  )
+                                if (m_noStopOrder.isSelected()  )
                                 {
-                                    System.out.println("Stop Order Selected");
-                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                    System.out.println("No Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
                                 }else
                                 {
-                                    System.out.println("Stop Order NOT Selected");
-                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                    System.out.println("No Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
                                 }
                                 
-                                m_stopOrder.setSelected(false); 
+                                m_noStopOrder.setSelected(false); 
                                 
                                 if (fl_childStopPrice > 1.00)
                                 {
@@ -2949,17 +3066,17 @@ System.exit(0);
                                 
                                 double fl_childStopPrice;
                                 
-                                if (m_stopOrder.isSelected()  )
+                                if (m_noStopOrder.isSelected()  )
                                 {
-                                    System.out.println("Stop Order Selected");
-                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                    System.out.println("No Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
                                 }else
                                 {
-                                    System.out.println("Stop Order NOT Selected");
-                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                    System.out.println("No Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
                                 }
                                 
-                                m_stopOrder.setSelected(false); 
+                                m_noStopOrder.setSelected(false); 
                                 
                                 if (fl_childStopPrice > 1.00)
                                 {
@@ -3186,17 +3303,17 @@ System.exit(0);
                                 
                                 double fl_childStopPrice;
                                 
-                                if (m_stopOrder.isSelected()  )
+                                if (m_noStopOrder.isSelected()  )
                                 {
-                                    System.out.println("Stop Order Selected");
-                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                    System.out.println("No Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
                                 }else
                                 {
-                                    System.out.println("Stop Order NOT Selected");
-                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                    System.out.println("No Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
                                 }
                                 
-                                m_stopOrder.setSelected(false); 
+                                m_noStopOrder.setSelected(false); 
                                 
                                 if (fl_childStopPrice > 1.00)
                                 {
@@ -3423,17 +3540,17 @@ System.exit(0);
                                 
                                 double fl_childStopPrice;
                                 
-                                if (m_stopOrder.isSelected()  )
+                                if (m_noStopOrder.isSelected()  )
                                 {
-                                    System.out.println("Stop Order Selected");
-                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                    System.out.println("No Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
                                 }else
                                 {
-                                    System.out.println("Stop Order NOT Selected");
-                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                    System.out.println("No Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
                                 }
                                 
-                                m_stopOrder.setSelected(false); 
+                                m_noStopOrder.setSelected(false); 
                                 
                                 if (fl_childStopPrice > 1.00)
                                 {
@@ -3660,17 +3777,17 @@ System.exit(0);
                                 
                                 double fl_childStopPrice;
                                 
-                                if (m_stopOrder.isSelected()  )
+                                if (m_noStopOrder.isSelected()  )
                                 {
-                                    System.out.println("Stop Order Selected");
-                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                    System.out.println("No Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
                                 }else
                                 {
-                                    System.out.println("Stop Order NOT Selected");
-                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                    System.out.println("No Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
                                 }
                                 
-                                m_stopOrder.setSelected(false); 
+                                m_noStopOrder.setSelected(false); 
                                 
                                 if (fl_childStopPrice > 1.00)
                                 {
@@ -3897,17 +4014,17 @@ System.exit(0);
                                 
                                 double fl_childStopPrice;
                                 
-                                if (m_stopOrder.isSelected()  )
+                                if (m_noStopOrder.isSelected()  )
                                 {
-                                    System.out.println("Stop Order Selected");
-                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                    System.out.println("No Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
                                 }else
                                 {
-                                    System.out.println("Stop Order NOT Selected");
-                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                    System.out.println("No Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
                                 }
                                 
-                                m_stopOrder.setSelected(false); 
+                                m_noStopOrder.setSelected(false); 
                                 
                                 if (fl_childStopPrice > 1.00)
                                 {
@@ -4130,17 +4247,17 @@ System.exit(0);
                                 
                                 double fl_childStopPrice;
                                 
-                                if (m_stopOrder.isSelected()  )
+                                if (m_noStopOrder.isSelected()  )
                                 {
-                                    System.out.println("Stop Order Selected");
-                                    fl_childStopPrice = fl_price - 0.105*fl_price;
+                                    System.out.println("No Stop Order Selected");
+                                    fl_childStopPrice = fl_price - 0.8*fl_price;
                                 }else
                                 {
-                                    System.out.println("Stop Order NOT Selected");
-                                    fl_childStopPrice = fl_price - 0.8*fl_price;
+                                    System.out.println("No Stop Order NOT Selected");
+                                    fl_childStopPrice = fl_price - 0.105*fl_price;
                                 }
                                 
-                                m_stopOrder.setSelected(false); 
+                                m_noStopOrder.setSelected(false); 
                                 
                                 if (fl_childStopPrice > 1.00)
                                 {
@@ -4436,7 +4553,9 @@ System.exit(0);
                         p1.add("Send:", m_b10); 
                         p1.add("Send:", m_b11);
                         p1.add("Send:", m_b95);
-                        p1.add("", m_stopOrder); 
+                        p1.add("", m_noStopOrder); 
+                        p1.add("", m_averageDown); 
+                        
 
 			JPanel p2 = new VerticalPanel();
                         // p2.add(m_b2); 
