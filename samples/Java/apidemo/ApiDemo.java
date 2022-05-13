@@ -1628,13 +1628,13 @@ System.exit(0);
                                     o.tif(TimeInForce.DAY);
                                     o.outsideRth(true);
 
-                                    // grab the latest (max) order id
                                     int i_parentFirstBuyOrderId = 0; 
                                     int i_parentSecondBuyOrderId = 0; 
                                     int i_childFirstSellOrderId = 0;
                                     int i_childSecondSellOrderId = 0;
                                     int i_secondOrderStopId = 0;
 
+                                    // grab the latest (max) order id
                                     try
                                     {
                                         // new input stream created
@@ -1700,6 +1700,17 @@ System.exit(0);
                                     
                                     double fl_secondBuyOrderPercentage = fl_percentage +  10; 
                                     double fl_secondBuyOrderEntryPrice = fl_previousClose - (fl_secondBuyOrderPercentage*fl_previousClose/100); 
+                                    
+                                    // if it's a dollar stock and we are then going to pennies, Interactive Brokers won't accept 4-digit penny prices
+                                    // so we have to adjust 
+                                    if (fl_price > 1.00)
+                                    {
+                                        fl_secondBuyOrderEntryPrice = Double.parseDouble(String.format( "%.2f", fl_secondBuyOrderEntryPrice )); 
+                                    }
+                                    else
+                                    {
+                                        fl_secondBuyOrderEntryPrice = Double.parseDouble(String.format( "%.4f", fl_secondBuyOrderEntryPrice )); 
+                                    }
 
                                     // 2nd parent buy order 
                                     
@@ -1749,11 +1760,22 @@ System.exit(0);
                                     else 
                                     {
                                         fl_childSellPrice = fl_halfWayEntryPrice + 0.0002; 
-                                        fl_childSellPrice = Double.parseDouble(String.format( "%.4f", fl_childSellPrice )); 
+
+                                        // if it's a dollar stock and we are then going to pennies, Interactive Brokers won't accept 4-digit penny prices
+                                        // so we have to adjust 
+                                        if (fl_price > 1.00)
+                                        {
+                                            fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
+                                        }
+                                        else
+                                        {
+                                            fl_childSellPrice = Double.parseDouble(String.format( "%.4f", fl_childSellPrice )); 
+                                        }
+
                                     }  
                                     System.out.println("Child sell price is " + fl_childSellPrice);
                                     o2Sell.lmtPrice(fl_childSellPrice);
-                                    o2Sell.totalQuantity(i_numShares*2);
+                                    o2Sell.totalQuantity(i_numShares);
                                     o2Sell.tif(TimeInForce.DAY);
                                     o2Sell.outsideRth(true);
                                     o2Sell.orderId(i_childSecondSellOrderId); 
@@ -1773,6 +1795,12 @@ System.exit(0);
                                     double fl_childStopPrice;
 
                                     fl_childStopPrice = fl_halfWayEntryPrice - 0.105*fl_halfWayEntryPrice;
+                                    
+                                    if (fl_childStopPrice > fl_secondBuyOrderEntryPrice)
+                                    {
+                                        double fl_secondBuyStopOrderPercentage = fl_percentage +  12; 
+                                        fl_childStopPrice = fl_previousClose - (fl_secondBuyStopOrderPercentage*fl_previousClose/100); 
+                                    }
 
                                     m_noStopOrder.setSelected(false); 
 
@@ -1782,7 +1810,16 @@ System.exit(0);
                                     }
                                     else 
                                     {
-                                        fl_childStopPrice = Double.parseDouble(String.format( "%.4f", fl_childStopPrice )); 
+                                        // if it's a dollar stock and we are then going to pennies, Interactive Brokers won't accept 4-digit penny prices
+                                        // so we have to adjust 
+                                        if (fl_price > 1.00)
+                                        {
+                                            fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
+                                        }
+                                        else
+                                        {
+                                            fl_childStopPrice = Double.parseDouble(String.format( "%.4f", fl_childStopPrice )); 
+                                        }
                                     }  
                                     System.out.println("Child stop order price is " + fl_childStopPrice);
                                     o2Stop.auxPrice(fl_childStopPrice);
