@@ -3,7 +3,6 @@
 
 package apidemo;
 
-
 import java.awt.BorderLayout; 
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -65,10 +64,15 @@ import com.ib.controller.Types.NewsType;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public class ApiDemo implements IConnectionHandler {
 	static { NewLookAndFeel.register(); }
 	static ApiDemo INSTANCE = new ApiDemo();
 
+        public final int i_halfwayDown = 5; 
+        public final int i_averageDownSpread = 10; 
+        public final int i_stopOrderPercentage = 10; 
+        
 	private final JTextArea m_inLog = new JTextArea();
 	private final JTextArea m_outLog = new JTextArea();
 	private final Logger m_inLogger = new Logger( m_inLog);
@@ -266,7 +270,6 @@ public class ApiDemo implements IConnectionHandler {
                         e.printStackTrace();
                     }
 
-
                     /*
                     String str_orderText = m_orderText.getText().trim();
 
@@ -282,7 +285,6 @@ public class ApiDemo implements IConnectionHandler {
                     String[] arr_orderParameters = str_orderText.split(" ");
                     String str_symbol = arr_orderParameters[0];
                     str_symbol = str_symbol.replaceAll("\\.", " ");
-
 
                     System.out.println("Symbol is " + str_symbol);
 
@@ -397,7 +399,7 @@ public class ApiDemo implements IConnectionHandler {
                         }else
                         {
                             System.out.println("No Stop Order NOT Selected");
-                            fl_childStopPrice = fl_price - 0.105*fl_price;
+                            fl_childStopPrice = fl_price - fl_price*(i_stopOrderPercentage/100;
                         }
 
                         m_noStopOrder.setSelected(false); 
@@ -430,7 +432,7 @@ public class ApiDemo implements IConnectionHandler {
                         NewOrder oSell = new NewOrder();
                         oSell.action(Action.SELL);
                         oSell.orderType(OrderType.LMT); 
-                        double fl_childSellPrice = fl_price + 0.05*fl_price;
+                        double fl_childSellPrice = fl_price + fl_price*(fl_percentProfit/100);
                         if (fl_childSellPrice > 1.00)
                         {
                             fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
@@ -523,7 +525,7 @@ public class ApiDemo implements IConnectionHandler {
                         NewOrder oSell = new NewOrder();
                         oSell.action(Action.SELL);
                         oSell.orderType(OrderType.LMT); 
-                        double fl_childSellPrice = fl_price + 0.05*fl_price;
+                        double fl_childSellPrice = fl_price + fl_price*(fl_percentProfit/100);
                         if (fl_childSellPrice > 1.00)
                         {
                             fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
@@ -552,10 +554,10 @@ public class ApiDemo implements IConnectionHandler {
                         // 10% past the first order percentage 
 
                         // str_previousClose 
-                        double fl_halfWayPercentage = fl_percentage + 5;
+                        double fl_halfWayPercentage = fl_percentage + i_halfwayDown;
                         double fl_halfWayEntryPrice = fl_previousClose - (fl_halfWayPercentage*fl_previousClose/100); 
 
-                        double fl_secondBuyOrderPercentage = fl_percentage +  10; 
+                        double fl_secondBuyOrderPercentage = fl_percentage +  i_averageDownSpread; 
                         double fl_secondBuyOrderEntryPrice = fl_previousClose - (fl_secondBuyOrderPercentage*fl_previousClose/100); 
 
                         // if it's a dollar stock and we are then going to pennies, Interactive Brokers won't accept 4-digit penny prices
@@ -651,7 +653,7 @@ public class ApiDemo implements IConnectionHandler {
 
                         double fl_childStopPrice;
 
-                        fl_childStopPrice = fl_halfWayEntryPrice - 0.105*fl_halfWayEntryPrice;
+                        fl_childStopPrice = fl_halfWayEntryPrice - fl_halfWayEntryPrice*(i_stopOrderPercentage/100); 
 
                         if (fl_childStopPrice > fl_secondBuyOrderEntryPrice)
                         {
@@ -726,23 +728,7 @@ public class ApiDemo implements IConnectionHandler {
                     m_orderText.setText(""); 
 
                     javax.swing.JOptionPane.showMessageDialog(p1, str_orderText + "\n\nHas been placed successfully", "Order Placed", JOptionPane.NO_OPTION);
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+
                 }
                 
                 public void sendOrder(double percentageProfit)
@@ -990,21 +976,7 @@ public class ApiDemo implements IConnectionHandler {
                 	    } // end of the click "Send" event handler for 
                         });                    
 
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
+
                         // No bracket button 
                         
                         m_noBracket.addActionListener(new java.awt.event.ActionListener()
