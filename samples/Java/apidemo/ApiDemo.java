@@ -149,7 +149,7 @@ public class ApiDemo implements IConnectionHandler {
 		bot.addTab( "Messages", msgScroll);
 		bot.addTab( "Log (out)", outLogScroll);
 		bot.addTab( "Log (in)", inLogScroll);
-		
+
         m_frame.add( m_tabbedPanel);
         m_frame.add( bot, BorderLayout.SOUTH);
         m_frame.setSize( 1024, 768);
@@ -399,7 +399,7 @@ public class ApiDemo implements IConnectionHandler {
                         }else
                         {
                             System.out.println("No Stop Order NOT Selected");
-                            fl_childStopPrice = fl_price - fl_price*(i_stopOrderPercentage/100;
+                            fl_childStopPrice = fl_price - fl_price*i_stopOrderPercentage/100;
                         }
 
                         m_noStopOrder.setSelected(false); 
@@ -432,7 +432,7 @@ public class ApiDemo implements IConnectionHandler {
                         NewOrder oSell = new NewOrder();
                         oSell.action(Action.SELL);
                         oSell.orderType(OrderType.LMT); 
-                        double fl_childSellPrice = fl_price + fl_price*(fl_percentProfit/100);
+                        double fl_childSellPrice = fl_price + fl_price*fl_percentProfit/100;
                         if (fl_childSellPrice > 1.00)
                         {
                             fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
@@ -525,7 +525,7 @@ public class ApiDemo implements IConnectionHandler {
                         NewOrder oSell = new NewOrder();
                         oSell.action(Action.SELL);
                         oSell.orderType(OrderType.LMT); 
-                        double fl_childSellPrice = fl_price + fl_price*(fl_percentProfit/100);
+                        double fl_childSellPrice = fl_price + fl_price*fl_percentProfit/100;
                         if (fl_childSellPrice > 1.00)
                         {
                             fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
@@ -653,7 +653,7 @@ public class ApiDemo implements IConnectionHandler {
 
                         double fl_childStopPrice;
 
-                        fl_childStopPrice = fl_halfWayEntryPrice - fl_halfWayEntryPrice*(i_stopOrderPercentage/100); 
+                        fl_childStopPrice = fl_halfWayEntryPrice - fl_halfWayEntryPrice*i_stopOrderPercentage/100; 
 
                         if (fl_childStopPrice > fl_secondBuyOrderEntryPrice)
                         {
