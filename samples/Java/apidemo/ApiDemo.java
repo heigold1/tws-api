@@ -739,12 +739,18 @@ public class ApiDemo implements IConnectionHandler {
                         if (fl_secondBuyOrderEntryPrice > 0.01)
                         {
                             fl_thirdProfitTakerSellPrice = fl_secondBuyOrderEntryPrice + 0.01; 
-                            fl_thirdProfitTakerSellPrice = Double.parseDouble(String.format( "%.2f", fl_thirdProfitTakerSellPrice )); 
                         }
                         else 
                         {
                             fl_thirdProfitTakerSellPrice = fl_secondBuyOrderEntryPrice + 0.0005; 
+                        }  
 
+                        if (fl_thirdProfitTakerSellPrice > 1.00)
+                        {
+                            fl_thirdProfitTakerSellPrice = Double.parseDouble(String.format( "%.2f", fl_thirdProfitTakerSellPrice )); 
+                        }   
+                        else
+                        {
                             // if it's a dollar stock and we are then going to pennies, Interactive Brokers won't accept 4-digit penny prices
                             // so we have to adjust 
                             if (fl_previousClose > 1.00)
@@ -755,8 +761,7 @@ public class ApiDemo implements IConnectionHandler {
                             {
                                 fl_thirdProfitTakerSellPrice = Double.parseDouble(String.format( "%.4", fl_thirdProfitTakerSellPrice )); 
                             }
-                            
-                        }  
+                        }
 
                         NewOrder o3Sell = new NewOrder();
                         o3Sell.account("U1203596"); 
