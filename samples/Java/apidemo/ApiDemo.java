@@ -409,7 +409,17 @@ public class ApiDemo implements IConnectionHandler {
                         }
                         else 
                         {
-                            fl_childStopPrice = Double.parseDouble(String.format( "%.4f", fl_childStopPrice )); 
+                            
+                            // if it's a dollar stock and we are then going to pennies, Interactive Brokers won't accept 4-digit penny prices
+                            // so we have to adjust 
+                            if (fl_price > 1.00)
+                            {
+                                fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
+                            }
+                            else
+                            {
+                                fl_childStopPrice = Double.parseDouble(String.format( "%.4f", fl_childStopPrice )); 
+                            }
                         }  
                         System.out.println("Child stop order price is " + fl_childStopPrice);
                         oStop.auxPrice(fl_childStopPrice);
@@ -1023,7 +1033,7 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(5, 3); 
+                                m_connectionPanel.createOrders(5, 3.2); 
                 	    } 
                         });  // end of the click event handler for "Fast 5%" 
                         
@@ -1033,7 +1043,7 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(5.15, 3); 
+                                m_connectionPanel.createOrders(5.15, 3.2); 
                 	    } 
                         });  // end of the click event handler for "Fast 5.15%" 
                         
