@@ -411,8 +411,8 @@ public class ApiDemo implements IConnectionHandler {
                         {
                             
                             // if it's a dollar stock and we are then going to pennies, Interactive Brokers won't accept 4-digit penny prices
-                            // so we have to adjust 
-                            if (fl_price > 1.00)
+                            // if the previous day's closing price was over $1.00 
+                            if (fl_previousClose > 1.00)
                             {
                                 fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
                             }
@@ -539,15 +539,24 @@ public class ApiDemo implements IConnectionHandler {
                         oSell.action(Action.SELL);
                         oSell.orderType(OrderType.LMT); 
                         double fl_childSellPrice = fl_price + fl_price*fl_percentProfit/100;
+
                         if (fl_childSellPrice > 1.00)
                         {
                             fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
                         }
                         else 
                         {
-                            fl_childSellPrice = Double.parseDouble(String.format( "%.4f", fl_childSellPrice )); 
+
+                            if (fl_previousClose > 1.00)
+                            {
+                                fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
+                            }
+                            else
+                            {
+                                fl_childSellPrice = Double.parseDouble(String.format( "%.4f", fl_childSellPrice )); 
+                            }
                         }  
-                        System.out.println("Child sell price is " + fl_childSellPrice);
+
                         oSell.lmtPrice(fl_childSellPrice);
                         oSell.totalQuantity(i_numShares);
                         oSell.tif(TimeInForce.DAY);
@@ -556,10 +565,10 @@ public class ApiDemo implements IConnectionHandler {
                         oSell.parentId(i_parentFirstBuyOrderId);
                         oSell.transmit(true);
 
-                        System.out.println("The NEXT child sell order id is " + i_childFirstSellOrderId);
                         ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oSell); 
                         System.out.println("You have just sent off the child sell order");
 
+                        
                         i_nextOrderId =  i_childFirstSellOrderId + 1; // i_parentFirstBuyOrderId + 3;
                         i_parentSecondBuyOrderId = i_nextOrderId; 
 
@@ -580,7 +589,14 @@ public class ApiDemo implements IConnectionHandler {
                         }
                         else
                         {
-                            fl_secondBuyOrderEntryPrice = Double.parseDouble(String.format( "%.4f", fl_secondBuyOrderEntryPrice )); 
+                            if (fl_previousClose > 1.00)
+                            {
+                                fl_secondBuyOrderEntryPrice = Double.parseDouble(String.format( "%.2f", fl_secondBuyOrderEntryPrice )); 
+                            }
+                            else
+                            {
+                                fl_secondBuyOrderEntryPrice = Double.parseDouble(String.format( "%.4f", fl_secondBuyOrderEntryPrice )); 
+                            }
                         }
 
                         // 2nd parent buy order 
@@ -610,10 +626,16 @@ public class ApiDemo implements IConnectionHandler {
                         i_nextOrderId = i_parentSecondBuyOrderId + 1; 
                         i_childSecondSellOrderId = i_nextOrderId; 
 
-                        // 2nd sell child order 
+                        // 2nd order's child sell order 
 
                         double fl_midwayPercentage = (fl_percentage + fl_secondBuyOrderPercentage)/2; 
                         double fl_midwayPrice = fl_previousClose - (fl_midwayPercentage*fl_previousClose/100); 
+                        
+                        // if we're dealing with penny stocks then we can bump up the profit-taker percentage by a small amount
+                        if (fl_midwayPrice < 1.00)
+                        {
+                            fl_secondaryPercentProfit += 0.5; 
+                        }
                         
                         double fl_secondProfitTakerSellPrice = fl_midwayPrice + fl_midwayPrice*fl_secondaryPercentProfit/100; 
 
@@ -626,6 +648,17 @@ public class ApiDemo implements IConnectionHandler {
                             if (fl_price > 1.00)
                             {
                                 fl_secondProfitTakerSellPrice = Double.parseDouble(String.format( "%.2f", fl_secondProfitTakerSellPrice )); 
+                            }
+                            else 
+                            {
+                                if (fl_previousClose > 1.00)
+                                {
+                                    fl_secondProfitTakerSellPrice = Double.parseDouble(String.format( "%.2f", fl_secondProfitTakerSellPrice )); 
+                                }
+                                else
+                                {
+                                    fl_secondProfitTakerSellPrice = Double.parseDouble(String.format( "%.4f", fl_secondProfitTakerSellPrice )); 
+                                }
                             }
                         }
 
@@ -668,6 +701,17 @@ public class ApiDemo implements IConnectionHandler {
                             {
                                 fl_thirdBuyOrderEntryPrice = Double.parseDouble(String.format( "%.2f", fl_thirdBuyOrderEntryPrice )); 
                             }
+                            else 
+                            {
+                                if (fl_previousClose > 1.00)
+                                {
+                                    fl_thirdBuyOrderEntryPrice = Double.parseDouble(String.format( "%.2f", fl_thirdBuyOrderEntryPrice )); 
+                                }
+                                else
+                                {
+                                    fl_thirdBuyOrderEntryPrice = Double.parseDouble(String.format( "%.4f", fl_thirdBuyOrderEntryPrice )); 
+                                }
+                            }
                         }  
                         
                         NewOrder o3 = new NewOrder();
@@ -699,14 +743,19 @@ public class ApiDemo implements IConnectionHandler {
                         }
                         else 
                         {
-                            fl_thirdProfitTakerSellPrice = fl_secondBuyOrderEntryPrice + 0.0004; 
+                            fl_thirdProfitTakerSellPrice = fl_secondBuyOrderEntryPrice + 0.0005; 
 
                             // if it's a dollar stock and we are then going to pennies, Interactive Brokers won't accept 4-digit penny prices
                             // so we have to adjust 
-                            if (fl_price > 1.00)
+                            if (fl_previousClose > 1.00)
                             {
                                 fl_thirdProfitTakerSellPrice = Double.parseDouble(String.format( "%.2f", fl_thirdProfitTakerSellPrice )); 
                             }
+                            else 
+                            {
+                                fl_thirdProfitTakerSellPrice = Double.parseDouble(String.format( "%.4", fl_thirdProfitTakerSellPrice )); 
+                            }
+                            
                         }  
 
                         NewOrder o3Sell = new NewOrder();
@@ -729,7 +778,6 @@ public class ApiDemo implements IConnectionHandler {
                         o3Sell.orderId(i_childThirdSellOrderId); 
                         ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o3Sell); 
 
-                        
                         i_nextOrderId = i_childThirdSellOrderId + 1; 
                         
                         i_thirdOrderStopId = i_nextOrderId; 
@@ -757,9 +805,13 @@ public class ApiDemo implements IConnectionHandler {
                         {
                             // if it's a dollar stock and we are then going to pennies, Interactive Brokers won't accept 4-digit penny prices
                             // so we have to adjust 
-                            if (fl_price > 1.00)
+                            if (fl_previousClose > 1.00)
                             {
                                 fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
+                            }
+                            else 
+                            {
+                                fl_childStopPrice = Double.parseDouble(String.format( "%.4f", fl_childStopPrice )); 
                             }
                         }  
                         
