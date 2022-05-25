@@ -759,7 +759,7 @@ public class ApiDemo implements IConnectionHandler {
                             }
                             else 
                             {
-                                fl_thirdProfitTakerSellPrice = Double.parseDouble(String.format( "%.4", fl_thirdProfitTakerSellPrice )); 
+                                fl_thirdProfitTakerSellPrice = Double.parseDouble(String.format( "%.4f", fl_thirdProfitTakerSellPrice )); 
                             }
                         }
 
