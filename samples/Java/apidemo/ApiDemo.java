@@ -237,8 +237,9 @@ public class ApiDemo implements IConnectionHandler {
                 JButton m_b10 = new JButton("12%");                 
                 JButton m_b11 = new JButton("13%");
                 JButton m_b95 = new JButton("95%");
-                JCheckBox m_noStopOrder = new JCheckBox("No Stop Order"); 
-                JCheckBox m_averageDown = new JCheckBox("Average Down"); 
+                JCheckBox m_noStopOrder = new JCheckBox("No Stop"); 
+                JCheckBox m_averageDown = new JCheckBox("3 Pt Avg"); 
+                JCheckBox m_jaysAlgorithm = new JCheckBox("Jay's Alg"); 
 		
                 JTextField m_profitTakerHighRisk = new JTextField("3.5", 15);
                 JTextField m_profitTakerNonHighRisk = new JTextField("4.2", 15);
@@ -424,12 +425,6 @@ public class ApiDemo implements IConnectionHandler {
                         
                         i_nextOrderId =  i_childFirstSellOrderId + 1; // i_parentFirstBuyOrderId + 3;
                         i_parentSecondBuyOrderId = i_nextOrderId; 
-
-                        // next we calculate the additional prices
-
-                        // str_previousClose 
-/*                        double fl_halfWayPercentage = fl_percentage + i_halfwayDown;
-                        double fl_halfWayEntryPrice = fl_previousClose - (fl_halfWayPercentage*fl_previousClose/100);  */ 
 
                         double fl_secondBuyOrderPercentage = fl_percentage +  i_halfwayDown; 
                         double fl_secondBuyOrderEntryPrice = fl_previousClose - (fl_secondBuyOrderPercentage*fl_previousClose/100); 
@@ -696,9 +691,247 @@ public class ApiDemo implements IConnectionHandler {
                         m_averageDown.setSelected(false); 
                         
                     } // if we ARE averaging down 
+                    else if (m_jaysAlgorithm.isSelected())
+                    {
+                        System.out.println("Jay's Algorithm Selected");                                    
+                        m_jaysAlgorithm.setSelected(false); 
+                        
+                        int i_firstOrderParent = 0; 
+                        int i_firstOrderChildSell = 0; 
+                        int i_secondOrderParent = 0; 
+                        int i_breakEvenOrder = 0; 
+                        int i_stopOrder = 0; 
+
+                        // Order starts here                                 
+                        NewContract myContract = new NewContract();
+                        myContract.symbol(str_symbol); 
+                        myContract.secType(SecType.STK);
+                        myContract.exchange("SMART"); 
+                        myContract.primaryExch("ISLAND");
+                        myContract.currency("USD"); 
+                        NewOrder o = new NewOrder();
+
+                        o.account("U1203596"); 
+                        o.action(Action.BUY);
+                        o.lmtPrice(fl_price);
+                        o.totalQuantity(i_numShares);
+                        o.tif(TimeInForce.DAY);
+                        o.outsideRth(true);
+
+                        // grab the latest (max) order id
+                        try
+                        {
+                            // new input stream created
+                            FileInputStream fis = new FileInputStream("C:\\TWS API\\DayTradeApp\\latestOrder.txt");
+                            BufferedReader fisReader = new BufferedReader(new InputStreamReader(fis));
+
+                            String str_latestOrderId = fisReader.readLine();
+                            i_firstOrderParent = Integer.parseInt(str_latestOrderId);
+
+                            System.out.println("The latest order id is " + i_firstOrderParent);
+                            fis.close();
+                        }
+                        catch(Exception e)
+                        {
+                            // if any I/O error occurs
+                            System.out.println(e.getMessage()); 
+                            e.printStackTrace();
+                        }
+
+                        o.orderId(i_firstOrderParent); 
+                        o.transmit(true);
+
+                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o); 
+                        System.out.println("You have just sent off the parent order");
+
+                        i_firstOrderChildSell = i_firstOrderParent + 1; 
+
+                        NewOrder oSell = new NewOrder();
+                        oSell.action(Action.SELL);
+                        oSell.orderType(OrderType.LMT); 
+                        double fl_childSellPrice = fl_price + fl_price*fl_percentProfit/100;
+                        
+                        if (fl_childSellPrice > 1.00)
+                        {
+                            fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
+                        }
+                        else 
+                        {
+
+                            if (fl_previousClose > 1.00)
+                            {
+                                fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
+                            }
+                            else
+                            {
+                                fl_childSellPrice = Double.parseDouble(String.format( "%.4f", fl_childSellPrice )); 
+                            }
+                        }  
+
+                        oSell.lmtPrice(fl_childSellPrice);
+                        oSell.totalQuantity(i_numShares);
+                        oSell.tif(TimeInForce.DAY);
+                        oSell.outsideRth(true);
+                        oSell.orderId(i_firstOrderChildSell); 
+                        oSell.parentId(i_firstOrderParent);
+                        oSell.transmit(true);
+
+                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oSell); 
+                        System.out.println("You have just sent off the child sell order");
+
+                        i_secondOrderParent = i_firstOrderChildSell + 1; 
+                        
+                        // If it goes 12% past our original order, then we place our second order. 
+                        double fl_secondBuyOrderEntryPrice = fl_price - fl_price*0.12; 
+
+                        // if it's a dollar stock and we are then going to pennies, Interactive Brokers won't accept 4-digit penny prices
+                        // so we have to adjust 
+                        if (fl_price > 1.00)
+                        {
+                            fl_secondBuyOrderEntryPrice = Double.parseDouble(String.format( "%.2f", fl_secondBuyOrderEntryPrice )); 
+                        }
+                        else
+                        {
+                            if (fl_previousClose > 1.00)
+                            {
+                                fl_secondBuyOrderEntryPrice = Double.parseDouble(String.format( "%.2f", fl_secondBuyOrderEntryPrice )); 
+                            }
+                            else
+                            {
+                                fl_secondBuyOrderEntryPrice = Double.parseDouble(String.format( "%.4f", fl_secondBuyOrderEntryPrice )); 
+                            }
+                        }
+
+                        // 2nd parent buy order 
+
+                        myContract = new NewContract();
+                        myContract.symbol(str_symbol); 
+                        myContract.secType(SecType.STK);
+                        myContract.exchange("SMART"); 
+                        myContract.primaryExch("ISLAND");
+                        myContract.currency("USD"); 
+                        NewOrder o2 = new NewOrder();
+
+                        o2.account("U1203596"); 
+                        o2.action(Action.BUY);
+                        o2.orderType(OrderType.LMT);                                     
+
+                        o2.lmtPrice(fl_secondBuyOrderEntryPrice);
+                        o2.totalQuantity(i_numShares);
+                        o2.tif(TimeInForce.DAY);
+                        o2.outsideRth(true);
+                        o2.orderId(i_secondOrderParent); 
+                        o2.transmit(true);
+
+                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o2); 
+                        System.out.println("You have just sent off the SECOND parent order");
+
+                        i_breakEvenOrder = i_secondOrderParent + 1; 
+
+                        double fl_breakEvenPrice = (fl_price + fl_secondBuyOrderEntryPrice)/2; 
+
+                        if (fl_breakEvenPrice > 1.00)
+                        {
+                            fl_breakEvenPrice = Double.parseDouble(String.format( "%.2f", fl_breakEvenPrice )); 
+                        }
+                        else 
+                        {
+                            // if it's a dollar stock and we are then going to pennies, Interactive Brokers won't accept 4-digit penny prices
+                            // so we have to adjust 
+                            if (fl_price > 1.00)
+                            {
+                                fl_breakEvenPrice = Double.parseDouble(String.format( "%.2f", fl_breakEvenPrice )); 
+                            }
+                            else 
+                            {
+                                if (fl_previousClose > 1.00)
+                                {
+                                    fl_breakEvenPrice = Double.parseDouble(String.format( "%.2f", fl_breakEvenPrice )); 
+                                }
+                                else
+                                {
+                                    fl_breakEvenPrice = Double.parseDouble(String.format( "%.4f", fl_breakEvenPrice )); 
+                                }
+                            }
+                        }  
+                        
+                        NewOrder o3 = new NewOrder();
+
+                        o3.account("U1203596"); 
+                        o3.action(Action.SELL);
+                        o3.orderType(OrderType.LMT);                                     
+                        o3.lmtPrice(fl_breakEvenPrice);
+                        o3.totalQuantity(i_numShares);
+                        o3.tif(TimeInForce.DAY);
+                        o3.outsideRth(true);
+                        o3.orderId(i_breakEvenOrder); 
+                        o3.parentId(i_secondOrderParent);
+                        o3.transmit(true);
+
+                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o3); 
+                        
+                        // we're placing the break even order twice, because now we have double the shares from the first and second orders 
+                        i_breakEvenOrder++; 
+                        o3.orderId(i_breakEvenOrder); 
+                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o3); 
+
+                        i_stopOrder = i_breakEvenOrder + 1;  
+                        
+                        double fl_stopPrice = fl_breakEvenPrice - fl_breakEvenPrice*0.25; 
+                        
+                        System.out.println("fl_stopPrice is " + fl_stopPrice);
+                        
+                        if (fl_stopPrice > 1.00)
+                        {
+                            fl_stopPrice = Double.parseDouble(String.format( "%.2f", fl_stopPrice )); 
+                        }
+                        else 
+                        {
+                            // if it's a dollar stock and we are then going to pennies, Interactive Brokers won't accept 4-digit penny prices
+                            // so we have to adjust 
+                            if (fl_price > 1.00)
+                            {
+                                fl_stopPrice = Double.parseDouble(String.format( "%.2f", fl_stopPrice )); 
+                            }
+                            else 
+                            {
+                                if (fl_previousClose > 1.00)
+                                {
+                                    fl_stopPrice = Double.parseDouble(String.format( "%.2f", fl_stopPrice )); 
+                                }
+                                else
+                                {
+                                    fl_stopPrice = Double.parseDouble(String.format( "%.4f", fl_stopPrice )); 
+                                }
+                            }
+                        }  
+                        
+                        NewOrder oStop = new NewOrder();
+
+                        oStop.account("U1203596"); 
+                        oStop.action(Action.SELL);
+                        oStop.orderType(OrderType.STP);                                     
+                        oStop.auxPrice(fl_stopPrice);
+                        oStop.totalQuantity(i_numShares);
+                        oStop.tif(TimeInForce.DAY);
+                        oStop.outsideRth(true);
+                        oStop.orderId(i_stopOrder); 
+                        oStop.parentId(i_secondOrderParent);
+                        oStop.transmit(true);
+
+                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oStop); 
+                        System.out.println("You have just sent off the stop order");
+                        
+                        i_stopOrder++;
+                        oStop.orderId(i_stopOrder); 
+                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oStop); 
+                        
+                        i_nextOrderId = i_stopOrder + 1; 
+
+                    }
                     else
                     {
-                        System.out.println("Average Down is not selected");
+                        System.out.println("No averaging is selected");
 
 
                         // Order starts here                                 
@@ -1411,6 +1644,7 @@ public class ApiDemo implements IConnectionHandler {
                         p1.add("Send:", m_b95);
                         p1.add("", m_noStopOrder); 
                         p1.add("", m_averageDown); 
+                        p1.add("", m_jaysAlgorithm); 
                         
 
 			JPanel p2 = new VerticalPanel();
