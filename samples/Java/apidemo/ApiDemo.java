@@ -70,8 +70,10 @@ public class ApiDemo implements IConnectionHandler {
 	static ApiDemo INSTANCE = new ApiDemo();
 
         public final int i_halfwayDown = 5; 
-        public final int i_averageDownSpread = 10; 
-        public final int i_stopOrderPercentage = 10; 
+        public final int i_averageDownSpread = 12; 
+        public final int i_stopOrderPercentage = 25; 
+        public final double fl_secondOrderPercentageProfit = 4.1; 
+        public final double fl_thirdOrderPercentageProfit = 3.5; 
         
 	private final JTextArea m_inLog = new JTextArea();
 	private final JTextArea m_outLog = new JTextArea();
@@ -426,8 +428,9 @@ public class ApiDemo implements IConnectionHandler {
                         i_nextOrderId =  i_childFirstSellOrderId + 1; // i_parentFirstBuyOrderId + 3;
                         i_parentSecondBuyOrderId = i_nextOrderId; 
 
-                        double fl_secondBuyOrderPercentage = fl_percentage +  i_halfwayDown; 
-                        double fl_secondBuyOrderEntryPrice = fl_previousClose - (fl_secondBuyOrderPercentage*fl_previousClose/100); 
+                        
+                        double fl_thirdBuyOrderEntryPrice = fl_price - fl_price*i_averageDownSpread/100; 
+                        double fl_secondBuyOrderEntryPrice = (fl_price + fl_thirdBuyOrderEntryPrice)/2; 
 
                         // if it's a dollar stock and we are then going to pennies, Interactive Brokers won't accept 4-digit penny prices
                         // so we have to adjust 
@@ -476,16 +479,9 @@ public class ApiDemo implements IConnectionHandler {
 
                         // 2nd order's child sell order 
 
-                        double fl_midwayPercentage = (fl_percentage + fl_secondBuyOrderPercentage)/2; 
-                        double fl_midwayPrice = fl_previousClose - (fl_midwayPercentage*fl_previousClose/100); 
+                        double fl_halfwayPrice = (fl_price + fl_secondBuyOrderEntryPrice)/2; 
                         
-                        // if we're dealing with penny stocks then we can bump up the profit-taker percentage by a small amount
-                        if (fl_midwayPrice < 1.00)
-                        {
-                            fl_secondaryPercentProfit += 0.5; 
-                        }
-                        
-                        double fl_secondProfitTakerSellPrice = fl_midwayPrice + fl_midwayPrice*fl_secondaryPercentProfit/100; 
+                        double fl_secondProfitTakerSellPrice = fl_halfwayPrice + fl_halfwayPrice*fl_secondOrderPercentageProfit/100; 
 
                         if (fl_secondProfitTakerSellPrice >  1.00)
                         {
@@ -534,9 +530,6 @@ public class ApiDemo implements IConnectionHandler {
                         
                         i_parentThirdBuyOrderId = i_nextOrderId; 
                         
-                        double fl_thirdBuyOrderPercentage = fl_percentage +  i_averageDownSpread; 
-                        double fl_thirdBuyOrderEntryPrice = fl_previousClose - (fl_thirdBuyOrderPercentage*fl_previousClose/100); 
-
                         if (fl_thirdBuyOrderEntryPrice > 1.00)
                         {
                             fl_thirdBuyOrderEntryPrice = Double.parseDouble(String.format( "%.2f", fl_thirdBuyOrderEntryPrice )); 
@@ -578,20 +571,11 @@ public class ApiDemo implements IConnectionHandler {
 
                         i_nextOrderId = i_parentThirdBuyOrderId + 1; 
 
-                        // 3rd order child profit taker (which is just the break even order) 
+                        // 3rd order child profit taker 
                         
                         i_childThirdSellOrderId = i_nextOrderId; 
 
-                        double fl_thirdProfitTakerSellPrice = 0; 
-
-                        if (fl_secondBuyOrderEntryPrice > 0.01)
-                        {
-                            fl_thirdProfitTakerSellPrice = fl_secondBuyOrderEntryPrice + 0.01; 
-                        }
-                        else 
-                        {
-                            fl_thirdProfitTakerSellPrice = fl_secondBuyOrderEntryPrice + 0.0005; 
-                        }  
+                        double fl_thirdProfitTakerSellPrice = fl_secondBuyOrderEntryPrice + fl_secondBuyOrderEntryPrice*fl_thirdOrderPercentageProfit/100; 
 
                         if (fl_thirdProfitTakerSellPrice > 1.00)
                         {

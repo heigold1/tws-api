@@ -21,6 +21,7 @@ public class Test implements EWrapper {
 	}
 
 	private void run() {
+                // port number 
 		m_s.eConnect("localhost", 7496, 0);
 	}
 
