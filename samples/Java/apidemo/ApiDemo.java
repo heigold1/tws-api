@@ -71,7 +71,8 @@ public class ApiDemo implements IConnectionHandler {
 
         public final int i_halfwayDown = 5; 
         public final int i_averageDownSpread = 12; 
-        public final int i_stopOrderPercentage = 25; 
+        public final int i_stopOrderPercentage = 10; 
+        public final int i_averageDownStopOrderPercentage = 25; 
         public final double fl_secondOrderPercentageProfit = 4.1; 
         public final double fl_thirdOrderPercentageProfit = 3.5; 
         
@@ -626,7 +627,7 @@ public class ApiDemo implements IConnectionHandler {
 
                         double fl_childStopPrice;
 
-                        fl_childStopPrice = fl_secondBuyOrderEntryPrice - fl_secondBuyOrderEntryPrice*i_stopOrderPercentage/100; 
+                        fl_childStopPrice = fl_secondBuyOrderEntryPrice - fl_secondBuyOrderEntryPrice*i_averageDownStopOrderPercentage/100; 
 
                         if (fl_childStopPrice > fl_thirdBuyOrderEntryPrice)
                         {
@@ -861,7 +862,7 @@ public class ApiDemo implements IConnectionHandler {
 
                         i_stopOrder = i_breakEvenOrder + 1;  
                         
-                        double fl_stopPrice = fl_breakEvenPrice - fl_breakEvenPrice*0.25; 
+                        double fl_stopPrice = fl_breakEvenPrice - fl_breakEvenPrice*i_averageDownStopOrderPercentage; 
                         
                         System.out.println("fl_stopPrice is " + fl_stopPrice);
                         
