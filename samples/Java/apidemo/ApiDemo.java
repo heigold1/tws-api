@@ -239,6 +239,9 @@ public class ApiDemo implements IConnectionHandler {
                 JButton m_b9 = new JButton("11%");                 
                 JButton m_b10 = new JButton("12%");                 
                 JButton m_b11 = new JButton("13%");
+                JButton m_b20 = new JButton("20%"); 
+                JButton m_b30 = new JButton("30%"); 
+                JButton m_b40 = new JButton("40%"); 
                 JButton m_b95 = new JButton("95%");
                 JCheckBox m_noStopOrder = new JCheckBox("No Stop"); 
                 JCheckBox m_averageDown = new JCheckBox("3 Pt Avg"); 
@@ -1401,7 +1404,7 @@ public class ApiDemo implements IConnectionHandler {
                                 m_connectionPanel.createOrders(12, 5); 
                 	    } 
                         });  // end of the click event handler for "Fast 12%"  
-                        
+
                         // Take fast 13% 
                         m_b11.addActionListener(new java.awt.event.ActionListener()
                 	{
@@ -1411,6 +1414,33 @@ public class ApiDemo implements IConnectionHandler {
                 	    } 
                         });  // end of the click event handler for "Fast 13%"  
 
+                        // Take 20% 
+                        m_b20.addActionListener(new java.awt.event.ActionListener()
+                	{
+                	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
+                    	    {
+                                m_connectionPanel.createOrders(20, 5); 
+                	    } 
+                        });  // end of the click event handler for "Take 20%"  
+
+                        // Take 30%
+                        m_b30.addActionListener(new java.awt.event.ActionListener()
+                	{
+                	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
+                    	    {
+                                m_connectionPanel.createOrders(30, 5); 
+                	    } 
+                        });  // end of the click event handler for "Take 30%"
+                        
+                        // Take 40%
+                        m_b30.addActionListener(new java.awt.event.ActionListener()
+                	{
+                	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
+                    	    {
+                                m_connectionPanel.createOrders(40, 5); 
+                	    } 
+                        });  // end of the click event handler for "Take 40%"
+                        
                         // Take fast 95% 
                         m_b95.addActionListener(new java.awt.event.ActionListener()
                 	{
@@ -1626,6 +1656,9 @@ public class ApiDemo implements IConnectionHandler {
                         p1.add("Send:", m_b9); 
                         p1.add("Send:", m_b10); 
                         p1.add("Send:", m_b11);
+                        p1.add("Send:", m_b20); 
+                        p1.add("Send:", m_b30);
+                        p1.add("Send:", m_b40); 
                         p1.add("Send:", m_b95);
                         p1.add("", m_noStopOrder); 
                         p1.add("", m_averageDown); 
