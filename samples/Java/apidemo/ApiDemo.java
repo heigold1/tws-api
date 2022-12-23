@@ -48,6 +48,7 @@ import com.ib.controller.NewOrder;
 import com.ib.controller.Types.SecType;
 import com.ib.controller.Types.Action;
 import com.ib.controller.Types.TimeInForce;
+import com.ib.controller.Types.OcaType; 
 import com.ib.controller.NewOrderState;
 import com.ib.controller.OrderStatus;
 import com.ib.controller.OrderType;
@@ -406,7 +407,6 @@ public class ApiDemo implements IConnectionHandler {
                         }
                         else 
                         {
-
                             if (fl_previousClose > 1.00)
                             {
                                 fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
@@ -423,6 +423,8 @@ public class ApiDemo implements IConnectionHandler {
                         oSell.outsideRth(true);
                         oSell.orderId(i_childFirstSellOrderId); 
                         oSell.parentId(i_parentFirstBuyOrderId);
+                        oSell.ocaGroup(str_symbol + "_OCA_FIRST"); 
+                        oSell.ocaType(OcaType.CancelWithBlocking); 
                         oSell.transmit(true);
 
                         ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oSell); 
@@ -473,6 +475,8 @@ public class ApiDemo implements IConnectionHandler {
                         o2.tif(TimeInForce.DAY);
                         o2.outsideRth(true);
                         o2.orderId(i_parentSecondBuyOrderId); 
+                        oSell.ocaGroup(str_symbol + "_OCA_FIRST"); 
+                        oSell.ocaType(OcaType.CancelWithBlocking);  
                         o2.transmit(true);
 
                         ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o2); 
@@ -520,6 +524,8 @@ public class ApiDemo implements IConnectionHandler {
                         o2Sell.outsideRth(true);
                         o2Sell.orderId(i_childSecondSellOrderId); 
                         o2Sell.parentId(i_parentSecondBuyOrderId);
+                        oSell.ocaGroup(str_symbol + "_OCA_SECOND"); 
+                        oSell.ocaType(OcaType.CancelWithBlocking);  
                         o2Sell.transmit(true);
 
                         // Here we add the add the bracket orders twice because 
@@ -569,6 +575,8 @@ public class ApiDemo implements IConnectionHandler {
                         o3.tif(TimeInForce.DAY);
                         o3.outsideRth(true);
                         o3.orderId(i_parentThirdBuyOrderId); 
+                        oSell.ocaGroup(str_symbol + "_OCA_SECOND"); 
+                        oSell.ocaType(OcaType.CancelWithBlocking);  
                         o3.transmit(true);
 
                         ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o3); 
