@@ -71,8 +71,8 @@ public class ApiDemo implements IConnectionHandler {
 	static ApiDemo INSTANCE = new ApiDemo();
 
         public final int i_halfwayDown = 5; 
-        public final int i_averageDownSpread = 12; 
-        public final int i_stopOrderPercentage = 10; 
+        public final int i_averageDownSpread = 15; 
+        public final int i_stopOrderPercentage = 12; 
         public final int i_averageDownStopOrderPercentage = 25; 
         public final double fl_secondOrderPercentageProfit = 4.1; 
         public final double fl_thirdOrderPercentageProfit = 3.5; 
@@ -245,7 +245,8 @@ public class ApiDemo implements IConnectionHandler {
                 JButton m_b40 = new JButton("40%"); 
                 JButton m_b95 = new JButton("95%");
                 JCheckBox m_noStopOrder = new JCheckBox("No Stop"); 
-                JCheckBox m_averageDown = new JCheckBox("3 Pt Avg", true); 
+//                JCheckBox m_averageDown = new JCheckBox("3 Pt Avg", true); 
+                JCheckBox m_averageDown = new JCheckBox("3 Pt Avg"); 
                 JCheckBox m_jaysAlgorithm = new JCheckBox("Jay's Alg"); 
 		
                 JTextField m_profitTakerHighRisk = new JTextField("3.5", 15);
@@ -776,11 +777,11 @@ public class ApiDemo implements IConnectionHandler {
                         i_secondOrderParent = i_firstOrderChildSell + 1; 
                         
                         // If it goes 12% past our original order, then we place our second order. 
-                        double fl_secondBuyOrderEntryPrice = fl_price - fl_price*0.12; 
+                        double fl_secondBuyOrderEntryPrice = fl_price - fl_price*i_averageDownSpread/100; 
 
                         // if it's a dollar stock and we are then going to pennies, Interactive Brokers won't accept 4-digit penny prices
                         // so we have to adjust 
-                        if (fl_price > 1.00)
+                        if (fl_secondBuyOrderEntryPrice > 1.00)
                         {
                             fl_secondBuyOrderEntryPrice = Double.parseDouble(String.format( "%.2f", fl_secondBuyOrderEntryPrice )); 
                         }
@@ -824,6 +825,8 @@ public class ApiDemo implements IConnectionHandler {
 
                         double fl_breakEvenPrice = (fl_price + fl_secondBuyOrderEntryPrice)/2; 
 
+                        fl_breakEvenPrice = fl_breakEvenPrice + fl_breakEvenPrice*fl_secondOrderPercentageProfit/100; 
+                        
                         if (fl_breakEvenPrice > 1.00)
                         {
                             fl_breakEvenPrice = Double.parseDouble(String.format( "%.2f", fl_breakEvenPrice )); 
@@ -832,20 +835,13 @@ public class ApiDemo implements IConnectionHandler {
                         {
                             // if it's a dollar stock and we are then going to pennies, Interactive Brokers won't accept 4-digit penny prices
                             // so we have to adjust 
-                            if (fl_price > 1.00)
+                            if (fl_previousClose > 1.00)
                             {
                                 fl_breakEvenPrice = Double.parseDouble(String.format( "%.2f", fl_breakEvenPrice )); 
                             }
-                            else 
+                            else
                             {
-                                if (fl_previousClose > 1.00)
-                                {
-                                    fl_breakEvenPrice = Double.parseDouble(String.format( "%.2f", fl_breakEvenPrice )); 
-                                }
-                                else
-                                {
-                                    fl_breakEvenPrice = Double.parseDouble(String.format( "%.4f", fl_breakEvenPrice )); 
-                                }
+                                fl_breakEvenPrice = Double.parseDouble(String.format( "%.4f", fl_breakEvenPrice )); 
                             }
                         }  
                         
@@ -1076,7 +1072,7 @@ public class ApiDemo implements IConnectionHandler {
 
                         i_nextOrderId = i_parentBuyOrderId + 3;
 
-                        m_averageDown.setSelected(true); 
+//                        m_averageDown.setSelected(true); 
                         
                     } // if (!m_averageDown.selected()) 
                     
@@ -1438,10 +1434,10 @@ public class ApiDemo implements IConnectionHandler {
                     	    {
                                 m_connectionPanel.createOrders(30, 5); 
                 	    } 
-                        });  // end of the click event handler for "Take 30%"
+                        });  // end of the click event handler for "Take  30%"
                         
                         // Take 40%
-                        m_b30.addActionListener(new java.awt.event.ActionListener()
+                        m_b40.addActionListener(new java.awt.event.ActionListener()
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
