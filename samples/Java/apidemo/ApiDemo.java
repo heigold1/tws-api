@@ -71,9 +71,9 @@ public class ApiDemo implements IConnectionHandler {
 	static ApiDemo INSTANCE = new ApiDemo();
 
         public final int i_halfwayDown = 5; 
-        public final int i_averageDownSpread = 15; 
-        public final int i_stopOrderPercentage = 12; 
-        public final int i_averageDownStopOrderPercentage = 25; 
+        public final int i_averageDownSpread = 25; 
+        public final int i_stopOrderPercentage = 11; 
+        public final int i_averageDownStopOrderPercentage = 20; 
         public final double fl_secondOrderPercentageProfit = 4.1; 
         public final double fl_thirdOrderPercentageProfit = 3.5; 
         
@@ -246,7 +246,7 @@ public class ApiDemo implements IConnectionHandler {
                 JButton m_b95 = new JButton("95%");
                 JCheckBox m_noStopOrder = new JCheckBox("No Stop"); 
 //                JCheckBox m_averageDown = new JCheckBox("3 Pt Avg", true); 
-                JCheckBox m_averageDown = new JCheckBox("3 Pt Avg"); 
+                JCheckBox m_averageDown = new JCheckBox("3 Pt Avg", true); 
                 JCheckBox m_jaysAlgorithm = new JCheckBox("Jay's Alg"); 
 		
                 JTextField m_profitTakerHighRisk = new JTextField("3.5", 15);
@@ -689,7 +689,7 @@ public class ApiDemo implements IConnectionHandler {
                     else if (m_jaysAlgorithm.isSelected())
                     {
                         System.out.println("Jay's Algorithm Selected");                                    
-                        m_jaysAlgorithm.setSelected(false); 
+//                         m_jaysAlgorithm.setSelected(false); 
                         
                         int i_firstOrderParent = 0; 
                         int i_firstOrderChildSell = 0; 
@@ -923,7 +923,6 @@ public class ApiDemo implements IConnectionHandler {
                     {
                         System.out.println("No averaging is selected");
 
-
                         // Order starts here                                 
                         NewContract myContract = new NewContract();
                         myContract.symbol(str_symbol); 
@@ -1072,7 +1071,7 @@ public class ApiDemo implements IConnectionHandler {
 
                         i_nextOrderId = i_parentBuyOrderId + 3;
 
-//                        m_averageDown.setSelected(true); 
+                        m_averageDown.setSelected(true); 
                         
                     } // if (!m_averageDown.selected()) 
                     
