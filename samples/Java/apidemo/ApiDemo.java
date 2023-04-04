@@ -245,8 +245,7 @@ public class ApiDemo implements IConnectionHandler {
                 JButton m_b40 = new JButton("40%"); 
                 JButton m_b95 = new JButton("95%");
                 JCheckBox m_noStopOrder = new JCheckBox("No Stop"); 
-//                JCheckBox m_averageDown = new JCheckBox("3 Pt Avg", true); 
-                JCheckBox m_averageDown = new JCheckBox("3 Pt Avg", true); 
+                JCheckBox m_averageDown = new JCheckBox("3 Pt Avg"); 
                 JCheckBox m_jaysAlgorithm = new JCheckBox("Jay's Alg"); 
 		
                 JTextField m_profitTakerHighRisk = new JTextField("3.5", 15);
@@ -331,6 +330,7 @@ public class ApiDemo implements IConnectionHandler {
                     if (m_averageDown.isSelected())
                     {
                         System.out.println("Average down is selected.");
+                        m_averageDown.setSelected(false);                         
                         
                         // we are averaging down 
 
@@ -689,7 +689,7 @@ public class ApiDemo implements IConnectionHandler {
                     else if (m_jaysAlgorithm.isSelected())
                     {
                         System.out.println("Jay's Algorithm Selected");                                    
-//                         m_jaysAlgorithm.setSelected(false); 
+                        m_jaysAlgorithm.setSelected(false);                         
                         
                         int i_firstOrderParent = 0; 
                         int i_firstOrderChildSell = 0; 
@@ -1071,8 +1071,6 @@ public class ApiDemo implements IConnectionHandler {
 
                         i_nextOrderId = i_parentBuyOrderId + 3;
 
-                        m_averageDown.setSelected(true); 
-                        
                     } // if (!m_averageDown.selected()) 
                     
                     // now we write the next order ID to the output file
