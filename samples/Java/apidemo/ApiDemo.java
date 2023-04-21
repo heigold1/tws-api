@@ -226,7 +226,7 @@ public class ApiDemo implements IConnectionHandler {
                 // brent 
 		public final JTextField m_orderText = new JTextField(25);
                 JButton m_noBracket = new JButton("No BR");
-                JButton m_b29 = new JButton("2.9%");     
+                JButton m_b29 = new JButton("2.6%");     
                 JButton m_b35 = new JButton("3.5%");     
                 JButton m_b2 = new JButton("4.2%"); 
                 JButton m_b3 = new JButton("5%"); 
@@ -1285,14 +1285,14 @@ public class ApiDemo implements IConnectionHandler {
                 	    } // end of the click "No BR" event handler
                         });      
 
-                        // Take fast 2.9% 
+                        // Take fast 2.6% 
                         m_b29.addActionListener(new java.awt.event.ActionListener()
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(2.9, 1.5); 
+                                m_connectionPanel.createOrders(2.6, 1.5); 
                 	    } 
-                        });  // end of the click event handler for "Fast 2.9%" 
+                        });  // end of the click event handler for "Fast 2.6%" 
 
                         // Take fast 3.5% 
                         m_b35.addActionListener(new java.awt.event.ActionListener()
