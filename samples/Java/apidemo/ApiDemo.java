@@ -529,10 +529,14 @@ public class ApiDemo implements IConnectionHandler {
 
                         // Here we add the add the bracket orders twice because 
                         ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o2Sell); 
+                        
+/*
                         i_childSecondSellOrderId++; 
                         o2Sell.orderId(i_childSecondSellOrderId); 
                         ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o2Sell); 
+*/
 
+                        
                         i_nextOrderId = i_childSecondSellOrderId + 1; 
                         
                         // Now we go to the bottom (3rd) parent order
@@ -619,12 +623,15 @@ public class ApiDemo implements IConnectionHandler {
                         o3Sell.transmit(true);
                         
                         ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o3Sell); 
+                        
+/*
                         i_childThirdSellOrderId++; 
                         o3Sell.orderId(i_childThirdSellOrderId); 
                         ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o3Sell); 
                         i_childThirdSellOrderId++; 
                         o3Sell.orderId(i_childThirdSellOrderId); 
                         ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o3Sell); 
+*/
 
                         i_nextOrderId = i_childThirdSellOrderId + 1; 
                         
@@ -690,6 +697,9 @@ public class ApiDemo implements IConnectionHandler {
                     {
                         System.out.println("Jay's Algorithm Selected");                                    
                         m_jaysAlgorithm.setSelected(false);                         
+                        
+                        int i_secondOrderPercentageDollar = 12; 
+                        int i_secondOrderPercentagePenny = 15; 
                         
                         int i_firstOrderParent = 0; 
                         int i_firstOrderChildSell = 0; 
@@ -777,7 +787,11 @@ public class ApiDemo implements IConnectionHandler {
                         i_secondOrderParent = i_firstOrderChildSell + 1; 
                         
                         // If it goes 12% past our original order, then we place our second order. 
-                        double fl_secondBuyOrderEntryPrice = fl_price - fl_price*i_averageDownSpread/100; 
+                        double fl_secondBuyOrderEntryPrice = fl_price - fl_price*i_secondOrderPercentageDollar/100; 
+                        if (fl_secondBuyOrderEntryPrice < 1.00)
+                        {
+                            fl_secondBuyOrderEntryPrice = fl_price - fl_price*i_secondOrderPercentagePenny/100;
+                        }
 
                         // if it's a dollar stock and we are then going to pennies, Interactive Brokers won't accept 4-digit penny prices
                         // so we have to adjust 
@@ -825,11 +839,11 @@ public class ApiDemo implements IConnectionHandler {
 
                         double fl_breakEvenPrice = (fl_price + fl_secondBuyOrderEntryPrice)/2; 
 
-                        fl_breakEvenPrice = fl_breakEvenPrice + fl_breakEvenPrice*fl_secondOrderPercentageProfit/100; 
+                        double fl_breakEvenProfitPrice = fl_breakEvenPrice + fl_breakEvenPrice*fl_secondOrderPercentageProfit/100; 
                         
-                        if (fl_breakEvenPrice > 1.00)
+                        if (fl_breakEvenProfitPrice > 1.00)
                         {
-                            fl_breakEvenPrice = Double.parseDouble(String.format( "%.2f", fl_breakEvenPrice )); 
+                            fl_breakEvenProfitPrice = Double.parseDouble(String.format( "%.2f", fl_breakEvenProfitPrice )); 
                         }
                         else 
                         {
@@ -837,11 +851,11 @@ public class ApiDemo implements IConnectionHandler {
                             // so we have to adjust 
                             if (fl_previousClose > 1.00)
                             {
-                                fl_breakEvenPrice = Double.parseDouble(String.format( "%.2f", fl_breakEvenPrice )); 
+                                fl_breakEvenProfitPrice = Double.parseDouble(String.format( "%.2f", fl_breakEvenProfitPrice )); 
                             }
                             else
                             {
-                                fl_breakEvenPrice = Double.parseDouble(String.format( "%.4f", fl_breakEvenPrice )); 
+                                fl_breakEvenProfitPrice = Double.parseDouble(String.format( "%.4f", fl_breakEvenProfitPrice )); 
                             }
                         }  
                         
@@ -850,7 +864,7 @@ public class ApiDemo implements IConnectionHandler {
                         o3.account("U1203596"); 
                         o3.action(Action.SELL);
                         o3.orderType(OrderType.LMT);                                     
-                        o3.lmtPrice(fl_breakEvenPrice);
+                        o3.lmtPrice(fl_breakEvenProfitPrice);
                         o3.totalQuantity(i_numShares);
                         o3.tif(TimeInForce.DAY);
                         o3.outsideRth(true);
@@ -861,13 +875,15 @@ public class ApiDemo implements IConnectionHandler {
                         ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o3); 
                         
                         // we're placing the break even order twice, because now we have double the shares from the first and second orders 
+/*
                         i_breakEvenOrder++; 
                         o3.orderId(i_breakEvenOrder); 
                         ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o3); 
+*/
 
                         i_stopOrder = i_breakEvenOrder + 1;  
                         
-                        double fl_stopPrice = fl_breakEvenPrice - fl_breakEvenPrice*i_averageDownStopOrderPercentage; 
+                        double fl_stopPrice = fl_breakEvenPrice - fl_breakEvenPrice*i_averageDownStopOrderPercentage/100; 
                         
                         System.out.println("fl_stopPrice is " + fl_stopPrice);
                         
@@ -911,7 +927,7 @@ public class ApiDemo implements IConnectionHandler {
 
                         ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oStop); 
                         System.out.println("You have just sent off the stop order");
-                        
+
                         i_stopOrder++;
                         oStop.orderId(i_stopOrder); 
                         ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oStop); 
