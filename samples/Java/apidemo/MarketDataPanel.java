@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Vector;
 
 import java.lang.Object; 
 
@@ -40,6 +41,7 @@ import apidemo.util.VerticalPanel.StackPanel;
 
 import com.ib.client.ScannerSubscription;
 
+import com.ib.client.TagValue;
 import com.ib.controller.Bar;
 import com.ib.controller.Instrument;
 import com.ib.controller.NewContract;
@@ -197,8 +199,9 @@ public class MarketDataPanel extends JPanel {
                         str_change = str_change.replace("%", ""); 
                         negativeSignCount = str_change.length() - str_change.replace("-", "").length();
 
-                        if (negativeSignCount > 0)
+/*                        if (negativeSignCount > 0)
                         {
+*/                        
                             str_change = str_change.replace("-", ""); 
                             float fl_change = Float.valueOf(str_change); 
 
@@ -209,7 +212,7 @@ public class MarketDataPanel extends JPanel {
 
                             TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
                             myRows.add(myRow);
-                        }
+//                        }
                     }
                     catch(NullPointerException e) 
                     { 
@@ -253,8 +256,9 @@ public class MarketDataPanel extends JPanel {
                         str_change = str_change.replace("%", ""); 
                         negativeSignCount = str_change.length() - str_change.replace("-", "").length();
 
-                        if (negativeSignCount > 0)
+/*                        if (negativeSignCount > 0)
                         {
+*/
                             str_change = str_change.replace("-", ""); 
                             float fl_change = Float.valueOf(str_change); 
 
@@ -265,7 +269,7 @@ public class MarketDataPanel extends JPanel {
 
                             TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
                             myRows.add(myRow);
-                        }
+//                        }
                     }
                     catch(NullPointerException e) 
                     { 
@@ -323,9 +327,11 @@ public class MarketDataPanel extends JPanel {
                         str_change = str_change.replace("%", ""); 
                         
                         negativeSignCount = str_change.length() - str_change.replace("-", "").length();
-                        
+
+/*                        
                         if (negativeSignCount > 0)
                         {
+*/
                             str_change = str_change.replace("-", ""); 
                             float fl_change = Float.valueOf(str_change); 
 
@@ -336,7 +342,7 @@ public class MarketDataPanel extends JPanel {
 
                             TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
                             myRows.add(myRow);
-                        }
+//                        }
                     }
                     catch(NullPointerException e) 
                     { 
@@ -377,8 +383,10 @@ public class MarketDataPanel extends JPanel {
                         
                         negativeSignCount = str_change.length() - str_change.replace("-", "").length();
 
+/*
                         if (negativeSignCount > 0)
                         {
+*/
                             str_change = str_change.replace("-", ""); 
                             float fl_change = Float.valueOf(str_change); 
 
@@ -389,7 +397,7 @@ public class MarketDataPanel extends JPanel {
 
                             TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
                             myRows.add(myRow);
-                        }
+//                        }
                     }
                     catch(NullPointerException e) 
                     { 
@@ -445,19 +453,31 @@ public class MarketDataPanel extends JPanel {
                         
                         negativeSignCount = str_change.length() - str_change.replace("-", "").length();
 
+/*
                         if (negativeSignCount > 0)
                         {
+*/
                             str_change = str_change.replace("-", ""); 
                             float fl_change = Float.valueOf(str_change); 
 
                             String str_lowPercent = row.lowPercent();
+                            
+if (str_symbol.equals("SOFO"))
+        {
+System.out.println("previous close for SOFO is " + row.getClose()); 
+        }
+
+                           
                             str_lowPercent = str_lowPercent.replace("%", ""); 
                             str_lowPercent = str_lowPercent.replace("-", ""); 
                             float fl_lowPercent = Float.valueOf(str_lowPercent); 
 
                             TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
                             myRows.add(myRow);
-                        }
+                            
+                            
+                            
+//                        }
                     }
                     catch(NullPointerException e) 
                     { 
@@ -1087,6 +1107,12 @@ public class MarketDataPanel extends JPanel {
 
                 protected void subscribeAll() {
 
+                    /*
+                        TagValue t1 = new TagValue("avgVolumeAbove", "700000");
+                        Vector<TagValue> TagValues = new Vector<TagValue>();
+                        TagValues.add(t1); 
+*/
+                    
 
                         int reqIdPink;
 			ScannerSubscription subPink = new ScannerSubscription();
@@ -1114,7 +1140,7 @@ public class MarketDataPanel extends JPanel {
 			subNasdqaSCM.stockTypeFilter( "ALL" );
                         subNasdqaSCM.belowPrice(25.50);
                         subNasdqaSCM.abovePrice(0.0015);
-                        subNasdqaSCM.aboveVolume(10000);
+                        subNasdqaSCM.aboveVolume(50000);
 			ScannerResultsPanel resultsPanelNasdaqSCM = new ScannerResultsPanel();
             		m_resultsPanel.addTab("STK.NASDAQ.SCM", resultsPanelNasdaqSCM, true, true);
 			reqIdNasdaqSCM = ApiDemo.INSTANCE.controller().reqScannerSubscription( subNasdqaSCM, resultsPanelNasdaqSCM);
@@ -1130,7 +1156,7 @@ public class MarketDataPanel extends JPanel {
 			subNasdqaNMS.stockTypeFilter( "ALL" );
                         subNasdqaNMS.belowPrice(25.50);
                         subNasdqaNMS.abovePrice(0.0015);
-                        subNasdqaNMS.aboveVolume(10000);
+                        subNasdqaNMS.aboveVolume(50000);
 			ScannerResultsPanel resultsPanelNasdaqNMS = new ScannerResultsPanel();
             		m_resultsPanel.addTab("STK.NASDAQ.NMS", resultsPanelNasdaqNMS, true, true);
 			reqIdNasdaqNMS = ApiDemo.INSTANCE.controller().reqScannerSubscription( subNasdqaNMS, resultsPanelNasdaqNMS);
@@ -1146,7 +1172,7 @@ public class MarketDataPanel extends JPanel {
 			subNYSE.stockTypeFilter( "ALL" );
                         subNYSE.belowPrice(25.50);
                         subNYSE.abovePrice(0.0015);
-                        subNYSE.aboveVolume(10000);
+                        subNYSE.aboveVolume(50000);
 			ScannerResultsPanel resultsPanelNYSE = new ScannerResultsPanel();
             		m_resultsPanel.addTab("STK.NYSE", resultsPanelNYSE, true, true);
 			reqIdNYSE = ApiDemo.INSTANCE.controller().reqScannerSubscription( subNYSE, resultsPanelNYSE);
@@ -1162,7 +1188,7 @@ public class MarketDataPanel extends JPanel {
 			subAMEX.stockTypeFilter( "ALL" );
                         subAMEX.belowPrice(25.50);
                         subAMEX.abovePrice(0.0015);
-                        subAMEX.aboveVolume(10000);
+                        subAMEX.aboveVolume(50000);
 			ScannerResultsPanel resultsPanelAMEX = new ScannerResultsPanel();
             		m_resultsPanel.addTab("STK.AMEX", resultsPanelAMEX, true, true);
 			reqIdAMEX = ApiDemo.INSTANCE.controller().reqScannerSubscription( subAMEX, resultsPanelAMEX);

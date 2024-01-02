@@ -827,6 +827,13 @@ System.out.println("inside reqTopMktData, the reqId one, requestData.m_genericTi
 		int reqId = m_reqId++;
 		m_scannerMap.put( reqId, handler);
 		Vector<TagValue> scannerSubscriptionOptions = new Vector<TagValue>();
+
+//                 Brent - Dec 30th, 2023
+
+                TagValue t1 = new TagValue("avgVolumeAbove", "200000");
+                scannerSubscriptionOptions.add(t1); 
+
+
 		m_client.reqScannerSubscription( reqId, sub, scannerSubscriptionOptions);
 		sendEOM();
                 
@@ -838,6 +845,17 @@ System.out.println("inside reqTopMktData, the reqId one, requestData.m_genericTi
 		m_client.reqScannerSubscription( reqId, sub, scannerSubscriptionOptions);
 		sendEOM();
 	}
+        
+        // Brent Dec 30th, 2023 
+	public int reqScannerSubscription( ScannerSubscription sub, IScannerHandler handler, Vector tagValues) {
+		int reqId = m_reqId++;
+		m_scannerMap.put( reqId, handler);
+		m_client.reqScannerSubscription( reqId, sub, tagValues);
+		sendEOM();
+                
+                return reqId; 
+	}
+
         
         // brent 
         public void cancelScannerSubscription(int reqId)

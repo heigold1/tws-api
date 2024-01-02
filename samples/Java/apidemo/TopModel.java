@@ -159,12 +159,17 @@ public class TopModel extends AbstractTableModel {
 		}
 
 		public String change() {
-			return m_close == 0	? null : fmtPct( (m_last - m_close) / m_close);
+			return m_close == 0	? null : fmtPct( (m_close - m_last) / m_close);
 		}
                 
 		public String lowPercent() {
-			return m_close == 0	? null : fmtPct( (m_low - m_close) / m_close);
+			return m_close == 0	? null : fmtPct( (m_close - m_low) / m_close);
 		}
+                
+                public double getClose()
+                {
+                    return m_close; 
+                }
 
 		@Override public void tickPrice( NewTickType tickType, double price, int canAutoExecute) {
 			switch( tickType) {
