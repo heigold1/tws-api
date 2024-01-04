@@ -473,6 +473,7 @@ public class EClientSocket {
             sendMax(subscription.couponRateAbove());
             sendMax(subscription.couponRateBelow());
             send(subscription.excludeConvertible());
+
             if (m_serverVersion >= 25) {
                 sendMax(subscription.averageOptionVolumeAbove());
                 send(subscription.scannerSettingPairs());

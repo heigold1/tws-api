@@ -209,6 +209,8 @@ public class MarketDataPanel extends JPanel {
                             str_lowPercent = str_lowPercent.replace("%", ""); 
                             str_lowPercent = str_lowPercent.replace("-", ""); 
                             float fl_lowPercent = Float.valueOf(str_lowPercent); 
+                            
+                            
 
                             TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
                             myRows.add(myRow);
@@ -1133,14 +1135,14 @@ System.out.println("previous close for SOFO is " + row.getClose());
                     
                         int reqIdNasdaqSCM; 
 			ScannerSubscription subNasdqaSCM = new ScannerSubscription();
-			subNasdqaSCM.numberOfRows( 20 );
+			subNasdqaSCM.numberOfRows( 25 ); 
 			subNasdqaSCM.scanCode( "TOP_PERC_LOSE" );
 			subNasdqaSCM.instrument( "STK" );
 			subNasdqaSCM.locationCode( "STK.NASDAQ.SCM" );
 			subNasdqaSCM.stockTypeFilter( "ALL" );
                         subNasdqaSCM.belowPrice(25.50);
                         subNasdqaSCM.abovePrice(0.0015);
-                        subNasdqaSCM.aboveVolume(50000);
+                        subNasdqaSCM.aboveVolume(10000);
 			ScannerResultsPanel resultsPanelNasdaqSCM = new ScannerResultsPanel();
             		m_resultsPanel.addTab("STK.NASDAQ.SCM", resultsPanelNasdaqSCM, true, true);
 			reqIdNasdaqSCM = ApiDemo.INSTANCE.controller().reqScannerSubscription( subNasdqaSCM, resultsPanelNasdaqSCM);
@@ -1149,14 +1151,14 @@ System.out.println("previous close for SOFO is " + row.getClose());
 
                         int reqIdNasdaqNMS; 
 			ScannerSubscription subNasdqaNMS = new ScannerSubscription();
-			subNasdqaNMS.numberOfRows( 20 );
+			subNasdqaNMS.numberOfRows( 25 );
 			subNasdqaNMS.scanCode( "TOP_PERC_LOSE" );
 			subNasdqaNMS.instrument( "STK" );
 			subNasdqaNMS.locationCode( "STK.NASDAQ.NMS" );
 			subNasdqaNMS.stockTypeFilter( "ALL" );
                         subNasdqaNMS.belowPrice(25.50);
                         subNasdqaNMS.abovePrice(0.0015);
-                        subNasdqaNMS.aboveVolume(50000);
+                        subNasdqaNMS.aboveVolume(10000);
 			ScannerResultsPanel resultsPanelNasdaqNMS = new ScannerResultsPanel();
             		m_resultsPanel.addTab("STK.NASDAQ.NMS", resultsPanelNasdaqNMS, true, true);
 			reqIdNasdaqNMS = ApiDemo.INSTANCE.controller().reqScannerSubscription( subNasdqaNMS, resultsPanelNasdaqNMS);
@@ -1165,14 +1167,14 @@ System.out.println("previous close for SOFO is " + row.getClose());
                         
                         int reqIdNYSE; 
 			ScannerSubscription subNYSE = new ScannerSubscription();
-			subNYSE.numberOfRows( 20 );
+			subNYSE.numberOfRows( 25 );
 			subNYSE.scanCode( "TOP_PERC_LOSE" );
 			subNYSE.instrument( "STK" );
 			subNYSE.locationCode( "STK.NYSE" );
 			subNYSE.stockTypeFilter( "ALL" );
                         subNYSE.belowPrice(25.50);
                         subNYSE.abovePrice(0.0015);
-                        subNYSE.aboveVolume(50000);
+                        subNYSE.aboveVolume(10000);
 			ScannerResultsPanel resultsPanelNYSE = new ScannerResultsPanel();
             		m_resultsPanel.addTab("STK.NYSE", resultsPanelNYSE, true, true);
 			reqIdNYSE = ApiDemo.INSTANCE.controller().reqScannerSubscription( subNYSE, resultsPanelNYSE);
@@ -1181,14 +1183,14 @@ System.out.println("previous close for SOFO is " + row.getClose());
                         
                         int reqIdAMEX; 
 			ScannerSubscription subAMEX = new ScannerSubscription();
-			subAMEX.numberOfRows( 20 );
+			subAMEX.numberOfRows( 25 );
 			subAMEX.scanCode( "TOP_PERC_LOSE" );
 			subAMEX.instrument( "STK" );
 			subAMEX.locationCode( "STK.AMEX" );
 			subAMEX.stockTypeFilter( "ALL" );
                         subAMEX.belowPrice(25.50);
                         subAMEX.abovePrice(0.0015);
-                        subAMEX.aboveVolume(50000);
+                        subAMEX.aboveVolume(10000);
 			ScannerResultsPanel resultsPanelAMEX = new ScannerResultsPanel();
             		m_resultsPanel.addTab("STK.AMEX", resultsPanelAMEX, true, true);
 			reqIdAMEX = ApiDemo.INSTANCE.controller().reqScannerSubscription( subAMEX, resultsPanelAMEX);

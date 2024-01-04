@@ -830,7 +830,7 @@ System.out.println("inside reqTopMktData, the reqId one, requestData.m_genericTi
 
 //                 Brent - Dec 30th, 2023
 
-                TagValue t1 = new TagValue("avgVolumeAbove", "200000");
+                TagValue t1 = new TagValue("avgVolumeAbove", "400000");
                 scannerSubscriptionOptions.add(t1); 
 
 

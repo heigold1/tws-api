@@ -171,6 +171,11 @@ public class TopModel extends AbstractTableModel {
                     return m_close; 
                 }
 
+                public double getAvgVolume()
+                {
+                    return m_avgVolume; 
+                }
+                
 		@Override public void tickPrice( NewTickType tickType, double price, int canAutoExecute) {
 			switch( tickType) {
 				case BID:
