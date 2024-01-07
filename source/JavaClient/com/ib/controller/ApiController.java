@@ -413,8 +413,6 @@ public class ApiController implements EWrapper {
         ScannerRequestData requestData = new ScannerRequestData(contract, genericTickList, snapshot);
         m_scannerRequestDataMap.put(reqIdInteger, requestData);
 
-System.out.println("inside reqTopMktData, requestData.m_genericTickList is *" + genericTickList + "*"); 
-        
         genericTickList = "165";
 
     	m_client.reqMktData( reqId, contract.getContract(), genericTickList, snapshot, Collections.<TagValue>emptyList() );
@@ -827,9 +825,7 @@ System.out.println("inside reqTopMktData, the reqId one, requestData.m_genericTi
 		int reqId = m_reqId++;
 		m_scannerMap.put( reqId, handler);
 		Vector<TagValue> scannerSubscriptionOptions = new Vector<TagValue>();
-
 //                 Brent - Dec 30th, 2023
-
                 TagValue t1 = new TagValue("avgVolumeAbove", "400000");
                 scannerSubscriptionOptions.add(t1); 
 

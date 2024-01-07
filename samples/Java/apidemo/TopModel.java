@@ -33,7 +33,7 @@ public class TopModel extends AbstractTableModel {
             String[] arr_orderParameters = str_description.split(" ");
             String str_symbol = arr_orderParameters[0];
             
-		TopRow row = new TopRow( this, contract.description() );
+		TopRow row = new TopRow( this, contract.description(), contract.exchange());
 		m_rows.add( row);
 		int reqId = ApiDemo.INSTANCE.controller().reqTopMktData(contract, "", false, row);
                 
@@ -87,7 +87,7 @@ public class TopModel extends AbstractTableModel {
 	}
 	
 	@Override public int getColumnCount() {
-		return 12;
+		return 13;
 	}
 	
 	@Override public String getColumnName(int col) {
@@ -104,6 +104,7 @@ public class TopModel extends AbstractTableModel {
                         case 9: return "Low"; 
                         case 10: return "Avg Volume"; 
                         case 11: return "Low Percent"; 
+                        case 12: return "Exchange"; 
 			default: return null;
 		}
 	}
@@ -123,6 +124,7 @@ public class TopModel extends AbstractTableModel {
                         case 9: return fmt( row.m_low);
                         case 10: return Formats.fmt0( row.m_avgVolume);
                         case 11: return row.lowPercent(); 
+                        case 12: return row.exchange(); 
 			default: return null;
 		}
 	}
@@ -150,12 +152,14 @@ public class TopModel extends AbstractTableModel {
 		int m_volume;
                 double m_low; 
                 double m_avgVolume; 
+                String m_exchange; 
                 
 		boolean m_frozen;
 		
-		TopRow( AbstractTableModel model, String description) {
+		TopRow( AbstractTableModel model, String description, String exchange) {
 			m_model = model;
 			m_description = description;
+                        m_exchange = exchange; 
 		}
 
 		public String change() {
@@ -175,6 +179,11 @@ public class TopModel extends AbstractTableModel {
                 {
                     return m_avgVolume; 
                 }
+                
+                public String exchange(){
+                    return m_exchange; 
+                }
+                        
                 
 		@Override public void tickPrice( NewTickType tickType, double price, int canAutoExecute) {
 			switch( tickType) {

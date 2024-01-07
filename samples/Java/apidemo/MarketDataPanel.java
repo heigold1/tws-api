@@ -128,7 +128,6 @@ public class MarketDataPanel extends JPanel {
                             topRequestPanel.reSubscribeTabs();
                             
                         }
-                        System.out.println("Inside the TimerTask::run, about to call printTabs()"); 
                         printTabs(); 
                     }
                 };
@@ -170,8 +169,6 @@ public class MarketDataPanel extends JPanel {
 
 // ******* NASDAQ **********************************************************************
 
-
-            System.out.println("Inside printTabs,  about to grab STK.NASDAQ.SCM");
             Tab nasdaqTabSCM = hashList.get("STK.NASDAQ.SCM"); 
 
             try 
@@ -182,6 +179,8 @@ public class MarketDataPanel extends JPanel {
                 rows = model.getRows(); 
                 myRows = new ArrayList(); 
 
+System.out.println("STK.NASDAQ.SCM has " + rows.size() + " rows. Symbols are"); 
+                
                 // first create the array that will be sorted
                 for (int i = rows.size() - 1; i >= 0; i--) 
                 {
@@ -193,12 +192,15 @@ public class MarketDataPanel extends JPanel {
                     str_symbol = str_symbol.trim(); 
                     str_symbol = str_symbol.replace(" ", "."); 
 
+System.out.println(str_symbol); 
+                    
                     try
                     {
                         String str_change = row.change();
                         str_change = str_change.replace("%", ""); 
                         negativeSignCount = str_change.length() - str_change.replace("-", "").length();
 
+                        
 /*                        if (negativeSignCount > 0)
                         {
 */                        
@@ -215,6 +217,7 @@ public class MarketDataPanel extends JPanel {
                             TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
                             myRows.add(myRow);
 //                        }
+
                     }
                     catch(NullPointerException e) 
                     { 
@@ -231,7 +234,6 @@ public class MarketDataPanel extends JPanel {
 
 // ******* NASDAQ.NMS *******************************************************************
 
-            System.out.println("Inside printTabs,  about to grab STK.NASDAQ.NMS");
             Tab nasdaqTabNMS = hashList.get("STK.NASDAQ.NMS"); 
 
             try 
@@ -303,7 +305,6 @@ public class MarketDataPanel extends JPanel {
             
 // **** NYSE and AMEX *****************************************************************************
 
-            System.out.println("Inside printTabs,  about to grab STK.NYSE");
             Tab nyseTab = hashList.get("STK.NYSE"); 
 
             try
@@ -359,7 +360,6 @@ public class MarketDataPanel extends JPanel {
                 e.printStackTrace();
             } 
 
-            System.out.println("Inside printTabs,  about to grab STK.AMEX");
             Tab amexTab = hashList.get("STK.AMEX"); 
 
             try
@@ -377,6 +377,8 @@ public class MarketDataPanel extends JPanel {
                     str_symbol = str_symbol.replace(" WI", ""); 
                     str_symbol = str_symbol.trim(); 
                     str_symbol = str_symbol.replace(" ", "."); 
+
+
                     
                     try
                     {
@@ -403,8 +405,10 @@ public class MarketDataPanel extends JPanel {
                     }
                     catch(NullPointerException e) 
                     { 
+/*
                         System.out.println("Inside printTabs (AMEX),  null pointer when grabbing str_change");
                         e.printStackTrace();
+*/
                     } 
                 }
 
@@ -430,7 +434,6 @@ public class MarketDataPanel extends JPanel {
 
 // ***** PINK *************************************************************************
 
-            System.out.println("Inside printTabs,  about to grab STK.PINK");
             Tab pinkTab = hashList.get("STK.PINK"); 
 
             try
@@ -463,12 +466,6 @@ public class MarketDataPanel extends JPanel {
                             float fl_change = Float.valueOf(str_change); 
 
                             String str_lowPercent = row.lowPercent();
-                            
-if (str_symbol.equals("SOFO"))
-        {
-System.out.println("previous close for SOFO is " + row.getClose()); 
-        }
-
                            
                             str_lowPercent = str_lowPercent.replace("%", ""); 
                             str_lowPercent = str_lowPercent.replace("-", ""); 
@@ -507,19 +504,15 @@ System.out.println("previous close for SOFO is " + row.getClose());
 
 // ******* VIX **********************************************************************
 
-            System.out.println("Inside printTabs,  about to grab the VIX tab");
             Tab vixTab = hashList.get("VIX"); 
 
             try 
             {
-                System.out.println("Successul in grabbing the VIX tab"); 
                 childVixComponent = (TopResultsPanel)vixTab.getComponent(); 
                 model = childVixComponent.getModel();
 
                 rows = model.getRows(); 
                 myRows = new ArrayList(); 
-
-                System.out.println("About to go throught the VIX rows"); 
 
                 // first create the array that will be sorted
                 for (int i = rows.size() - 1; i >= 0; i--) 
@@ -532,7 +525,6 @@ System.out.println("previous close for SOFO is " + row.getClose());
                         try
                         {
                             String str_vixLast = Double.toString(row.m_last);
-                            System.out.println("Found the VIX row, it's last value is " + str_vixLast);
                             jsonOutput += ",\"VIX\": \n"; 
                             jsonOutput += str_vixLast + "\n";
                         }
@@ -580,14 +572,16 @@ System.out.println("previous close for SOFO is " + row.getClose());
             } 
 
 
-
-            if  (totalRows > 160)
+/*
+            if  (totalRows > 180)
             {
                 HashMap marketDataHashMap = m_requestPanel.getHashMap(); 
                 Tab scannerTab = (Tab) marketDataHashMap.get("market-scanner"); 
                 ScannerRequestPanel scannerRequestPanel = (ScannerRequestPanel) scannerTab.getComponent();
                 scannerRequestPanel.reSubscribeTabs(); 
             }
+*/            
+            
         }
 
 	private class DeepRequestPanel extends JPanel {
@@ -1118,7 +1112,7 @@ System.out.println("previous close for SOFO is " + row.getClose());
 
                         int reqIdPink;
 			ScannerSubscription subPink = new ScannerSubscription();
-			subPink.numberOfRows( 50 );
+			subPink.numberOfRows( 10 );
 			subPink.scanCode( "TOP_PERC_LOSE" );
 			subPink.instrument( "STK" );
 			subPink.locationCode( "STK.PINK" );
@@ -1135,7 +1129,7 @@ System.out.println("previous close for SOFO is " + row.getClose());
                     
                         int reqIdNasdaqSCM; 
 			ScannerSubscription subNasdqaSCM = new ScannerSubscription();
-			subNasdqaSCM.numberOfRows( 25 ); 
+//			subNasdqaSCM.numberOfRows( 5 ); 
 			subNasdqaSCM.scanCode( "TOP_PERC_LOSE" );
 			subNasdqaSCM.instrument( "STK" );
 			subNasdqaSCM.locationCode( "STK.NASDAQ.SCM" );
@@ -1151,7 +1145,7 @@ System.out.println("previous close for SOFO is " + row.getClose());
 
                         int reqIdNasdaqNMS; 
 			ScannerSubscription subNasdqaNMS = new ScannerSubscription();
-			subNasdqaNMS.numberOfRows( 25 );
+//			subNasdqaNMS.numberOfRows( 5 );
 			subNasdqaNMS.scanCode( "TOP_PERC_LOSE" );
 			subNasdqaNMS.instrument( "STK" );
 			subNasdqaNMS.locationCode( "STK.NASDAQ.NMS" );
@@ -1167,7 +1161,7 @@ System.out.println("previous close for SOFO is " + row.getClose());
                         
                         int reqIdNYSE; 
 			ScannerSubscription subNYSE = new ScannerSubscription();
-			subNYSE.numberOfRows( 25 );
+//			subNYSE.numberOfRows( 5 );
 			subNYSE.scanCode( "TOP_PERC_LOSE" );
 			subNYSE.instrument( "STK" );
 			subNYSE.locationCode( "STK.NYSE" );
@@ -1183,7 +1177,7 @@ System.out.println("previous close for SOFO is " + row.getClose());
                         
                         int reqIdAMEX; 
 			ScannerSubscription subAMEX = new ScannerSubscription();
-			subAMEX.numberOfRows( 25 );
+//			subAMEX.numberOfRows( 5 );
 			subAMEX.scanCode( "TOP_PERC_LOSE" );
 			subAMEX.instrument( "STK" );
 			subAMEX.locationCode( "STK.AMEX" );
@@ -1212,7 +1206,7 @@ System.out.println("previous close for SOFO is " + row.getClose());
                             
                             String str_locationCode = (String)pair.getKey(); 
 
-                            System.out.println(pair.getKey() + " = " + subscriptionResultsPanel.m_sub.locationCode());
+//                             System.out.println(pair.getKey() + " = " + subscriptionResultsPanel.m_sub.locationCode());
                             
                             ApiDemo.INSTANCE.controller().cancelScannerSubscription(subscriptionResultsPanel.m_reqId);
 

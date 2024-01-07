@@ -103,11 +103,9 @@ public class ApiDemo implements IConnectionHandler {
         
         public boolean isConnected(){
             String str_status = m_connectionPanel.m_status.getText(); 
-            System.out.println("Inside isConnected, str_status is " + str_status); 
                     
             if (str_status == "connected")
             {
-                System.out.println("We are connected"); 
                 return true;
             }
             else

@@ -492,7 +492,7 @@ public class ComboPanel extends JPanel implements INewTab {
 			ArrayList<EfpRow> m_rows = new ArrayList<EfpRow>();
 
 			void addRow(NewContract contract) {
-				EfpRow row = new EfpRow( this, contract.description() );
+				EfpRow row = new EfpRow( this, contract.description(), contract.exchange() );
 				m_rows.add( row);
 				ApiDemo.INSTANCE.controller().reqEfpMktData( contract, "", false, row);
 				fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
@@ -549,8 +549,8 @@ public class ComboPanel extends JPanel implements INewTab {
 				double m_dividendImpact;
 				double m_dividendsToExpiry;
 				
-				EfpRow(AbstractTableModel model, String description) {
-					super(model, description);
+				EfpRow(AbstractTableModel model, String description, String exchange) {
+					super(model, description, exchange);
 				}
 
 				@Override public void tickEFP(int tickType, double basisPoints, String formattedBasisPoints, double impliedFuture, int holdDays, String futureExpiry, double dividendImpact, double dividendsToExpiry) {
