@@ -179,7 +179,7 @@ public class MarketDataPanel extends JPanel {
                 rows = model.getRows(); 
                 myRows = new ArrayList(); 
 
-System.out.println("STK.NASDAQ.SCM has " + rows.size() + " rows. Symbols are"); 
+System.out.println("STK.NASDAQ.SCM has " + rows.size() + " rows"); 
                 
                 // first create the array that will be sorted
                 for (int i = rows.size() - 1; i >= 0; i--) 
@@ -192,11 +192,14 @@ System.out.println("STK.NASDAQ.SCM has " + rows.size() + " rows. Symbols are");
                     str_symbol = str_symbol.trim(); 
                     str_symbol = str_symbol.replace(" ", "."); 
 
-System.out.println(str_symbol); 
-                    
                     try
                     {
                         String str_change = row.change();
+                        
+if (str_change != null)
+{
+    
+// System.out.println(str_symbol); 
                         str_change = str_change.replace("%", ""); 
                         negativeSignCount = str_change.length() - str_change.replace("-", "").length();
 
@@ -217,12 +220,16 @@ System.out.println(str_symbol);
                             TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
                             myRows.add(myRow);
 //                        }
+}
+
 
                     }
                     catch(NullPointerException e) 
                     { 
+/*
                         System.out.println("NullPointerException Caught when accessing str_change");
                         e.printStackTrace();
+*/
                     } 
                 }
             }
@@ -242,6 +249,8 @@ System.out.println(str_symbol);
                 model = childComponent.getModel();
 
                 rows = model.getRows(); 
+                
+System.out.println("STK.NASDAQ.NMS has " + rows.size() + " rows"); 
 
                 // first create the array that will be sorted
                 for (int i = rows.size() - 1; i >= 0; i--) 
@@ -277,8 +286,10 @@ System.out.println(str_symbol);
                     }
                     catch(NullPointerException e) 
                     { 
+/*
                         System.out.println("NullPointerException Caught when accessing str_change");
                         e.printStackTrace();
+*/
                     } 
                 }
 
@@ -314,6 +325,8 @@ System.out.println(str_symbol);
                 rows = model.getRows(); 
                 myRows = new ArrayList(); 
 
+System.out.println("STK.NYSE has " + rows.size() + " rows"); 
+                
                 // first create the array that will be sorted
                 for (int i = 0; i < rows.size(); i++) 
                 {
@@ -349,8 +362,10 @@ System.out.println(str_symbol);
                     }
                     catch(NullPointerException e) 
                     { 
+/*
                         System.out.println("Inside printTabs (NYSE),  null pointer when grabbing str_change");
                         e.printStackTrace();
+*/
                     } 
                 }
             }
@@ -368,6 +383,8 @@ System.out.println(str_symbol);
                 model = childComponent.getModel();
                 rows = model.getRows(); 
 
+System.out.println("STK.AMEX has " + rows.size() + " rows"); 
+                
                 for (int i = 0; i < rows.size(); i++) 
                 {
                     TopModel.TopRow row = rows.get(i); 
@@ -428,8 +445,10 @@ System.out.println(str_symbol);
             }
             catch(NullPointerException e)
             {
+/*
                 System.out.println("Inside printTabs,  null pointer when grabbing STK.AMEX");
                 e.printStackTrace();
+*/
             } 
 
 // ***** PINK *************************************************************************
@@ -443,6 +462,8 @@ System.out.println(str_symbol);
                 rows = model.getRows(); 
                 myRows = new ArrayList(); 
 
+System.out.println("STK.PINK has " + rows.size() + " rows"); 
+                
                 for (int i = 0; i < rows.size(); i++) 
                 {
                     TopModel.TopRow row = rows.get(i); 
@@ -480,8 +501,10 @@ System.out.println(str_symbol);
                     }
                     catch(NullPointerException e) 
                     { 
+/*
                         System.out.println("Inside printTabs (PINK),  null pointer when grabbing str_change");
                         e.printStackTrace();
+*/
                     } 
                 }
 
@@ -514,6 +537,8 @@ System.out.println(str_symbol);
                 rows = model.getRows(); 
                 myRows = new ArrayList(); 
 
+System.out.println("VIX has " + rows.size() + " rows"); 
+                
                 // first create the array that will be sorted
                 for (int i = rows.size() - 1; i >= 0; i--) 
                 {
@@ -571,16 +596,22 @@ System.out.println(str_symbol);
                 e1.printStackTrace();
             } 
 
+System.out.println("Total rows is currently: " + totalRows); 
+System.out.println("--------------------------------"); 
 
 /*
-            if  (totalRows > 180)
+            if  (totalRows > 160)
             {
+                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                Date date = new Date();
+                System.out.println("Resubscribing, time is: " + dateFormat.format(date)); 
+                
                 HashMap marketDataHashMap = m_requestPanel.getHashMap(); 
                 Tab scannerTab = (Tab) marketDataHashMap.get("market-scanner"); 
                 ScannerRequestPanel scannerRequestPanel = (ScannerRequestPanel) scannerTab.getComponent();
                 scannerRequestPanel.reSubscribeTabs(); 
             }
-*/            
+*/ 
             
         }
 
@@ -1112,7 +1143,7 @@ System.out.println(str_symbol);
 
                         int reqIdPink;
 			ScannerSubscription subPink = new ScannerSubscription();
-			subPink.numberOfRows( 10 );
+			subPink.numberOfRows( 50 );
 			subPink.scanCode( "TOP_PERC_LOSE" );
 			subPink.instrument( "STK" );
 			subPink.locationCode( "STK.PINK" );
@@ -1129,7 +1160,7 @@ System.out.println(str_symbol);
                     
                         int reqIdNasdaqSCM; 
 			ScannerSubscription subNasdqaSCM = new ScannerSubscription();
-//			subNasdqaSCM.numberOfRows( 5 ); 
+			subNasdqaSCM.numberOfRows( 30 ); 
 			subNasdqaSCM.scanCode( "TOP_PERC_LOSE" );
 			subNasdqaSCM.instrument( "STK" );
 			subNasdqaSCM.locationCode( "STK.NASDAQ.SCM" );
@@ -1145,7 +1176,7 @@ System.out.println(str_symbol);
 
                         int reqIdNasdaqNMS; 
 			ScannerSubscription subNasdqaNMS = new ScannerSubscription();
-//			subNasdqaNMS.numberOfRows( 5 );
+			subNasdqaNMS.numberOfRows( 30 );
 			subNasdqaNMS.scanCode( "TOP_PERC_LOSE" );
 			subNasdqaNMS.instrument( "STK" );
 			subNasdqaNMS.locationCode( "STK.NASDAQ.NMS" );
@@ -1161,7 +1192,7 @@ System.out.println(str_symbol);
                         
                         int reqIdNYSE; 
 			ScannerSubscription subNYSE = new ScannerSubscription();
-//			subNYSE.numberOfRows( 5 );
+			subNYSE.numberOfRows( 30 );
 			subNYSE.scanCode( "TOP_PERC_LOSE" );
 			subNYSE.instrument( "STK" );
 			subNYSE.locationCode( "STK.NYSE" );
@@ -1177,7 +1208,7 @@ System.out.println(str_symbol);
                         
                         int reqIdAMEX; 
 			ScannerSubscription subAMEX = new ScannerSubscription();
-//			subAMEX.numberOfRows( 5 );
+			subAMEX.numberOfRows( 30 );
 			subAMEX.scanCode( "TOP_PERC_LOSE" );
 			subAMEX.instrument( "STK" );
 			subAMEX.locationCode( "STK.AMEX" );
