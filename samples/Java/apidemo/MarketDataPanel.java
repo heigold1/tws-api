@@ -181,6 +181,8 @@ public class MarketDataPanel extends JPanel {
 
 System.out.println("STK.NASDAQ.SCM has " + rows.size() + " rows"); 
                 
+                totalRows+= rows.size(); 
+
                 // first create the array that will be sorted
                 for (int i = rows.size() - 1; i >= 0; i--) 
                 {
@@ -196,33 +198,35 @@ System.out.println("STK.NASDAQ.SCM has " + rows.size() + " rows");
                     {
                         String str_change = row.change();
                         
-if (str_change != null)
-{
-    
-// System.out.println(str_symbol); 
-                        str_change = str_change.replace("%", ""); 
-                        negativeSignCount = str_change.length() - str_change.replace("-", "").length();
-
-                        
-/*                        if (negativeSignCount > 0)
+                        if (str_change != null)
                         {
-*/                        
-                            str_change = str_change.replace("-", ""); 
-                            float fl_change = Float.valueOf(str_change); 
+                            str_change = str_change.replace("%", ""); 
+                            negativeSignCount = str_change.length() - str_change.replace("-", "").length();
 
-                            String str_lowPercent = row.lowPercent();
-                            str_lowPercent = str_lowPercent.replace("%", ""); 
-                            str_lowPercent = str_lowPercent.replace("-", ""); 
-                            float fl_lowPercent = Float.valueOf(str_lowPercent); 
-                            
-                            
+                            Double avg_volume = row.getAvgVolume(); 
+                            int symbol_length = str_symbol.length(); 
 
-                            TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
-                            myRows.add(myRow);
-//                        }
-}
+                            if (
+                                    ((avg_volume > 1000) && (symbol_length < 5)) ||
+                                    (symbol_length > 5)
+                                    )
+                            {
+
+                                str_change = str_change.replace("-", ""); 
+                                float fl_change = Float.valueOf(str_change); 
+
+                                String str_lowPercent = row.lowPercent();
+                                str_lowPercent = str_lowPercent.replace("%", ""); 
+                                str_lowPercent = str_lowPercent.replace("-", ""); 
+                                float fl_lowPercent = Float.valueOf(str_lowPercent); 
 
 
+
+                                TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
+                                myRows.add(myRow);
+
+                            }
+                        }
                     }
                     catch(NullPointerException e) 
                     { 
@@ -252,6 +256,8 @@ if (str_change != null)
                 
 System.out.println("STK.NASDAQ.NMS has " + rows.size() + " rows"); 
 
+                totalRows+= rows.size(); 
+
                 // first create the array that will be sorted
                 for (int i = rows.size() - 1; i >= 0; i--) 
                 {
@@ -266,23 +272,34 @@ System.out.println("STK.NASDAQ.NMS has " + rows.size() + " rows");
                     try
                     {
                         String str_change = row.change();
-                        str_change = str_change.replace("%", ""); 
-                        negativeSignCount = str_change.length() - str_change.replace("-", "").length();
-
-/*                        if (negativeSignCount > 0)
+                        
+                        if (str_change != null)
                         {
-*/
-                            str_change = str_change.replace("-", ""); 
-                            float fl_change = Float.valueOf(str_change); 
+                            str_change = str_change.replace("%", ""); 
+                            negativeSignCount = str_change.length() - str_change.replace("-", "").length();
 
-                            String str_lowPercent = row.lowPercent();
-                            str_lowPercent = str_lowPercent.replace("%", ""); 
-                            str_lowPercent = str_lowPercent.replace("-", ""); 
-                            float fl_lowPercent = Float.valueOf(str_lowPercent); 
+                            Double avg_volume = row.getAvgVolume(); 
+                            int symbol_length = str_symbol.length(); 
 
-                            TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
-                            myRows.add(myRow);
-//                        }
+                            if (
+                                    ((avg_volume > 1000) && (symbol_length < 5)) ||
+                                    (symbol_length > 5)
+                                    )
+                            {
+
+                                str_change = str_change.replace("-", ""); 
+                                float fl_change = Float.valueOf(str_change); 
+
+                                String str_lowPercent = row.lowPercent();
+                                str_lowPercent = str_lowPercent.replace("%", ""); 
+                                str_lowPercent = str_lowPercent.replace("-", ""); 
+                                float fl_lowPercent = Float.valueOf(str_lowPercent); 
+
+                                TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
+                                myRows.add(myRow);
+
+                            }
+                        }
                     }
                     catch(NullPointerException e) 
                     { 
@@ -296,7 +313,6 @@ System.out.println("STK.NASDAQ.NMS has " + rows.size() + " rows");
                 if ((nasdaqTabSCM != null) || (nasdaqTabNMS != null))
                 {
                     myRows.sort(new OrderByComparator()); 
-                    totalRows+= myRows.size(); 
 
                     jsonOutput += "\""+ "NASDAQ" + "\":  \n\n { \n"; 
                     for (int i = 0; i < myRows.size(); i++) 
@@ -327,6 +343,8 @@ System.out.println("STK.NASDAQ.NMS has " + rows.size() + " rows");
 
 System.out.println("STK.NYSE has " + rows.size() + " rows"); 
                 
+                totalRows+= rows.size(); 
+
                 // first create the array that will be sorted
                 for (int i = 0; i < rows.size(); i++) 
                 {
@@ -342,23 +360,30 @@ System.out.println("STK.NYSE has " + rows.size() + " rows");
                         String str_change = row.change(); 
                         str_change = str_change.replace("%", ""); 
                         
-                        negativeSignCount = str_change.length() - str_change.replace("-", "").length();
-
-/*                        
-                        if (negativeSignCount > 0)
+                        if (str_change != null)
                         {
-*/
-                            str_change = str_change.replace("-", ""); 
-                            float fl_change = Float.valueOf(str_change); 
+                            negativeSignCount = str_change.length() - str_change.replace("-", "").length();
+                            Double avg_volume = row.getAvgVolume(); 
+                            int symbol_length = str_symbol.length(); 
 
-                            String str_lowPercent = row.lowPercent();
-                            str_lowPercent = str_lowPercent.replace("%", ""); 
-                            str_lowPercent = str_lowPercent.replace("-", ""); 
-                            float fl_lowPercent = Float.valueOf(str_lowPercent); 
+                            if (
+                                    ((avg_volume > 1000) && (symbol_length < 5)) ||
+                                    (symbol_length > 5)
+                                    )
+                            {
 
-                            TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
-                            myRows.add(myRow);
-//                        }
+                                str_change = str_change.replace("-", ""); 
+                                float fl_change = Float.valueOf(str_change); 
+
+                                String str_lowPercent = row.lowPercent();
+                                str_lowPercent = str_lowPercent.replace("%", ""); 
+                                str_lowPercent = str_lowPercent.replace("-", ""); 
+                                float fl_lowPercent = Float.valueOf(str_lowPercent); 
+
+                                TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
+                                myRows.add(myRow);
+                            }
+                        }
                     }
                     catch(NullPointerException e) 
                     { 
@@ -385,6 +410,8 @@ System.out.println("STK.NYSE has " + rows.size() + " rows");
 
 System.out.println("STK.AMEX has " + rows.size() + " rows"); 
                 
+                totalRows+= rows.size(); 
+
                 for (int i = 0; i < rows.size(); i++) 
                 {
                     TopModel.TopRow row = rows.get(i); 
@@ -395,30 +422,36 @@ System.out.println("STK.AMEX has " + rows.size() + " rows");
                     str_symbol = str_symbol.trim(); 
                     str_symbol = str_symbol.replace(" ", "."); 
 
-
-                    
                     try
                     {
-                        String str_change = row.change(); 
-                        str_change = str_change.replace("%", ""); 
+                        String str_change = row.change();
                         
-                        negativeSignCount = str_change.length() - str_change.replace("-", "").length();
-
-/*
-                        if (negativeSignCount > 0)
+                        if (str_change != null)
                         {
-*/
-                            str_change = str_change.replace("-", ""); 
-                            float fl_change = Float.valueOf(str_change); 
+                            str_change = str_change.replace("%", ""); 
+                            negativeSignCount = str_change.length() - str_change.replace("-", "").length();
 
-                            String str_lowPercent = row.lowPercent();
-                            str_lowPercent = str_lowPercent.replace("%", ""); 
-                            str_lowPercent = str_lowPercent.replace("-", ""); 
-                            float fl_lowPercent = Float.valueOf(str_lowPercent); 
+                            Double avg_volume = row.getAvgVolume(); 
+                            int symbol_length = str_symbol.length(); 
 
-                            TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
-                            myRows.add(myRow);
-//                        }
+                            if (
+                                    ((avg_volume > 1000) && (symbol_length < 5)) ||
+                                    (symbol_length > 5)
+                                    )
+                            {
+
+                                str_change = str_change.replace("-", ""); 
+                                float fl_change = Float.valueOf(str_change); 
+
+                                String str_lowPercent = row.lowPercent();
+                                str_lowPercent = str_lowPercent.replace("%", ""); 
+                                str_lowPercent = str_lowPercent.replace("-", ""); 
+                                float fl_lowPercent = Float.valueOf(str_lowPercent); 
+
+                                TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
+                                myRows.add(myRow);
+                            }
+                        }
                     }
                     catch(NullPointerException e) 
                     { 
@@ -432,7 +465,6 @@ System.out.println("STK.AMEX has " + rows.size() + " rows");
                 if ((amexTab != null) || (nyseTab != null))
                 {
                     myRows.sort(new OrderByComparator()); 
-                    totalRows+= myRows.size(); 
 
                     jsonOutput += "\""+ "NYSEAMEX" + "\":  \n\n { \n"; 
                     for (int i = 0; i < myRows.size(); i++) 
@@ -464,6 +496,8 @@ System.out.println("STK.AMEX has " + rows.size() + " rows");
 
 System.out.println("STK.PINK has " + rows.size() + " rows"); 
                 
+                totalRows+= rows.size(); 
+
                 for (int i = 0; i < rows.size(); i++) 
                 {
                     TopModel.TopRow row = rows.get(i); 
@@ -475,14 +509,12 @@ System.out.println("STK.PINK has " + rows.size() + " rows");
                     try
                     {
                         String str_change = row.change(); 
-                        str_change = str_change.replace("%", ""); 
                         
-                        negativeSignCount = str_change.length() - str_change.replace("-", "").length();
-
-/*
-                        if (negativeSignCount > 0)
+                        if (str_change != null)
                         {
-*/
+                            str_change = str_change.replace("%", ""); 
+                            negativeSignCount = str_change.length() - str_change.replace("-", "").length();
+
                             str_change = str_change.replace("-", ""); 
                             float fl_change = Float.valueOf(str_change); 
 
@@ -494,10 +526,7 @@ System.out.println("STK.PINK has " + rows.size() + " rows");
 
                             TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
                             myRows.add(myRow);
-                            
-                            
-                            
-//                        }
+                        }
                     }
                     catch(NullPointerException e) 
                     { 
@@ -509,7 +538,6 @@ System.out.println("STK.PINK has " + rows.size() + " rows");
                 }
 
                 myRows.sort(new OrderByComparator()); 
-                totalRows+= myRows.size(); 
 
                 jsonOutput += "\""+ "PINK" + "\":  \n\n { \n"; 
                 for (int i = 0; i < myRows.size(); i++) 
@@ -535,7 +563,6 @@ System.out.println("STK.PINK has " + rows.size() + " rows");
                 model = childVixComponent.getModel();
 
                 rows = model.getRows(); 
-                myRows = new ArrayList(); 
 
 System.out.println("VIX has " + rows.size() + " rows"); 
                 
@@ -567,10 +594,14 @@ System.out.println("VIX has " + rows.size() + " rows");
             }
             catch(NullPointerException e)
             {
+/*
                 System.out.println("Inside printTabs, null pointer when grabbing VIX");
                 e.printStackTrace();
+*/
             } 
 
+            totalRows+=1;  
+            
             jsonOutput += "}"; 
             jsonOutput = jsonOutput.replace("},}", "}}");
             // need this a second time 
@@ -599,20 +630,19 @@ System.out.println("VIX has " + rows.size() + " rows");
 System.out.println("Total rows is currently: " + totalRows); 
 System.out.println("--------------------------------"); 
 
-/*
-            if  (totalRows > 160)
+            if  (totalRows > 199)
             {
                 DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                 Date date = new Date();
+                System.out.println("*****************************************"); 
                 System.out.println("Resubscribing, time is: " + dateFormat.format(date)); 
+                System.out.println("*****************************************"); 
                 
                 HashMap marketDataHashMap = m_requestPanel.getHashMap(); 
                 Tab scannerTab = (Tab) marketDataHashMap.get("market-scanner"); 
                 ScannerRequestPanel scannerRequestPanel = (ScannerRequestPanel) scannerTab.getComponent();
                 scannerRequestPanel.reSubscribeTabs(); 
             }
-*/ 
-            
         }
 
 	private class DeepRequestPanel extends JPanel {
