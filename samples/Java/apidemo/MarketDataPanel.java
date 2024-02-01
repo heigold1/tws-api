@@ -207,7 +207,7 @@ System.out.println("STK.NASDAQ.SCM has " + rows.size() + " rows");
                             int symbol_length = str_symbol.length(); 
 
                             if (
-                                    ((avg_volume > 90000) && (symbol_length < 5)) ||
+                                    ((avg_volume > 200) && (symbol_length < 5)) ||
                                     (symbol_length > 5)
                                     )
                             {
@@ -282,7 +282,7 @@ System.out.println("STK.NASDAQ.NMS has " + rows.size() + " rows");
                             int symbol_length = str_symbol.length(); 
 
                             if (
-                                    ((avg_volume > 90000) && (symbol_length < 5)) ||
+                                    ((avg_volume > 200) && (symbol_length < 5)) ||
                                     (symbol_length > 5)
                                     )
                             {
@@ -367,7 +367,7 @@ System.out.println("STK.NYSE has " + rows.size() + " rows");
                             int symbol_length = str_symbol.length(); 
 
                             if (
-                                    ((avg_volume > 90000) && (symbol_length < 5)) ||
+                                    ((avg_volume > 200) && (symbol_length < 5)) ||
                                     (symbol_length > 5)
                                     )
                             {
@@ -435,7 +435,7 @@ System.out.println("STK.AMEX has " + rows.size() + " rows");
                             int symbol_length = str_symbol.length(); 
 
                             if (
-                                    ((avg_volume > 90000) && (symbol_length < 5)) ||
+                                    ((avg_volume > 200) && (symbol_length < 5)) ||
                                     (symbol_length > 5)
                                     )
                             {
