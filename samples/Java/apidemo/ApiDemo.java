@@ -16,6 +16,8 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -245,7 +247,7 @@ public class ApiDemo implements IConnectionHandler {
                 JCheckBox m_noStopOrder = new JCheckBox("No Stop"); 
                 JCheckBox m_averageDown = new JCheckBox("3 Pt Avg"); 
                 JCheckBox m_jaysAlgorithm = new JCheckBox("Jay's Alg"); 
-		
+
                 JTextField m_profitTakerHighRisk = new JTextField("3.5", 15);
                 JTextField m_profitTakerNonHighRisk = new JTextField("4.2", 15);
                 JButton m_processMultipleOrders = new JButton("Process Multiple Orders"); 
@@ -689,12 +691,12 @@ public class ApiDemo implements IConnectionHandler {
                         i_nextOrderId = i_thirdOrderStopId + 1; 
 
 //                        m_averageDown.setSelected(false); 
-                        
+                          m_jaysAlgorithm.setSelected(true);
                     } // if we ARE averaging down 
                     else if (m_jaysAlgorithm.isSelected())
                     {
                         System.out.println("Jay's Algorithm Selected");                                    
-                        m_jaysAlgorithm.setSelected(false);                         
+//                         m_jaysAlgorithm.setSelected(false);                         
                         
                         int i_secondOrderPercentageDollar = 12; 
                         int i_secondOrderPercentagePenny = 15; 
@@ -1146,6 +1148,21 @@ public class ApiDemo implements IConnectionHandler {
 //                        p1.add( "Order:", m_orderText);
 
                         // No bracket button 
+                        
+                        m_jaysAlgorithm.setSelected(true); 
+                        
+                        m_averageDown.addItemListener(new ItemListener() {
+                            @Override
+                            public void itemStateChanged(ItemEvent e) {
+                            // Handle the checkbox state change event
+                                if (e.getStateChange() == ItemEvent.SELECTED) {
+                                    m_jaysAlgorithm.setSelected(false);
+                                } else {
+
+                                }
+                            }
+                        });
+                        
                         
                         m_noBracket.addActionListener(new java.awt.event.ActionListener()
                 	{
