@@ -1160,8 +1160,11 @@ public class EReader extends Thread {
             }
 
             default: {
+                /*
                 m_parent.error( EClientErrors.NO_VALID_ID, EClientErrors.UNKNOWN_ID.code(), EClientErrors.UNKNOWN_ID.msg());
                 return false;
+                */
+                break; 
             }
         }
         return true;

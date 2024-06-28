@@ -1016,6 +1016,7 @@ System.out.println("--------------------------------");
 		}
                 
                 public void reSubscribeTabs(){
+                    
                     m_topResultPanel.m_model.removeAllRows(); 
                     
                     Iterator it = m_newContractHash.entrySet().iterator();
@@ -1196,7 +1197,7 @@ System.out.println("--------------------------------");
 			subNasdqaSCM.locationCode( "STK.NASDAQ.SCM" );
 			subNasdqaSCM.stockTypeFilter( "ALL" );
                         subNasdqaSCM.belowPrice(50);
-                        subNasdqaSCM.abovePrice(0.03);
+                        subNasdqaSCM.abovePrice(0.01);
                         subNasdqaSCM.aboveVolume(10000);
 			ScannerResultsPanel resultsPanelNasdaqSCM = new ScannerResultsPanel();
             		m_resultsPanel.addTab("STK.NASDAQ.SCM", resultsPanelNasdaqSCM, true, true);
@@ -1212,7 +1213,7 @@ System.out.println("--------------------------------");
 			subNasdqaNMS.locationCode( "STK.NASDAQ.NMS" );
 			subNasdqaNMS.stockTypeFilter( "ALL" );
                         subNasdqaNMS.belowPrice(50);
-                        subNasdqaNMS.abovePrice(0.03);
+                        subNasdqaNMS.abovePrice(0.01);
                         subNasdqaNMS.aboveVolume(10000);
 			ScannerResultsPanel resultsPanelNasdaqNMS = new ScannerResultsPanel();
             		m_resultsPanel.addTab("STK.NASDAQ.NMS", resultsPanelNasdaqNMS, true, true);
@@ -1228,7 +1229,7 @@ System.out.println("--------------------------------");
 			subNYSE.locationCode( "STK.NYSE" );
 			subNYSE.stockTypeFilter( "ALL" );
                         subNYSE.belowPrice(50);
-                        subNYSE.abovePrice(0.03);
+                        subNYSE.abovePrice(0.01);
                         subNYSE.aboveVolume(10000);
 			ScannerResultsPanel resultsPanelNYSE = new ScannerResultsPanel();
             		m_resultsPanel.addTab("STK.NYSE", resultsPanelNYSE, true, true);
@@ -1244,7 +1245,7 @@ System.out.println("--------------------------------");
 			subAMEX.locationCode( "STK.AMEX" );
 			subAMEX.stockTypeFilter( "ALL" );
                         subAMEX.belowPrice(50);
-                        subAMEX.abovePrice(0.03);
+                        subAMEX.abovePrice(0.01);
                         subAMEX.aboveVolume(10000);
 			ScannerResultsPanel resultsPanelAMEX = new ScannerResultsPanel();
             		m_resultsPanel.addTab("STK.AMEX", resultsPanelAMEX, true, true);

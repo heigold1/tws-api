@@ -74,7 +74,7 @@ public class ApiDemo implements IConnectionHandler {
 
         public final int i_halfwayDown = 5; 
         public final int i_averageDownSpread = 25; 
-        public final int i_stopOrderPercentage = 11; 
+        public final int i_stopOrderPercentage = 20; 
         public final int i_averageDownStopOrderPercentage = 20; 
         public final double fl_secondOrderPercentageProfit = 4.1; 
         public final double fl_thirdOrderPercentageProfit = 3.5; 
@@ -691,7 +691,7 @@ public class ApiDemo implements IConnectionHandler {
                         i_nextOrderId = i_thirdOrderStopId + 1; 
 
 //                        m_averageDown.setSelected(false); 
-                          m_jaysAlgorithm.setSelected(true);
+//                          m_jaysAlgorithm.setSelected(true);
                     } // if we ARE averaging down 
                     else if (m_jaysAlgorithm.isSelected())
                     {
@@ -1149,7 +1149,7 @@ public class ApiDemo implements IConnectionHandler {
 
                         // No bracket button 
                         
-                        m_jaysAlgorithm.setSelected(true); 
+//                        m_jaysAlgorithm.setSelected(true); 
                         
                         m_averageDown.addItemListener(new ItemListener() {
                             @Override
