@@ -1228,6 +1228,9 @@ public class ApiDemo implements IConnectionHandler {
                                   return;
                                 }
 
+                                String str_previousClose = arr_orderParameters[6].replaceAll("\\$", "");
+                                double fl_previousClose = Double.parseDouble(str_previousClose); 
+                                
                                 // Order starts here                                 
                                 NewContract myContract = new NewContract();
                                 myContract.symbol(str_symbol); 
@@ -1257,7 +1260,6 @@ public class ApiDemo implements IConnectionHandler {
                                 // grab the latest (max) order id
                                 int i_parentBuyOrderId = 0; 
                                 int i_childSellOrderId = 0;
-                                int i_childStopOrderId = 0;
                                 int i_nextOrderId = 0; 
                                 try
                                 {
@@ -1279,19 +1281,54 @@ public class ApiDemo implements IConnectionHandler {
                                 }
 
                                 o.orderId(i_parentBuyOrderId); 
-                    
                                 o.transmit(true);
 
                                 System.out.println("The NEXT parent buy order id is " + i_parentBuyOrderId);
                                 ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o); 
                                 System.out.println("You have just sent off the parent order");
 
+                                i_childSellOrderId = i_parentBuyOrderId + 1; 
+
+                                NewOrder oSell = new NewOrder();
+                                oSell.action(Action.SELL);
+                                oSell.orderType(OrderType.LMT); 
+                                // Since this is technically a "no bracket" order, we are just setting the profit to 300% 
+                                double fl_childSellPrice = fl_price + fl_price*3.0;
+
+                                if (fl_childSellPrice > 1.00)
+                                {
+                                    fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
+                                }
+                                else 
+                                {
+
+                                    if (fl_previousClose > 1.00)
+                                    {
+                                        fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
+                                    }
+                                    else
+                                    {
+                                        fl_childSellPrice = Double.parseDouble(String.format( "%.4f", fl_childSellPrice )); 
+                                    }
+                                }  
+
+                                oSell.lmtPrice(fl_childSellPrice);
+                                oSell.totalQuantity(i_numShares);
+                                oSell.tif(TimeInForce.DAY);
+                                oSell.outsideRth(true);
+                                oSell.orderId(i_childSellOrderId); 
+                                oSell.parentId(i_parentBuyOrderId);
+                                oSell.transmit(true);
+
+                                ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oSell); 
+                                System.out.println("You have just sent off the child sell order");
+
                                 try
                                 {
                                     // new input stream created
                                     FileOutputStream fos = new FileOutputStream("C:\\TWS API\\DayTradeApp\\latestOrder.txt");
 
-                                    i_nextOrderId = i_parentBuyOrderId + 1; 
+                                    i_nextOrderId = i_childSellOrderId + 1; 
                                     // convert next orderId to string 
                                     StringBuilder sb = new StringBuilder();
                                     sb.append("");
