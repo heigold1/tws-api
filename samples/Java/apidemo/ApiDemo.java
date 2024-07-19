@@ -696,7 +696,7 @@ public class ApiDemo implements IConnectionHandler {
                     else if (m_jaysAlgorithm.isSelected())
                     {
                         System.out.println("Jay's Algorithm Selected");                                    
-//                         m_jaysAlgorithm.setSelected(false);                         
+                        m_jaysAlgorithm.setSelected(false);                         
                         
                         int i_secondOrderPercentageDollar = 12; 
                         int i_secondOrderPercentagePenny = 15; 
