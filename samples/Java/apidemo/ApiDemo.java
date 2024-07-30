@@ -1292,8 +1292,8 @@ public class ApiDemo implements IConnectionHandler {
                                 NewOrder oSell = new NewOrder();
                                 oSell.action(Action.SELL);
                                 oSell.orderType(OrderType.LMT); 
-                                // Since this is technically a "no bracket" order, we are just setting the profit to 300% 
-                                double fl_childSellPrice = fl_price + fl_price*3.0;
+                                // Since this is technically a "no bracket" order, we are just setting the profit to 40% 
+                                double fl_childSellPrice = fl_price + fl_price*0.4;
 
                                 if (fl_childSellPrice > 1.00)
                                 {

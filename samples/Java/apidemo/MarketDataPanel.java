@@ -204,11 +204,12 @@ System.out.println("STK.NASDAQ.SCM has " + rows.size() + " rows");
                             negativeSignCount = str_change.length() - str_change.replace("-", "").length();
 
                             Double avg_volume = row.getAvgVolume(); 
+                            Double last = row.getLast(); 
                             int symbol_length = str_symbol.length(); 
 
                             if (
-                                    ((avg_volume > 200) && (symbol_length < 5)) ||
-                                    (symbol_length > 5)
+                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.20)) ||
+                                    (symbol_length >= 5)
                                     )
                             {
 
@@ -279,11 +280,12 @@ System.out.println("STK.NASDAQ.NMS has " + rows.size() + " rows");
                             negativeSignCount = str_change.length() - str_change.replace("-", "").length();
 
                             Double avg_volume = row.getAvgVolume(); 
+                            Double last = row.getLast(); 
                             int symbol_length = str_symbol.length(); 
 
                             if (
-                                    ((avg_volume > 200) && (symbol_length < 5)) ||
-                                    (symbol_length > 5)
+                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.20)) ||
+                                    (symbol_length >= 5)
                                     )
                             {
 
@@ -364,11 +366,12 @@ System.out.println("STK.NYSE has " + rows.size() + " rows");
                         {
                             negativeSignCount = str_change.length() - str_change.replace("-", "").length();
                             Double avg_volume = row.getAvgVolume(); 
+                            Double last = row.getLast(); 
                             int symbol_length = str_symbol.length(); 
 
                             if (
-                                    ((avg_volume > 200) && (symbol_length < 5)) ||
-                                    (symbol_length > 5)
+                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.20)) ||
+                                    (symbol_length >= 5)
                                     )
                             {
 
@@ -431,12 +434,13 @@ System.out.println("STK.AMEX has " + rows.size() + " rows");
                             str_change = str_change.replace("%", ""); 
                             negativeSignCount = str_change.length() - str_change.replace("-", "").length();
 
-                            Double avg_volume = row.getAvgVolume(); 
+                            Double avg_volume = row.getAvgVolume();
+                            Double last = row.getLast(); 
                             int symbol_length = str_symbol.length(); 
 
                             if (
-                                    ((avg_volume > 200) && (symbol_length < 5)) ||
-                                    (symbol_length > 5)
+                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.20)) ||
+                                    (symbol_length >= 5)
                                     )
                             {
 
@@ -1197,7 +1201,7 @@ System.out.println("--------------------------------");
 			subNasdqaSCM.locationCode( "STK.NASDAQ.SCM" );
 			subNasdqaSCM.stockTypeFilter( "ALL" );
                         subNasdqaSCM.belowPrice(50);
-                        subNasdqaSCM.abovePrice(0.20);
+                        subNasdqaSCM.abovePrice(0.01);
                         subNasdqaSCM.aboveVolume(10000);
 			ScannerResultsPanel resultsPanelNasdaqSCM = new ScannerResultsPanel();
             		m_resultsPanel.addTab("STK.NASDAQ.SCM", resultsPanelNasdaqSCM, true, true);
@@ -1213,7 +1217,7 @@ System.out.println("--------------------------------");
 			subNasdqaNMS.locationCode( "STK.NASDAQ.NMS" );
 			subNasdqaNMS.stockTypeFilter( "ALL" );
                         subNasdqaNMS.belowPrice(50);
-                        subNasdqaNMS.abovePrice(0.20);
+                        subNasdqaNMS.abovePrice(0.01);
                         subNasdqaNMS.aboveVolume(10000);
 			ScannerResultsPanel resultsPanelNasdaqNMS = new ScannerResultsPanel();
             		m_resultsPanel.addTab("STK.NASDAQ.NMS", resultsPanelNasdaqNMS, true, true);
@@ -1229,7 +1233,7 @@ System.out.println("--------------------------------");
 			subNYSE.locationCode( "STK.NYSE" );
 			subNYSE.stockTypeFilter( "ALL" );
                         subNYSE.belowPrice(50);
-                        subNYSE.abovePrice(0.20);
+                        subNYSE.abovePrice(0.01);
                         subNYSE.aboveVolume(10000);
 			ScannerResultsPanel resultsPanelNYSE = new ScannerResultsPanel();
             		m_resultsPanel.addTab("STK.NYSE", resultsPanelNYSE, true, true);
@@ -1245,7 +1249,7 @@ System.out.println("--------------------------------");
 			subAMEX.locationCode( "STK.AMEX" );
 			subAMEX.stockTypeFilter( "ALL" );
                         subAMEX.belowPrice(50);
-                        subAMEX.abovePrice(0.20);
+                        subAMEX.abovePrice(0.01);
                         subAMEX.aboveVolume(10000);
 			ScannerResultsPanel resultsPanelAMEX = new ScannerResultsPanel();
             		m_resultsPanel.addTab("STK.AMEX", resultsPanelAMEX, true, true);

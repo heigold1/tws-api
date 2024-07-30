@@ -174,6 +174,11 @@ public class TopModel extends AbstractTableModel {
                 {
                     return m_close; 
                 }
+                
+                public double getLast()
+                {
+                    return m_last; 
+                }
 
                 public double getAvgVolume()
                 {
