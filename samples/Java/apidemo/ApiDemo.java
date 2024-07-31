@@ -76,7 +76,7 @@ public class ApiDemo implements IConnectionHandler {
         public final int i_averageDownSpread = 25; 
         public final int i_stopOrderPercentage = 20; 
         public final int i_averageDownStopOrderPercentage = 20; 
-        public final double fl_secondOrderPercentageProfit = 4.1; 
+        public final double fl_secondOrderPercentageProfit = 0.5; 
         public final double fl_thirdOrderPercentageProfit = 3.5; 
         
 	private final JTextArea m_inLog = new JTextArea();
@@ -697,7 +697,7 @@ public class ApiDemo implements IConnectionHandler {
                     else if (m_jaysAlgorithm.isSelected())
                     {
                         System.out.println("Jay's Algorithm Selected");                                    
-                        
+
                         int i_secondOrderPercentageDollar = 12; 
                         int i_secondOrderPercentagePenny = 15; 
                         
@@ -777,6 +777,7 @@ public class ApiDemo implements IConnectionHandler {
                         oSell.totalQuantity(i_numShares);
                         oSell.tif(TimeInForce.DAY);
                         oSell.outsideRth(true);
+                        oSell.ocaGroup(str_symbol + "_OCA_FIRST"); 
                         oSell.orderId(i_firstOrderChildSell); 
                         oSell.parentId(i_firstOrderParent);
                         oSell.transmit(true);
@@ -865,7 +866,12 @@ public class ApiDemo implements IConnectionHandler {
                         o3.action(Action.SELL);
                         o3.orderType(OrderType.LMT);                                     
                         o3.lmtPrice(fl_breakEvenProfitPrice);
-                        o3.totalQuantity(i_numShares);
+                        
+                        // on the break-even order we are doubling the amount of shares sold, since we had to double the amount bought 
+                        // in our second order 
+                        o3.totalQuantity(i_numShares*2);
+                        // we're putting it in the same OCA group as the 1st sell, in case it breaks even, then comes back up and hits this as a short
+                        o3.ocaGroup(str_symbol + "_OCA_FIRST"); 
                         o3.tif(TimeInForce.DAY);
                         o3.outsideRth(true);
                         o3.orderId(i_breakEvenOrder); 
