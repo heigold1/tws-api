@@ -76,7 +76,7 @@ public class ApiDemo implements IConnectionHandler {
         public final int i_averageDownSpread = 25; 
         public final int i_stopOrderPercentage = 20; 
         public final int i_averageDownStopOrderPercentage = 20; 
-        public final double fl_secondOrderPercentageProfit = 0.5; 
+        public final double fl_secondOrderPercentageProfit = 0.05; 
         public final double fl_thirdOrderPercentageProfit = 3.5; 
         
 	private final JTextArea m_inLog = new JTextArea();
@@ -789,6 +789,7 @@ public class ApiDemo implements IConnectionHandler {
                         
                         // If it goes 12% past our original order, then we place our second order. 
                         double fl_secondBuyOrderEntryPrice = fl_price - fl_price*i_secondOrderPercentageDollar/100; 
+                        
                         if (fl_secondBuyOrderEntryPrice < 1.00)
                         {
                             fl_secondBuyOrderEntryPrice = fl_price - fl_price*i_secondOrderPercentagePenny/100;
