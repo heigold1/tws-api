@@ -246,7 +246,7 @@ public class ApiDemo implements IConnectionHandler {
                 JButton m_b95 = new JButton("95%");
                 JCheckBox m_noStopOrder = new JCheckBox("No Stop"); 
                 JCheckBox m_averageDown = new JCheckBox("3 Pt Avg"); 
-                JCheckBox m_jaysAlgorithm = new JCheckBox("Jay's Alg"); 
+                JCheckBox m_jaysAlgorithm = new JCheckBox("Jay's Alg", true); 
 
                 JTextField m_profitTakerHighRisk = new JTextField("3.5", 15);
                 JTextField m_profitTakerNonHighRisk = new JTextField("4.2", 15);
@@ -330,7 +330,8 @@ public class ApiDemo implements IConnectionHandler {
                     if (m_averageDown.isSelected())
                     {
                         System.out.println("Average down is selected.");
-                        m_averageDown.setSelected(false);                         
+                        m_averageDown.setSelected(false);  
+                        m_jaysAlgorithm.setSelected(true); 
                         
                         // we are averaging down 
 
@@ -696,7 +697,6 @@ public class ApiDemo implements IConnectionHandler {
                     else if (m_jaysAlgorithm.isSelected())
                     {
                         System.out.println("Jay's Algorithm Selected");                                    
-                        m_jaysAlgorithm.setSelected(false);                         
                         
                         int i_secondOrderPercentageDollar = 12; 
                         int i_secondOrderPercentagePenny = 15; 
@@ -1518,6 +1518,15 @@ public class ApiDemo implements IConnectionHandler {
                                 m_connectionPanel.createOrders(95, 50); 
                 	    } 
                         });  // end of the click event handler for "Fast 95%"  
+                        
+                        m_averageDown.addActionListener(new java.awt.event.ActionListener()
+                	{
+                	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
+                    	    {
+                                m_jaysAlgorithm.setSelected(false); 
+                	    } 
+                        });  // end of the click event handler for "Fast 2.6%" 
+                        
 
                         // grab the lines of orders from the text area and parse them out into orders.
                         m_processMultipleOrders.addActionListener(new java.awt.event.ActionListener()
