@@ -246,7 +246,7 @@ public class ApiDemo implements IConnectionHandler {
                 JButton m_b95 = new JButton("95%");
                 JCheckBox m_noStopOrder = new JCheckBox("No Stop"); 
                 JCheckBox m_averageDown = new JCheckBox("3 Pt Avg"); 
-                JCheckBox m_jaysAlgorithm = new JCheckBox("Jay's Alg", true); 
+                JCheckBox m_jaysAlgorithm = new JCheckBox("Jay's Alg"); 
 
                 JTextField m_profitTakerHighRisk = new JTextField("3.5", 15);
                 JTextField m_profitTakerNonHighRisk = new JTextField("4.2", 15);
@@ -331,7 +331,6 @@ public class ApiDemo implements IConnectionHandler {
                     {
                         System.out.println("Average down is selected.");
                         m_averageDown.setSelected(false);  
-                        m_jaysAlgorithm.setSelected(true); 
                         
                         // we are averaging down 
 
@@ -698,6 +697,8 @@ public class ApiDemo implements IConnectionHandler {
                     {
                         System.out.println("Jay's Algorithm Selected");                                    
 
+                        m_jaysAlgorithm.setSelected(false);
+                        
                         int i_secondOrderPercentageDollar = 12; 
                         int i_secondOrderPercentagePenny = 15; 
                         
@@ -1235,9 +1236,18 @@ public class ApiDemo implements IConnectionHandler {
                                   return;
                                 }
 
-                                String str_previousClose = arr_orderParameters[6].replaceAll("\\$", "");
-                                double fl_previousClose = Double.parseDouble(str_previousClose); 
                                 
+                                
+                                String str_previousClose;
+                                double fl_previousClose = 0.00; 
+                               
+                                // If we have a previous day's closing price
+                                if ((arr_orderParameters.length >= 7) && (arr_orderParameters[6] != null)) 
+                                {    
+                                    str_previousClose = arr_orderParameters[6].replaceAll("\\$", "");
+                                    fl_previousClose = Double.parseDouble(str_previousClose); 
+                                }
+                                 
                                 // Order starts here                                 
                                 NewContract myContract = new NewContract();
                                 myContract.symbol(str_symbol); 
@@ -1302,22 +1312,30 @@ public class ApiDemo implements IConnectionHandler {
                                 // Since this is technically a "no bracket" order, we are just setting the profit to 40% 
                                 double fl_childSellPrice = fl_price + fl_price*0.4;
 
-                                if (fl_childSellPrice > 1.00)
-                                {
-                                    fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
-                                }
-                                else 
-                                {
-
-                                    if (fl_previousClose > 1.00)
+                                // if we have a previous day's closing price
+                                if ((arr_orderParameters.length >= 7) && (arr_orderParameters[6] != null)) 
+                                {  
+                                    if (fl_childSellPrice > 1.00)
                                     {
                                         fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
                                     }
-                                    else
+                                    else 
                                     {
-                                        fl_childSellPrice = Double.parseDouble(String.format( "%.4f", fl_childSellPrice )); 
-                                    }
-                                }  
+
+                                        if (fl_previousClose > 1.00)
+                                        {
+                                            fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
+                                        }
+                                        else
+                                        {
+                                            fl_childSellPrice = Double.parseDouble(String.format( "%.4f", fl_childSellPrice )); 
+                                        }
+                                    }  
+                                }    
+                                else 
+                                {
+                                    fl_childSellPrice = Double.parseDouble(String.format( "%.4f", fl_childSellPrice )); 
+                                }
 
                                 oSell.lmtPrice(fl_childSellPrice);
                                 oSell.totalQuantity(i_numShares);
