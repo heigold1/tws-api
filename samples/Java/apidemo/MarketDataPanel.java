@@ -516,20 +516,26 @@ System.out.println("STK.PINK has " + rows.size() + " rows");
                         
                         if (str_change != null)
                         {
+                            int i_volume = row.m_volume*100; 
+
                             str_change = str_change.replace("%", ""); 
                             negativeSignCount = str_change.length() - str_change.replace("-", "").length();
 
-                            str_change = str_change.replace("-", ""); 
-                            float fl_change = Float.valueOf(str_change); 
+                            // only if over $300 worth in trades will we bother looking at it. 
+                            if (i_volume*row.m_last > 300.00)
+                            {
+                                str_change = str_change.replace("-", ""); 
+                                float fl_change = Float.valueOf(str_change); 
 
-                            String str_lowPercent = row.lowPercent();
+                                String str_lowPercent = row.lowPercent();
                            
-                            str_lowPercent = str_lowPercent.replace("%", ""); 
-                            str_lowPercent = str_lowPercent.replace("-", ""); 
-                            float fl_lowPercent = Float.valueOf(str_lowPercent); 
+                                str_lowPercent = str_lowPercent.replace("%", ""); 
+                                str_lowPercent = str_lowPercent.replace("-", ""); 
+                                float fl_lowPercent = Float.valueOf(str_lowPercent); 
 
-                            TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
-                            myRows.add(myRow);
+                                TopModel.MyCustomRow myRow = new TopModel.MyCustomRow(str_symbol, row.m_last, fl_change, row.m_volume, row.m_low, row.m_avgVolume, fl_lowPercent); 
+                                myRows.add(myRow);
+                            }
                         }
                     }
                     catch(NullPointerException e) 
