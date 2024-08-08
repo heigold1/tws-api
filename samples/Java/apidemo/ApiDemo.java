@@ -75,10 +75,6 @@ public class ApiDemo implements IConnectionHandler {
 	static ApiDemo INSTANCE = new ApiDemo();
 
         public final int i_halfwayDown = 5; 
-        public final int i_averageDownSpread = 25;    
-        public final int i_stopOrderPercentage = 30;               // for Jay's two-tier orders 
-        public final int i_averageDownStopOrderPercentage = 30;    // for three-tier orders 
-        public final int i_oneTierStopOrderPercentage = 20; 
         public final double fl_secondOrderPercentageProfit = 0.05; 
         public final double fl_thirdOrderPercentageProfit = 3.5; 
         
@@ -330,9 +326,11 @@ public class ApiDemo implements IConnectionHandler {
                     String str_previousClose = arr_orderParameters[6].replaceAll("\\$", "");
                     double fl_previousClose = Double.parseDouble(str_previousClose); 
 
-
+                    // Three-tier orders 
                     if (m_averageDown.isSelected())
                     {
+                        public final int i_averageDownSpread = 25;    
+                        int i_averageDownStopOrderPercentage = 30;
                         System.out.println("Average down is selected.");
                         m_averageDown.setSelected(false);  
                         
@@ -699,6 +697,9 @@ public class ApiDemo implements IConnectionHandler {
                     } // if we ARE averaging down 
                     else if (m_jaysAlgorithm.isSelected())
                     {
+                        
+                        int i_stopOrderPercentage = 25;
+                        
                         System.out.println("Jay's Algorithm Selected");                                    
 
                         m_jaysAlgorithm.setSelected(false);
@@ -904,7 +905,7 @@ public class ApiDemo implements IConnectionHandler {
 
                         i_stopOrder = i_breakEvenOrder + 1;  
                         
-                        double fl_stopPrice = fl_breakEvenPrice - fl_breakEvenPrice*i_averageDownStopOrderPercentage/100; 
+                        double fl_stopPrice = fl_breakEvenPrice - fl_breakEvenPrice*i_stopOrderPercentage/100; 
                         
                         System.out.println("fl_stopPrice is " + fl_stopPrice);
                         
@@ -958,6 +959,9 @@ public class ApiDemo implements IConnectionHandler {
                     }
                     else
                     {
+                        
+                        int i_oneTierStopOrderPercentage = 20; 
+                        
                         System.out.println("No averaging is selected");
 
                         // Order starts here                                 
