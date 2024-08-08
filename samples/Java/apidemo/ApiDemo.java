@@ -329,7 +329,7 @@ public class ApiDemo implements IConnectionHandler {
                     // Three-tier orders 
                     if (m_averageDown.isSelected())
                     {
-                        public final int i_averageDownSpread = 25;    
+                        int i_averageDownSpread = 25;    
                         int i_averageDownStopOrderPercentage = 30;
                         System.out.println("Average down is selected.");
                         m_averageDown.setSelected(false);  
