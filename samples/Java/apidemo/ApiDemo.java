@@ -38,6 +38,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JOptionPane; 
 import javax.swing.JCheckBox;
+import javax.swing.ButtonGroup; 
+import javax.swing.JRadioButton; 
 
 import apidemo.util.HtmlButton;
 import apidemo.util.NewLookAndFeel;
@@ -73,9 +75,10 @@ public class ApiDemo implements IConnectionHandler {
 	static ApiDemo INSTANCE = new ApiDemo();
 
         public final int i_halfwayDown = 5; 
-        public final int i_averageDownSpread = 25; 
-        public final int i_stopOrderPercentage = 20; 
-        public final int i_averageDownStopOrderPercentage = 20; 
+        public final int i_averageDownSpread = 25;    
+        public final int i_stopOrderPercentage = 30;               // for Jay's two-tier orders 
+        public final int i_averageDownStopOrderPercentage = 30;    // for three-tier orders 
+        public final int i_oneTierStopOrderPercentage = 20; 
         public final double fl_secondOrderPercentageProfit = 0.05; 
         public final double fl_thirdOrderPercentageProfit = 3.5; 
         
@@ -244,9 +247,10 @@ public class ApiDemo implements IConnectionHandler {
                 JButton m_b30 = new JButton("30%"); 
                 JButton m_b40 = new JButton("40%"); 
                 JButton m_b95 = new JButton("95%");
-                JCheckBox m_noStopOrder = new JCheckBox("No Stop"); 
-                JCheckBox m_averageDown = new JCheckBox("3 Pt Avg"); 
+                JRadioButton m_separate12 = new JRadioButton("12%", true); 
+                JRadioButton m_separate20 = new JRadioButton("20%"); 
                 JCheckBox m_jaysAlgorithm = new JCheckBox("Jay's Alg"); 
+                JCheckBox m_averageDown = new JCheckBox("3 Pt Avg"); 
 
                 JTextField m_profitTakerHighRisk = new JTextField("3.5", 15);
                 JTextField m_profitTakerNonHighRisk = new JTextField("4.2", 15);
@@ -698,10 +702,19 @@ public class ApiDemo implements IConnectionHandler {
                         System.out.println("Jay's Algorithm Selected");                                    
 
                         m_jaysAlgorithm.setSelected(false);
-                        
+
                         int i_secondOrderPercentageDollar = 12; 
                         int i_secondOrderPercentagePenny = 15; 
                         
+                        if (m_separate12.isSelected()){
+                            i_secondOrderPercentageDollar = 12; 
+                            i_secondOrderPercentagePenny = 15; 
+                        }            
+                        else if (m_separate20.isSelected()){
+                            i_secondOrderPercentageDollar = 20; 
+                            i_secondOrderPercentagePenny = 25; 
+                        }                                
+
                         int i_firstOrderParent = 0; 
                         int i_firstOrderChildSell = 0; 
                         int i_secondOrderParent = 0; 
@@ -1014,17 +1027,7 @@ public class ApiDemo implements IConnectionHandler {
 
                         double fl_childStopPrice;
 
-                        if (m_noStopOrder.isSelected()  )
-                        {
-                            System.out.println("No Stop Order Selected");
-                            fl_childStopPrice = fl_price - 0.95*fl_price;
-                        }else
-                        {
-                            System.out.println("No Stop Order NOT Selected");
-                            fl_childStopPrice = fl_price - fl_price*i_stopOrderPercentage/100;
-                        }
-
-                        m_noStopOrder.setSelected(false); 
+                        fl_childStopPrice = fl_price - fl_price*i_oneTierStopOrderPercentage/100;
 
                         if (fl_childStopPrice > 1.00)
                         {
@@ -1171,7 +1174,30 @@ public class ApiDemo implements IConnectionHandler {
                             }
                         });
                         
+                        m_separate12.addItemListener(new ItemListener() {
+                            @Override
+                            public void itemStateChanged(ItemEvent e) {
+                            // Handle the checkbox state change event
+                                if (e.getStateChange() == ItemEvent.SELECTED) {
+                                    m_separate20.setSelected(false);
+                                } else {
+
+                                }
+                            }
+                        });
                         
+                        m_separate20.addItemListener(new ItemListener() {
+                            @Override
+                            public void itemStateChanged(ItemEvent e) {
+                            // Handle the checkbox state change event
+                                if (e.getStateChange() == ItemEvent.SELECTED) {
+                                    m_separate12.setSelected(false);
+                                } else {
+
+                                }
+                            }
+                        });
+
                         m_noBracket.addActionListener(new java.awt.event.ActionListener()
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -1763,10 +1789,11 @@ public class ApiDemo implements IConnectionHandler {
                         p1.add("Send:", m_b30);
                         p1.add("Send:", m_b40); 
                         p1.add("Send:", m_b95);
-                        p1.add("", m_noStopOrder); 
-                        p1.add("", m_averageDown); 
+                        p1.add("", m_separate12);
+                        p1.add("", m_separate20); 
                         p1.add("", m_jaysAlgorithm); 
-                        
+                        p1.add("", m_averageDown); 
+                       
 
 			JPanel p2 = new VerticalPanel();
                         // p2.add(m_b2); 
