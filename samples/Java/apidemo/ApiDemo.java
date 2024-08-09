@@ -74,7 +74,6 @@ public class ApiDemo implements IConnectionHandler {
 	static { NewLookAndFeel.register(); }
 	static ApiDemo INSTANCE = new ApiDemo();
 
-        public final int i_halfwayDown = 5; 
         public final double fl_secondOrderPercentageProfit = 0.05; 
         public final double fl_thirdOrderPercentageProfit = 3.5; 
         
@@ -329,7 +328,7 @@ public class ApiDemo implements IConnectionHandler {
                     // Three-tier orders 
                     if (m_averageDown.isSelected())
                     {
-                        int i_averageDownSpread = 25;    
+                        int i_averageDownSpread = 30;    
                         int i_averageDownStopOrderPercentage = 30;
                         System.out.println("Average down is selected.");
                         m_averageDown.setSelected(false);  
