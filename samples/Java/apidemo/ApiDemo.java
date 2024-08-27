@@ -255,7 +255,7 @@ public class ApiDemo implements IConnectionHandler {
                 
                 private final JLabel m_status = new JLabel("Disconnected");
 		
-                public void createOrders(double fl_percentProfit, double fl_secondaryPercentProfit)
+                public void createOrders(double fl_percentProfit, double fl_secondaryPercentProfit, String str_multipleOrderString)
                 {
                     JPanel p1 = new JPanel();
                                 
@@ -263,17 +263,38 @@ public class ApiDemo implements IConnectionHandler {
 
                     // grab the pasted order from the text box 
                     String str_orderText = ""; 
-                    try
+                    String str_tier = ""; 
+                            
+                    if (str_multipleOrderString.equals(""))
                     {
-                        str_orderText = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor); 
-                        System.out.println(""); 
-                        System.out.println(str_orderText); 
+                    
+                        try
+                        {
+                            str_orderText = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor); 
+                        }
+                        catch(Exception e)
+                        {
+                            // if any I/O error occurs
+                            System.out.println(e.getMessage()); 
+                            e.printStackTrace();
+                        }
                     }
-                    catch(Exception e)
+                    else 
                     {
-                        // if any I/O error occurs
-                        System.out.println(e.getMessage()); 
-                        e.printStackTrace();
+                        str_orderText = str_multipleOrderString; 
+                        String[] parts = str_orderText.split(" "); 
+                        str_tier = parts[7]; 
+                        if (str_tier.equals("TWO_TIER"))
+                        {
+                            m_averageDown.setSelected(false); 
+                            m_jaysAlgorithm.setSelected(true); 
+                        }
+                        else if (str_tier.equals("ONE_TIER"))
+                        {
+                            m_averageDown.setSelected(false); 
+                            m_jaysAlgorithm.setSelected(false); 
+                        }
+                        
                     }
 
                     /*
@@ -291,20 +312,14 @@ public class ApiDemo implements IConnectionHandler {
                     String[] arr_orderParameters = str_orderText.split(" ");
                     String str_symbol = arr_orderParameters[0];
                     str_symbol = str_symbol.replaceAll("\\.", " ");
-
-                    System.out.println("Symbol is " + str_symbol);
-
                     String str_numShares = arr_orderParameters[2].replaceAll(",", "");
                     int i_numShares = Integer.parseInt(str_numShares);
                     if (i_numShares > 500000)
                     {
                         i_numShares = 500000; 
                     }
-                    System.out.println("Number of shares is " + i_numShares);
-
                     String str_price = arr_orderParameters[3].replaceAll("\\$", "");
                     double fl_price = Double.parseDouble(str_price); 
-                    System.out.println("Parent sell price is " + fl_price);
 
                     String str_percentage = arr_orderParameters[4].replaceAll("\\(", "");
                     str_percentage = str_percentage.replaceAll("\\)", "");
@@ -325,10 +340,13 @@ public class ApiDemo implements IConnectionHandler {
                     String str_previousClose = arr_orderParameters[6].replaceAll("\\$", "");
                     double fl_previousClose = Double.parseDouble(str_previousClose); 
 
+                    
+                    
+                    
+                    
                     // Three-tier orders 
                     if (m_averageDown.isSelected())
                     {
-
                         int i_averageDownSpread = 25;    
                         int i_averageDownPennySpread = 30; 
 
@@ -632,15 +650,6 @@ public class ApiDemo implements IConnectionHandler {
                         o3Sell.transmit(true);
                         
                         ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o3Sell); 
-                        
-/*
-                        i_childThirdSellOrderId++; 
-                        o3Sell.orderId(i_childThirdSellOrderId); 
-                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o3Sell); 
-                        i_childThirdSellOrderId++; 
-                        o3Sell.orderId(i_childThirdSellOrderId); 
-                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o3Sell); 
-*/
 
                         i_nextOrderId = i_childThirdSellOrderId + 1; 
                         
@@ -704,8 +713,6 @@ public class ApiDemo implements IConnectionHandler {
                     } // if we ARE averaging down 
                     else if (m_jaysAlgorithm.isSelected())
                     {
-                        m_separate20.setSelected(false);
-                        m_separate12.setSelected(true);
                         int i_stopOrderPercentage = 25;
                         
                         System.out.println("Jay's Algorithm Selected");                                    
@@ -809,7 +816,7 @@ public class ApiDemo implements IConnectionHandler {
                         System.out.println("You have just sent off the child sell order");
 
                         i_secondOrderParent = i_firstOrderChildSell + 1; 
-                        
+
                         // If it goes 12% past our original order, then we place our second order. 
                         double fl_secondBuyOrderEntryPrice = fl_price - fl_price*i_secondOrderPercentageDollar/100; 
                         
@@ -835,7 +842,7 @@ public class ApiDemo implements IConnectionHandler {
                                 fl_secondBuyOrderEntryPrice = Double.parseDouble(String.format( "%.4f", fl_secondBuyOrderEntryPrice )); 
                             }
                         }
-
+                        
                         // 2nd parent buy order 
 
                         myContract = new NewContract();
@@ -964,6 +971,9 @@ public class ApiDemo implements IConnectionHandler {
                         
                         i_nextOrderId = i_stopOrder + 1; 
 
+                        m_separate20.setSelected(false);
+                        m_separate12.setSelected(true);
+                        
                     }
                     else
                     {
@@ -1155,8 +1165,10 @@ public class ApiDemo implements IConnectionHandler {
                     // Clear the order text box
                     m_orderText.setText(""); 
 
-                    javax.swing.JOptionPane.showMessageDialog(p1, str_orderText + "\n\nHas been placed successfully", "Order Placed", JOptionPane.NO_OPTION);
-
+                    if (str_multipleOrderString.equals(""))
+                    {
+                        javax.swing.JOptionPane.showMessageDialog(p1, str_orderText + "\n\nHas been placed successfully", "Order Placed", JOptionPane.NO_OPTION);
+                    }
                 }
                 
                 public void sendOrder(double percentageProfit)
@@ -1448,7 +1460,7 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(2.6, 1.5); 
+                                m_connectionPanel.createOrders(2.6, 1.5, ""); 
                 	    } 
                         });  // end of the click event handler for "Fast 2.6%" 
 
@@ -1457,7 +1469,7 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(3.5, 2); 
+                                m_connectionPanel.createOrders(3.5, 2, ""); 
                 	    } 
                         });  // end of the click event handler for "Fast 3.5%" 
 
@@ -1467,7 +1479,7 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(4.2, 3); 
+                                m_connectionPanel.createOrders(4.2, 3, ""); 
                 	    } 
                         });  // end of the click event handler for "Fast 4.2%" 
 
@@ -1476,7 +1488,7 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(5, 3.2); 
+                                m_connectionPanel.createOrders(5, 3.2, ""); 
                 	    } 
                         });  // end of the click event handler for "Fast 5%" 
                         
@@ -1486,7 +1498,7 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(5.15, 3.2); 
+                                m_connectionPanel.createOrders(5.15, 3.2, ""); 
                 	    } 
                         });  // end of the click event handler for "Fast 5.15%" 
                         
@@ -1497,7 +1509,7 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(5.5, 3.2); 
+                                m_connectionPanel.createOrders(5.5, 3.2, ""); 
                 	    } 
                         });  // end of the click event handler for "Fast 5.5%" 
 
@@ -1506,7 +1518,7 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(6, 4); 
+                                m_connectionPanel.createOrders(6, 4, ""); 
                 	    } 
                         });  // end of the click event handler for "Fast 6%" 
                         
@@ -1515,7 +1527,7 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(7, 4); 
+                                m_connectionPanel.createOrders(7, 4, ""); 
                 	    } 
                         });  // end of the click event handler for "Fast 7%"                    
                         
@@ -1524,7 +1536,7 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(8, 5); 
+                                m_connectionPanel.createOrders(8, 5, ""); 
                 	    } 
                         });  // end of the click event handler for "Fast 8%"  
                         
@@ -1533,7 +1545,7 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(9, 5); 
+                                m_connectionPanel.createOrders(9, 5, ""); 
                 	    } 
                         });  // end of the click event handler for "Fast 9%"  
                         
@@ -1542,7 +1554,7 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(10, 5); 
+                                m_connectionPanel.createOrders(10, 5, ""); 
                 	    } 
                         });  // end of the click event handler for "Fast 10%"  
                         
@@ -1551,7 +1563,7 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(11, 5); 
+                                m_connectionPanel.createOrders(11, 5, ""); 
                 	    } 
                         });  // end of the click event handler for "Fast 11%"  
                         
@@ -1560,7 +1572,7 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(12, 5); 
+                                m_connectionPanel.createOrders(12, 5, ""); 
                 	    } 
                         });  // end of the click event handler for "Fast 12%"  
 
@@ -1569,7 +1581,7 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(13, 5); 
+                                m_connectionPanel.createOrders(13, 5, ""); 
                 	    } 
                         });  // end of the click event handler for "Fast 13%"  
 
@@ -1578,7 +1590,7 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(20, 5); 
+                                m_connectionPanel.createOrders(20, 5, ""); 
                 	    } 
                         });  // end of the click event handler for "Take 20%"  
 
@@ -1587,7 +1599,7 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(30, 5); 
+                                m_connectionPanel.createOrders(30, 5, ""); 
                 	    } 
                         });  // end of the click event handler for "Take  30%"
                         
@@ -1596,7 +1608,7 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(40, 5); 
+                                m_connectionPanel.createOrders(40, 5, ""); 
                 	    } 
                         });  // end of the click event handler for "Take 40%"
                         
@@ -1605,7 +1617,7 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                m_connectionPanel.createOrders(95, 50); 
+                                m_connectionPanel.createOrders(95, 50, ""); 
                 	    } 
                         });  // end of the click event handler for "Fast 95%"  
                         
@@ -1623,188 +1635,16 @@ public class ApiDemo implements IConnectionHandler {
                 	{
                 	   @Override public void actionPerformed(java.awt.event.ActionEvent evt)
                     	    {
-                                System.out.println("Inside process multiple orders");
-                                String str_profitTakerHighRisk = m_profitTakerHighRisk.getText(); 
-                                Double fl_profitTakerHighRisk = Double.parseDouble(str_profitTakerHighRisk)/100;
-                                String str_profitTakerNonHighRisk = m_profitTakerNonHighRisk.getText();
-                                Double fl_profitTakerNonHighRisk = Double.parseDouble(str_profitTakerNonHighRisk)/100;
-                                System.out.println("High risk is " + str_profitTakerHighRisk); 
-                                System.out.println("Non high risk is " + str_profitTakerNonHighRisk);
-
-                                // set the order id numbers
-                                int i_parentBuyOrderId = 0; 
-                                int i_childSellOrderId = 0;
-                                int i_childStopOrderId = 0;
-                                int i_nextOrderId = 0; 
-                                try
-                                {
-                                    // new input stream created
-                                    FileInputStream fis = new FileInputStream("C:\\TWS API\\DayTradeApp\\latestOrder.txt");
-                                    BufferedReader fisReader = new BufferedReader(new InputStreamReader(fis));
-
-                                    String str_latestOrderId = fisReader.readLine();
-                                    i_parentBuyOrderId = Integer.parseInt(str_latestOrderId);
-
-                                    System.out.println("The latest order id is " + i_parentBuyOrderId);
-                                    fis.close();
-                                }
-                                catch(Exception e)
-                                {
-                                    // if any I/O error occurs
-                                    System.out.println(e.getMessage()); 
-                                    e.printStackTrace();
-                                }
-                                // end of set the order id numbers
-
                                 // loop through the order strings and place the orders
                                 for (String line : m_multipleOrders.getText().split("\\n")){
 
-                                    System.out.println("line.trim() is: *" + line.trim() + "*"); 
-
-                                    String[] arr_orderParameters = line.split(" ");
+                                    line = line.trim(); 
+                                    String[] parts = line.split(" "); 
+                                    double fl_percentageProfit = Float.parseFloat(parts[8]); 
+                                    fl_percentageProfit = Double.parseDouble(String.format( "%.2f", fl_percentageProfit ));
                                     
-                                    try
-                                    {
-                                        // Parse out the order parameters
-                                        String str_symbol = arr_orderParameters[0];
-                                        String str_numShares = arr_orderParameters[1];
-                                        str_numShares = str_numShares.replaceAll("\\,", ""); 
-                                        Integer i_numShares = Integer.parseInt(str_numShares);
-                                        String str_price = arr_orderParameters[2]; 
-                                        str_price = str_price.replaceAll("\\$", ""); 
-                                        
-                                        Double fl_price = Double.parseDouble(str_price);
-
-                                        String str_highRisk = arr_orderParameters[3];
-                                        System.out.println("Order is: " + str_symbol + " " + str_numShares + " " + str_price + " " + str_highRisk); 
-
-                                        // Set up the contract
-                                        NewContract myContract = new NewContract();
-                                        myContract.symbol(str_symbol); 
-                                        myContract.secType(SecType.STK);
-                                        myContract.exchange("SMART"); 
-                                        myContract.primaryExch("ISLAND");
-                                        myContract.currency("USD");                                 
-
-                                        // set up the order
-                                        NewOrder o = new NewOrder();
-                                        o.account("U1203596"); 
-                                        o.action(Action.BUY);
-                                        o.lmtPrice(fl_price);
-                                        o.totalQuantity(i_numShares);
-                                        o.tif(TimeInForce.DAY);
-                                        o.outsideRth(true);
-                                        o.orderId(i_parentBuyOrderId); 
-                                        o.transmit(true);
-
-                                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o); 
-                                        System.out.println("You have just sent off the parent order");
-
-                                        // limit sell stop order
-                                        i_childStopOrderId = i_parentBuyOrderId + 1; 
-
-                                        NewOrder oStop = new NewOrder();
-                                        oStop.action(Action.SELL);
-                                        oStop.orderType(OrderType.STP); 
-                                        double fl_childStopPrice = fl_price - 0.80*fl_price;
-                                        if (fl_childStopPrice >= 1.00 || (fl_price >= 1.00 &&  fl_childStopPrice < 1.00) )
-                                        {
-                                            fl_childStopPrice = Double.parseDouble(String.format( "%.2f", fl_childStopPrice )); 
-                                        }
-                                        else 
-                                        {
-                                            fl_childStopPrice = Double.parseDouble(String.format( "%.4f", fl_childStopPrice )); 
-                                        }  
-                                        System.out.println("Child stop order price is " + fl_childStopPrice);
-                                        oStop.auxPrice(fl_childStopPrice);
-                                        oStop.totalQuantity(i_numShares);
-                                        oStop.tif(TimeInForce.DAY);
-                                        oStop.outsideRth(true);
-                                        oStop.orderId(i_childStopOrderId);
-                                        oStop.parentId(i_parentBuyOrderId); 
-                                        oStop.transmit(true);
-
-                                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oStop); 
-                                        System.out.println("You have just sent off the child stop order");
-
-                                        // Limit sell bracket order
-
-                                        i_childSellOrderId = i_parentBuyOrderId + 2; 
-
-                                        NewOrder oSell = new NewOrder();
-                                        oSell.action(Action.SELL);
-                                        oSell.orderType(OrderType.LMT); 
-                                        
-                                        double fl_childSellPrice = 0.0; 
-
-                                        if (str_highRisk.equals("HIGH_RISK")){
-                                            fl_childSellPrice = fl_price + (fl_profitTakerHighRisk*fl_price);
-                                        }
-                                        else if (str_highRisk.equals("NON_HIGH_RISK"))
-                                        {
-                                            fl_childSellPrice = fl_price + (fl_profitTakerNonHighRisk*fl_price);
-                                        }
-
-                                        if (fl_childSellPrice >= 1.00)
-                                        {
-                                            fl_childSellPrice = Double.parseDouble(String.format( "%.2f", fl_childSellPrice )); 
-                                        }
-                                        else 
-                                        {
-                                            fl_childSellPrice = Double.parseDouble(String.format( "%.4f", fl_childSellPrice )); 
-                                        }  
-                                        System.out.println("Child sell price is " + fl_childSellPrice);
-                                        oSell.lmtPrice(fl_childSellPrice);
-                                        oSell.totalQuantity(i_numShares);
-                                        oSell.tif(TimeInForce.DAY);
-                                        oSell.outsideRth(true);
-                                        oSell.orderId(i_childSellOrderId); 
-                                        oSell.parentId(i_parentBuyOrderId);
-                                        oSell.transmit(true);
-
-                                        ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, oSell); 
-                                        System.out.println("You have just sent off the child sell order");
-
-                                        i_parentBuyOrderId = i_parentBuyOrderId + 3;
-
-                                    }
-                                    catch(Exception e)
-                                    {
-                                        // if any I/O error occurs
-                                        System.out.println(e.getMessage()); 
-                                        e.printStackTrace();
-                                        continue; 
-                                    }                                    
-                                } // end of loop through the order strings and place the orders
-                                
-
-                                
-                                // now we write the next order ID to the output file
-                                try
-                                {
-                                    // new input stream created
-                                    FileOutputStream fos = new FileOutputStream("C:\\TWS API\\DayTradeApp\\latestOrder.txt");
-
-                                    // convert next orderId to string 
-                                    StringBuilder sb = new StringBuilder();
-                                    sb.append("");
-                                    sb.append(i_parentBuyOrderId);
-                                    String str_nextOrderId = sb.toString();
-                                    byte[] arr_nextOrderId = str_nextOrderId.getBytes();
-
-                                    // byte[] arr_outputString = 
-                                    fos.write(arr_nextOrderId);
-                                    fos.flush();
-                                    fos.close();
+                                    m_connectionPanel.createOrders(fl_percentageProfit, 2.5, line); 
                                 }
-                                catch(Exception e)
-                                {
-                                    // if any I/O error occurs
-                                    System.out.println(e.getMessage()); 
-                                    e.printStackTrace();
-                                }
-                                // end of write next order id to file 
-                                
                                 
                 	    } // end of the @override function
                         });  // end of the click event handler for process multiple orders
