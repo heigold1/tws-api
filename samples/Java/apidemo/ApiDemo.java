@@ -347,10 +347,10 @@ public class ApiDemo implements IConnectionHandler {
                     // Three-tier orders 
                     if (m_averageDown.isSelected())
                     {
-                        int i_averageDownSpread = 25;    
-                        int i_averageDownPennySpread = 30; 
+                        int i_averageDownSpread = 40;    
+                        int i_averageDownPennySpread = 40; 
 
-                        int i_averageDownStopOrderPercentage = 30;
+                        int i_averageDownStopOrderPercentage = 50;
                         System.out.println("Average down is selected.");
                         m_averageDown.setSelected(false);  
                         
@@ -545,7 +545,8 @@ public class ApiDemo implements IConnectionHandler {
                         o2Sell.account("U1203596"); 
                         o2Sell.action(Action.SELL);
                         o2Sell.orderType(OrderType.LMT); 
-                        o2Sell.lmtPrice(fl_secondProfitTakerSellPrice);
+//                        o2Sell.lmtPrice(fl_secondProfitTakerSellPrice);
+                        o2Sell.lmtPrice(fl_childSellPrice);
                         o2Sell.totalQuantity(i_numShares);
                         o2Sell.tif(TimeInForce.DAY);
                         o2Sell.outsideRth(true);
@@ -641,7 +642,8 @@ public class ApiDemo implements IConnectionHandler {
                         o3Sell.account("U1203596"); 
                         o3Sell.action(Action.SELL);
                         o3Sell.orderType(OrderType.LMT); 
-                        o3Sell.lmtPrice(fl_thirdProfitTakerSellPrice);
+//                        o3Sell.lmtPrice(fl_thirdProfitTakerSellPrice);
+                        o3Sell.lmtPrice(fl_childSellPrice);
                         o3Sell.totalQuantity(i_numShares);
                         o3Sell.tif(TimeInForce.DAY);
                         o3Sell.outsideRth(true);
@@ -652,6 +654,8 @@ public class ApiDemo implements IConnectionHandler {
                         ApiDemo.INSTANCE.controller().m_client.placeOrder(myContract, o3Sell); 
 
                         i_nextOrderId = i_childThirdSellOrderId + 1; 
+
+                        /* I'm taking out the stop orders for now 
                         
                         i_thirdOrderStopId = i_nextOrderId; 
 
@@ -708,8 +712,10 @@ public class ApiDemo implements IConnectionHandler {
 
                         i_nextOrderId = i_thirdOrderStopId + 1; 
 
+                        */
+                        
 //                        m_averageDown.setSelected(false); 
-//                          m_jaysAlgorithm.setSelected(true);
+//                         m_jaysAlgorithm.setSelected(true);
                     } // if we ARE averaging down 
                     else if (m_jaysAlgorithm.isSelected())
                     {
