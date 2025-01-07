@@ -3,9 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/TWS%20API/source/JavaClient/com/ib/controller/Types.java</file>
-            <file>file:/C:/TWS%20API/source/JavaClient/com/ib/controller/NewOrder.java</file>
-            <file>file:/C:/TWS%20API/source/JavaClient/com/ib/client/Order.java</file>
+            <file>file:/C:/TWS%20API/source/JavaClient/com/ib/client/EClientSocket.java</file>
+            <file>file:/C:/TWS%20API/samples/Java/apidemo/TopModel.java</file>
+            <file>file:/C:/TWS%20API/source/JavaClient/com/ib/controller/ApiController.java</file>
+            <file>file:/C:/TWS%20API/source/JavaClient/com/ib/client/EReader.java</file>
             <file>file:/C:/TWS%20API/samples/Java/apidemo/ApiDemo.java</file>
             <file>file:/C:/TWS%20API/samples/Java/apidemo/MarketDataPanel.java</file>
         </group>
