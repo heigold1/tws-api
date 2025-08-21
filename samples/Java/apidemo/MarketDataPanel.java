@@ -208,7 +208,7 @@ System.out.println("STK.NASDAQ.SCM has " + rows.size() + " rows");
                             int symbol_length = str_symbol.length(); 
 
                             if (
-                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.20)) ||
+                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.15)) ||
                                     (symbol_length >= 5)
                                     )
                             {
@@ -284,7 +284,7 @@ System.out.println("STK.NASDAQ.NMS has " + rows.size() + " rows");
                             int symbol_length = str_symbol.length(); 
 
                             if (
-                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.20)) ||
+                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.15)) ||
                                     (symbol_length >= 5)
                                     )
                             {
@@ -370,7 +370,7 @@ System.out.println("STK.NYSE has " + rows.size() + " rows");
                             int symbol_length = str_symbol.length(); 
 
                             if (
-                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.20)) ||
+                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.15)) ||
                                     (symbol_length >= 5)
                                     )
                             {
@@ -439,7 +439,7 @@ System.out.println("STK.AMEX has " + rows.size() + " rows");
                             int symbol_length = str_symbol.length(); 
 
                             if (
-                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.20)) ||
+                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.15)) ||
                                     (symbol_length >= 5)
                                     )
                             {
@@ -1198,6 +1198,7 @@ System.out.println("--------------------------------");
                         SubscriptionResultsPanel subscriptionResultsPanelPink = new SubscriptionResultsPanel(reqIdPink, subPink, resultsPanelPink); 
                         m_subscriptionResultsHash.put(m_location.getText(), subscriptionResultsPanelPink);
 
+
                     
                         int reqIdNasdaqSCM; 
 			ScannerSubscription subNasdqaSCM = new ScannerSubscription();
@@ -1231,6 +1232,8 @@ System.out.println("--------------------------------");
                         SubscriptionResultsPanel subscriptionResultsPanelNasdaqNMS = new SubscriptionResultsPanel(reqIdNasdaqNMS, subNasdqaNMS, resultsPanelNasdaqNMS); 
                         m_subscriptionResultsHash.put("STK.NASDAQ.NMS", subscriptionResultsPanelNasdaqNMS);
                         
+
+
                         int reqIdNYSE; 
 			ScannerSubscription subNYSE = new ScannerSubscription();
 			subNYSE.numberOfRows( 25 );
@@ -1262,6 +1265,8 @@ System.out.println("--------------------------------");
 			reqIdAMEX = ApiDemo.INSTANCE.controller().reqScannerSubscription( subAMEX, resultsPanelAMEX);
                         SubscriptionResultsPanel subscriptionResultsPanelAMEX = new SubscriptionResultsPanel(reqIdAMEX, subAMEX, resultsPanelAMEX); 
                         m_subscriptionResultsHash.put("STK.AMEX", subscriptionResultsPanelAMEX);
+
+
 
                 }
                 

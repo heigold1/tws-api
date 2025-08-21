@@ -826,8 +826,8 @@ System.out.println("inside reqTopMktData, the reqId one, requestData.m_genericTi
 		m_scannerMap.put( reqId, handler);
 		Vector<TagValue> scannerSubscriptionOptions = new Vector<TagValue>();
 //                 Brent - Dec 30th, 2023
-                TagValue t1 = new TagValue("avgVolumeAbove", "400000");
-                scannerSubscriptionOptions.add(t1); 
+//                TagValue t1 = new TagValue("avgVolumeAbove", "400000");
+//                scannerSubscriptionOptions.add(t1); 
 
 
 		m_client.reqScannerSubscription( reqId, sub, scannerSubscriptionOptions);
