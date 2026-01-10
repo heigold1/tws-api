@@ -219,7 +219,7 @@ public class ApiDemo implements IConnectionHandler {
 	private class ConnectionPanel extends JPanel {
 		private final JTextField m_host = new JTextField(7);
 		private final JTextField m_port = new JTextField( "7496", 7);
-		private final JTextField m_clientId = new JTextField("0", 7);
+		private final JTextField m_clientId = new JTextField("1", 7);
                 
                 // brent 
 		public final JTextField m_orderText = new JTextField(25);
