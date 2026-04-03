@@ -1,6 +1,0 @@
-apidemo.PositionsPanel$PositionKey
-apidemo.PositionsPanel
-apidemo.PositionsPanel$PositionRow
-apidemo.PositionsPanel$1
-apidemo.PositionsPanel$PositionModel
-apidemo.PositionsPanel$2

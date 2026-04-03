@@ -1,3 +1,0 @@
-apidemo.MarketValueSummaryPanel$1
-apidemo.MarketValueSummaryPanel
-apidemo.MarketValueSummaryPanel$2
