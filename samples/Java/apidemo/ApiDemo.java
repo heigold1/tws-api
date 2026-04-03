@@ -345,7 +345,7 @@ public class ApiDemo implements IConnectionHandler {
                     
                     
                     // Three-tier orders 
-                    if (m_averageDown.isSelected())
+                    if (m_averageDown.isSelected() || str_tier.equals("THREE_TIER"))
                     {
                         int i_averageDownSpread = 40;    
                         int i_averageDownPennySpread = 40; 
@@ -717,7 +717,7 @@ public class ApiDemo implements IConnectionHandler {
 //                        m_averageDown.setSelected(false); 
 //                         m_jaysAlgorithm.setSelected(true);
                     } // if we ARE averaging down 
-                    else if (m_jaysAlgorithm.isSelected())
+                    else if (m_jaysAlgorithm.isSelected() || str_tier.equals("TWO_TIER"))
                     {
                         int i_stopOrderPercentage = 25;
                         
@@ -1392,8 +1392,8 @@ public class ApiDemo implements IConnectionHandler {
                                 NewOrder oSell = new NewOrder();
                                 oSell.action(Action.SELL);
                                 oSell.orderType(OrderType.LMT); 
-                                // Since this is technically a "no bracket" order, we are just setting the profit to 40% 
-                                double fl_childSellPrice = fl_price + fl_price*0.4;
+                                // Since this is technically a "no bracket" order, we are just setting the profit to 100% 
+                                double fl_childSellPrice = fl_price*2.0;
 
                                 // if we have a previous day's closing price
                                 if ((arr_orderParameters.length >= 7) && (arr_orderParameters[6] != null)) 
