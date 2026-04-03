@@ -1389,6 +1389,8 @@ public class ApiDemo implements IConnectionHandler {
 
                                 i_childSellOrderId = i_parentBuyOrderId + 1; 
 
+                                /*  If you want to add a bracket sell, uncomment this code 
+                                
                                 NewOrder oSell = new NewOrder();
                                 oSell.action(Action.SELL);
                                 oSell.orderType(OrderType.LMT); 
@@ -1455,6 +1457,8 @@ public class ApiDemo implements IConnectionHandler {
                                     System.out.println(e.getMessage()); 
                                     e.printStackTrace();
                                 }                                    
+
+                                */
 
                                 return;                                 
 
