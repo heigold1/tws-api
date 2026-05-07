@@ -486,7 +486,7 @@ public class ApiDemo implements IConnectionHandler {
 
                         // 2nd parent buy order 
 
-                        myContract = new NewContract();
+//                         myContract = new NewContract();
                         myContract.symbol(str_symbol); 
                         myContract.secType(SecType.STK);
                         myContract.exchange("SMART"); 
