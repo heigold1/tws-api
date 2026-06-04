@@ -244,6 +244,7 @@ public class ApiDemo implements IConnectionHandler {
                 JButton m_b95 = new JButton("95%");
                 JRadioButton m_separate12 = new JRadioButton("12%", true); 
                 JRadioButton m_separate20 = new JRadioButton("20%"); 
+                JRadioButton m_separate30 = new JRadioButton("30%"); 
                 JCheckBox m_jaysAlgorithm = new JCheckBox("Jay's Alg"); 
                 JCheckBox m_averageDown = new JCheckBox("3 Pt Avg"); 
 
@@ -735,7 +736,13 @@ public class ApiDemo implements IConnectionHandler {
                         else if (m_separate20.isSelected()){
                             i_secondOrderPercentageDollar = 20; 
                             i_secondOrderPercentagePenny = 25; 
-                        }                                
+                        }   
+                        else if (m_separate30.isSelected()){
+                            i_secondOrderPercentageDollar = 30; 
+                            i_secondOrderPercentagePenny = 35; 
+                            i_stopOrderPercentage = 35; 
+                            
+                        }  
 
                         int i_firstOrderParent = 0; 
                         int i_firstOrderChildSell = 0; 
@@ -823,7 +830,7 @@ public class ApiDemo implements IConnectionHandler {
 
                         i_secondOrderParent = i_firstOrderChildSell + 1; 
 
-                        // If it goes 12% past our original order, then we place our second order. 
+                        // If it goes 12/20/30% past our original order, then we place our second order. 
                         double fl_secondBuyOrderEntryPrice = fl_price - fl_price*i_secondOrderPercentageDollar/100; 
                         
                         if (fl_secondBuyOrderEntryPrice < 1.00)
@@ -978,8 +985,8 @@ public class ApiDemo implements IConnectionHandler {
                         i_nextOrderId = i_stopOrder + 1; 
 
                         m_separate20.setSelected(false);
+                        m_separate30.setSelected(false); 
                         m_separate12.setSelected(true);
-                        
                     }
                     else
                     {
@@ -1237,6 +1244,7 @@ public class ApiDemo implements IConnectionHandler {
                             // Handle the checkbox state change event
                                 if (e.getStateChange() == ItemEvent.SELECTED) {
                                     m_separate20.setSelected(false);
+                                    m_separate30.setSelected(false);
                                 } else {
 
                                 }
@@ -1249,6 +1257,20 @@ public class ApiDemo implements IConnectionHandler {
                             // Handle the checkbox state change event
                                 if (e.getStateChange() == ItemEvent.SELECTED) {
                                     m_separate12.setSelected(false);
+                                    m_separate30.setSelected(false);                                    
+                                } else {
+
+                                }
+                            }
+                        });
+                        
+                        m_separate30.addItemListener(new ItemListener() {
+                            @Override
+                            public void itemStateChanged(ItemEvent e) {
+                            // Handle the checkbox state change event
+                                if (e.getStateChange() == ItemEvent.SELECTED) {
+                                    m_separate12.setSelected(false);
+                                    m_separate20.setSelected(false);                                    
                                 } else {
 
                                 }
@@ -1680,6 +1702,7 @@ public class ApiDemo implements IConnectionHandler {
                         p1.add("Send:", m_b95);
                         p1.add("", m_separate12);
                         p1.add("", m_separate20); 
+                        p1.add("", m_separate30); 
                         p1.add("", m_jaysAlgorithm); 
                         p1.add("", m_averageDown); 
                        
