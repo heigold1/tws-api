@@ -740,7 +740,7 @@ public class ApiDemo implements IConnectionHandler {
                         else if (m_separate30.isSelected()){
                             i_secondOrderPercentageDollar = 30; 
                             i_secondOrderPercentagePenny = 35; 
-                            i_stopOrderPercentage = 35; 
+                            i_stopOrderPercentage = 40; 
                             
                         }  
 
