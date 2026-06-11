@@ -521,8 +521,8 @@ System.out.println("STK.PINK has " + rows.size() + " rows");
                             str_change = str_change.replace("%", ""); 
                             negativeSignCount = str_change.length() - str_change.replace("-", "").length();
 
-                            // only if over $300 worth in trades will we bother looking at it. 
-                            if (i_volume*row.m_last > 1000.00)
+                            // only if over $1000 worth in trades will we bother looking at it. 
+                            if (i_volume*row.m_last > 2000.00)
                             {
                                 str_change = str_change.replace("-", ""); 
                                 float fl_change = Float.valueOf(str_change); 
