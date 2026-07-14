@@ -284,7 +284,7 @@ System.out.println("STK.NASDAQ.NMS has " + rows.size() + " rows");
                             int symbol_length = str_symbol.length(); 
 
                             if (
-                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.15)) ||
+                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.10)) ||
                                     (symbol_length >= 5)
                                     )
                             {
@@ -370,7 +370,7 @@ System.out.println("STK.NYSE has " + rows.size() + " rows");
                             int symbol_length = str_symbol.length(); 
 
                             if (
-                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.15)) ||
+                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.10)) ||
                                     (symbol_length >= 5)
                                     )
                             {
@@ -439,7 +439,7 @@ System.out.println("STK.AMEX has " + rows.size() + " rows");
                             int symbol_length = str_symbol.length(); 
 
                             if (
-                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.15)) ||
+                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.10)) ||
                                     (symbol_length >= 5)
                                     )
                             {
@@ -522,7 +522,7 @@ System.out.println("STK.PINK has " + rows.size() + " rows");
                             negativeSignCount = str_change.length() - str_change.replace("-", "").length();
 
                             // only if over $1000 worth in trades will we bother looking at it. 
-                            if (i_volume*row.m_last > 2000.00)
+                            if (i_volume*row.m_last > 30000.00)
                             {
                                 str_change = str_change.replace("-", ""); 
                                 float fl_change = Float.valueOf(str_change); 
