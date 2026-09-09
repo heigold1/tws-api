@@ -350,10 +350,19 @@ public class ApiDemo implements IConnectionHandler {
                     {
                         int i_averageDownSpread = 40;    
                         int i_averageDownPennySpread = 40; 
+                        if (m_separate12.isSelected()){
+                            i_averageDownSpread = 24;    
+                            i_averageDownPennySpread = 24; 
+                        }            
+                        else if (m_separate20.isSelected()){
+                            i_averageDownSpread = 40;    
+                            i_averageDownPennySpread = 40; 
+                        }
 
                         int i_averageDownStopOrderPercentage = 50;
                         System.out.println("Average down is selected.");
                         m_averageDown.setSelected(false);  
+                        m_separate12.setSelected(true);
                         
                         // we are averaging down 
 
@@ -1220,6 +1229,7 @@ public class ApiDemo implements IConnectionHandler {
                             // Handle the checkbox state change event
                                 if (e.getStateChange() == ItemEvent.SELECTED) {
                                     m_jaysAlgorithm.setSelected(false);
+                                    m_separate20.setSelected(true);
                                 } else {
 
                                 }
