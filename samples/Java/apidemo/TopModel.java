@@ -180,6 +180,11 @@ public class TopModel extends AbstractTableModel {
                     return m_last; 
                 }
 
+                public double getVolume()
+                {
+                    return m_volume; 
+                }
+                
                 public double getAvgVolume()
                 {
                     return m_avgVolume; 

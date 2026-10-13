@@ -206,9 +206,10 @@ System.out.println("STK.NASDAQ.SCM has " + rows.size() + " rows");
                             Double avg_volume = row.getAvgVolume(); 
                             Double last = row.getLast(); 
                             int symbol_length = str_symbol.length(); 
+                            Double volume = row.getVolume(); 
 
                             if (
-                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.15)) ||
+                                    ((avg_volume > 200) && (volume > 300) && (symbol_length < 5) && (last > 0.15)) ||
                                     (symbol_length >= 5)
                                     )
                             {
@@ -282,9 +283,10 @@ System.out.println("STK.NASDAQ.NMS has " + rows.size() + " rows");
                             Double avg_volume = row.getAvgVolume(); 
                             Double last = row.getLast(); 
                             int symbol_length = str_symbol.length(); 
+                            Double volume = row.getVolume(); 
 
                             if (
-                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.10)) ||
+                                    ((avg_volume > 200) && (volume > 300) && (symbol_length < 5) && (last > 0.10)) ||
                                     (symbol_length >= 5)
                                     )
                             {
@@ -367,10 +369,11 @@ System.out.println("STK.NYSE has " + rows.size() + " rows");
                             negativeSignCount = str_change.length() - str_change.replace("-", "").length();
                             Double avg_volume = row.getAvgVolume(); 
                             Double last = row.getLast(); 
-                            int symbol_length = str_symbol.length(); 
+                            int symbol_length = str_symbol.length();
+                            Double volume = row.getVolume();                             
 
                             if (
-                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.10)) ||
+                                    ((avg_volume > 200) && (volume > 300) && (symbol_length < 5) && (last > 0.10)) ||
                                     (symbol_length >= 5)
                                     )
                             {
@@ -437,9 +440,10 @@ System.out.println("STK.AMEX has " + rows.size() + " rows");
                             Double avg_volume = row.getAvgVolume();
                             Double last = row.getLast(); 
                             int symbol_length = str_symbol.length(); 
+                            Double volume = row.getVolume();                             
 
                             if (
-                                    ((avg_volume > 200) && (symbol_length < 5) && (last > 0.10)) ||
+                                    ((avg_volume > 200) && (volume > 300) && (symbol_length < 5) && (last > 0.10)) ||
                                     (symbol_length >= 5)
                                     )
                             {
@@ -521,7 +525,7 @@ System.out.println("STK.PINK has " + rows.size() + " rows");
                             str_change = str_change.replace("%", ""); 
                             negativeSignCount = str_change.length() - str_change.replace("-", "").length();
 
-                            // only if over $1000 worth in trades will we bother looking at it. 
+                            // only if over $30,000 worth in trades will we bother looking at it. 
                             if (i_volume*row.m_last > 30000.00)
                             {
                                 str_change = str_change.replace("-", ""); 
