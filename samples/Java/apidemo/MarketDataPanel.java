@@ -202,6 +202,11 @@ System.out.println("STK.NASDAQ.SCM has " + rows.size() + " rows");
                         {
                             str_change = str_change.replace("%", ""); 
                             negativeSignCount = str_change.length() - str_change.replace("-", "").length();
+                            
+                            if (negativeSignCount == 0)
+                            {
+                                continue;
+                            }
 
                             Double avg_volume = row.getAvgVolume(); 
                             Double last = row.getLast(); 
@@ -229,7 +234,7 @@ System.out.println("STK.NASDAQ.SCM has " + rows.size() + " rows");
                             }
                         }
                     }
-                    catch(NullPointerException e) 
+                    catch(NullPointerException | NumberFormatException e)
                     { 
 /*
                         System.out.println("NullPointerException Caught when accessing str_change");
@@ -278,6 +283,11 @@ System.out.println("STK.NASDAQ.NMS has " + rows.size() + " rows");
                         {
                             str_change = str_change.replace("%", ""); 
                             negativeSignCount = str_change.length() - str_change.replace("-", "").length();
+                            
+                            if (negativeSignCount == 0)
+                            {
+                                continue;
+                            }
 
                             Double avg_volume = row.getAvgVolume(); 
                             Double last = row.getLast(); 
@@ -304,7 +314,7 @@ System.out.println("STK.NASDAQ.NMS has " + rows.size() + " rows");
                             }
                         }
                     }
-                    catch(NullPointerException e) 
+                    catch(NullPointerException | NumberFormatException e)
                     { 
 /*
                         System.out.println("NullPointerException Caught when accessing str_change");
@@ -366,6 +376,12 @@ System.out.println("STK.NYSE has " + rows.size() + " rows");
                         if (str_change != null)
                         {
                             negativeSignCount = str_change.length() - str_change.replace("-", "").length();
+                            
+                            if (negativeSignCount == 0)
+                            {
+                                continue;
+                            }
+                            
                             Double avg_volume = row.getAvgVolume(); 
                             Double last = row.getLast(); 
                             int symbol_length = str_symbol.length();
@@ -390,7 +406,7 @@ System.out.println("STK.NYSE has " + rows.size() + " rows");
                             }
                         }
                     }
-                    catch(NullPointerException e) 
+                    catch(NullPointerException | NumberFormatException e)
                     { 
 /*
                         System.out.println("Inside printTabs (NYSE),  null pointer when grabbing str_change");
@@ -435,6 +451,11 @@ System.out.println("STK.AMEX has " + rows.size() + " rows");
                         {
                             str_change = str_change.replace("%", ""); 
                             negativeSignCount = str_change.length() - str_change.replace("-", "").length();
+                            
+                            if (negativeSignCount == 0)
+                            {
+                                continue;
+                            }
 
                             Double avg_volume = row.getAvgVolume();
                             Double last = row.getLast(); 
@@ -460,7 +481,7 @@ System.out.println("STK.AMEX has " + rows.size() + " rows");
                             }
                         }
                     }
-                    catch(NullPointerException e) 
+                    catch(NullPointerException | NumberFormatException e)
                     { 
 /*
                         System.out.println("Inside printTabs (AMEX),  null pointer when grabbing str_change");
@@ -519,13 +540,18 @@ System.out.println("STK.PINK has " + rows.size() + " rows");
                         
                         if (str_change != null)
                         {
-                            int i_volume = row.m_volume*100; 
+                            long l_volume = (long) row.m_volume*100; 
 
                             str_change = str_change.replace("%", ""); 
                             negativeSignCount = str_change.length() - str_change.replace("-", "").length();
+                            
+                            if (negativeSignCount == 0)
+                            {
+                                continue;
+                            }
 
                             // only if over $30,000 worth in trades will we bother looking at it. 
-                            if (i_volume*row.m_last > 30000.00)
+                            if (l_volume*row.m_last > 30000.00)
                             {
                                 str_change = str_change.replace("-", ""); 
                                 float fl_change = Float.valueOf(str_change); 
@@ -541,7 +567,7 @@ System.out.println("STK.PINK has " + rows.size() + " rows");
                             }
                         }
                     }
-                    catch(NullPointerException e) 
+                    catch(NullPointerException | NumberFormatException e)
                     { 
 /*
                         System.out.println("Inside printTabs (PINK),  null pointer when grabbing str_change");
